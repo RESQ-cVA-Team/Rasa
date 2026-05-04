@@ -74,9 +74,16 @@ nlu:
     examples: |
       - Change the chart to a [bar](chart_type) graph
       - Update to show [female](sex) patients only
+      - Filter for [male](sex) patients only
+      - Filter for [males](sex) only
+      - Filter for [female](sex) patients only
       - Modify the date range to [2023]{"entity": "date", "role": "lower"} to [2024]{"entity": "date", "role": "upper"}
       - Switch to [hemorrhagic](stroke_type) stroke type
       - Group the data by [treatment facility](group_by)
+      - Now group by [initial point of contact](group_by)
+      - Group by [initial point of contact](group_by)
+      - Now group by [first contact place](group_by)
+      - Group by [first contact place](group_by)
       - Add [DIDO](metric) to the current visualization
       - Remove [male](sex) patients from the chart
       - Change age range to [55]{"entity": "age", "role": "lower"} to [75]{"entity": "age", "role": "upper"}
@@ -99,11 +106,9 @@ nlu:
       - From [January 1, 2024]{"entity": "date", "role": "lower"} to [March 31, 2024]{"entity": "date", "role": "upper"}
       - [line](chart_type)
       - make it [bar](chart_type)
-      - group by [stroke type](group_by)
       - for [female](sex) patients
       - [ischemic](stroke_type)
       - The metric is [door to needle](metric)
-      - By [month](group_by)
       - Time window is [Q1 2025](date)
       - Use [admission nihss](metric)
       - [this year](date)
