@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - dev
   workflow_dispatch:
     inputs:
       force_all:
@@ -156,11 +157,18 @@ jobs:
           if [ "${PUSH_IMAGES:-true}" = "false" ]; then
             DOCKER_OUTPUT_FLAG="--load"
           fi
+          # Determine channel tag based on branch
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "master" ]]; then
+            CHANNEL_TAG="${SAFE_TAG}-latest"
+          else
+            CHANNEL_TAG="${SAFE_TAG}-dev"
+          fi
           docker buildx build \
             --build-arg LAYERS="$LAYERS_STR" \
             --cache-from type=gha,scope=rasa-build \
             --cache-to type=gha,scope=rasa-build,mode=max \
             --platform linux/amd64 \
-            -t ghcr.io/$REPO_NAME_LC:${SAFE_TAG}-latest \
-            -t ghcr.io/$REPO_NAME_LC:${SAFE_TAG}-${{ github.sha }} \
+            -t ghcr.io/$REPO_NAME_LC:${CHANNEL_TAG} \
+            -t ghcr.io/$REPO_NAME_LC:${SAFE_TAG}-${BRANCH}-${{ github.sha }} \
             $DOCKER_OUTPUT_FLAG .
