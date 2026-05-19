@@ -59,7 +59,7 @@ pipeline:
   - name: EntitySynonymMapper
     # Only apply synonyms to these entities, skip numeric entities with roles
     entities:
-      ["metric", "sex", "stroke_type", "chart_type", "group_by", "boolean_type"]
+      ["metric", "sex", "stroke_type", "chart_type", "group_by", "boolean_type", "country_code"]
 
   # Canonicalize SSOT-backed entity values (e.g. metric -> DTN)
   - name: src.components.ssot_canonicalizer.SSOTCanonicalizer
