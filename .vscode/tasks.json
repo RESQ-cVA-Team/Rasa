@@ -119,6 +119,45 @@
             "problemMatcher": []
         },
         {
+            "label": "Rasa: Visualize (layers - preset)",
+            "type": "shell",
+            "command": "bash scripts/visualize_rasa_projects.sh --out build/graph-layers-preset.html ${input:layersPreset}",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "PYTHONPATH": "${workspaceFolder}"
+                }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Rasa: Visualize (layers - custom)",
+            "type": "shell",
+            "command": "bash scripts/visualize_rasa_projects.sh --out build/graph-layers-custom.html ${input:layersCustom}",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "PYTHONPATH": "${workspaceFolder}"
+                }
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Rasa: Visualize (lang spec)",
+            "type": "shell",
+            "command": "bash scripts/visualize_rasa_lang.sh --out build/graph-lang-spec.html ${input:langSpec}",
+            "group": "test",
+            "options": {
+                "cwd": "${workspaceFolder}",
+                "env": {
+                    "PYTHONPATH": "${workspaceFolder}"
+                }
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Rasa: Train + Run (lang spec)",
             "type": "shell",
             "command": "bash scripts/layer_rasa_lang.sh ${input:langSpec} && rasa run --enable-api --cors '*' --model models --endpoints src/core/endpoints.yml --request-timeout 3600 --response-timeout 7200",
