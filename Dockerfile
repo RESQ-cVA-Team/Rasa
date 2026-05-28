@@ -1,4 +1,4 @@
-FROM rasa/rasa:3.6.21
+FROM rasa/rasa:3.6.21@sha256:7c0204065d4859e1b7a691c972ca3d26f5d39ad23fbd992b654084721226d813
 
 ENV RASA_TELEMETRY_ENABLED=false
 ENV SQLALCHEMY_SILENCE_UBER_WARNING=1
@@ -44,6 +44,6 @@ EXPOSE 5005
 
 USER 1001
 
-# Always run with API, CORS, timeout settings, and core endpoints file
-ENTRYPOINT ["rasa", "run", "--enable-api", "--cors", "*", "--endpoints", "src/core/endpoints.yml", "--request-timeout", "3600", "--response-timeout", "7200"]
+# Always run with API, native token auth, bounded timeouts, and the core endpoints file.
+ENTRYPOINT ["sh", "-lc", "test -n \"${RASA_AUTH_TOKEN:-}\" || { echo 'RASA_AUTH_TOKEN is required' >&2; exit 1; }; exec rasa run --enable-api --auth-token \"$RASA_AUTH_TOKEN\" --endpoints src/core/endpoints.yml --request-timeout 300 --response-timeout 300"]
 CMD []

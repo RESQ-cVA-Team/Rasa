@@ -10,6 +10,5 @@ tracker_store:
   url: ${TRACKER_STORE_URL}
   db: ${TRACKER_STORE_DB}
 cors:
-  enabled: true
-  allowed_origins:
-    - "*"
+  enabled: false
+  allowed_origins: []
