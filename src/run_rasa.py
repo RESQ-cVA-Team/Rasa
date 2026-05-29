@@ -1,4 +1,5 @@
 import os
+import sys
 from typing import Optional
 
 import rasa
@@ -44,6 +45,23 @@ def _install_version_route() -> None:
 
 def main() -> None:
     _install_version_route()
+    # Docker runs this entrypoint without CLI args by default; in that case,
+    # provide the same sensible defaults we used previously.
+    if len(sys.argv) == 1:
+        sys.argv.extend(
+            [
+                "run",
+                "--enable-api",
+                "--model",
+                "models",
+                "--endpoints",
+                "src/core/endpoints.yml",
+                "--request-timeout",
+                os.getenv("RASA_REQUEST_TIMEOUT", "300"),
+                "--response-timeout",
+                os.getenv("RASA_RESPONSE_TIMEOUT", "300"),
+            ]
+        )
     rasa_main.main()
 
 

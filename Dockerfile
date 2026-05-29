@@ -61,4 +61,4 @@ USER 1001
 
 # Always run with API, native token auth, bounded timeouts, and the core endpoints file.
 ENTRYPOINT ["python3", "-m", "src.run_rasa"]
-CMD []
+CMD ["run", "--enable-api", "--model", "models", "--endpoints", "src/core/endpoints.yml", "--request-timeout", "300", "--response-timeout", "300"]
