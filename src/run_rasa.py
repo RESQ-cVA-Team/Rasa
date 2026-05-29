@@ -6,6 +6,7 @@ import rasa
 import rasa.__main__ as rasa_main
 import rasa.core.run as core_run
 from sanic import response
+from sanic_routing.exceptions import RouteExists
 
 
 def _read_env(name: str) -> Optional[str]:
@@ -23,7 +24,6 @@ def _install_version_route() -> None:
     def configure_app_with_version(*args, **kwargs):
         app = original_configure_app(*args, **kwargs)
 
-        @app.get("/version")
         async def version(_):
             return response.json(
                 {
@@ -37,6 +37,13 @@ def _install_version_route() -> None:
                 },
                 status=200,
             )
+
+        # Rasa can call configure_app multiple times during startup. Avoid
+        # crashing when /version is already present.
+        try:
+            app.add_route(version, "/version", methods=["GET"])
+        except RouteExists:
+            pass
 
         return app
 
