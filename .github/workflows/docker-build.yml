@@ -142,6 +142,9 @@ jobs:
           PUSH_IMAGES: ${{ github.event.inputs.push }}
         run: |
           set -euo pipefail
+          RASA_VERSION="$(tr -d '[:space:]' < VERSION)"
+          BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          RASA_SSOT_SHA="$(git ls-tree HEAD src/shared/SSOT | awk '{print $3}')"
           LANG_SPEC='${{ matrix.lang }}'
           SAFE_TAG=${LANG_SPEC//\//-}
           LANG_CODE="$LANG_SPEC"; REGION=""
@@ -169,6 +172,11 @@ jobs:
             CHANNEL_TAG="${SAFE_TAG}-dev"
           fi
           docker buildx build \
+            --build-arg RASA_VERSION="$RASA_VERSION" \
+            --build-arg RASA_COMMIT_SHA="${{ github.sha }}" \
+            --build-arg RASA_IMAGE_TAG="$CHANNEL_TAG" \
+            --build-arg RASA_BUILD_DATE="$BUILD_DATE" \
+            --build-arg RASA_SSOT_VERSION="$RASA_SSOT_SHA" \
             --build-arg LAYERS="$LAYERS_STR" \
             --cache-from type=gha,scope=rasa-build \
             --cache-to type=gha,scope=rasa-build,mode=max \

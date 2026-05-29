@@ -20,6 +20,9 @@
 !/.dockerignore
 !/Dockerfile
 
+# Add version
+!/VERSION
+
 # Add Devtools
 !/.vscode/**
 !/envgen.sh
@@ -33,6 +36,7 @@
 !/src/locales/**
 !/src/shared/**
 !/src/__init__.py
+!/src/run_rasa.py
 
 .generated
 __pycache__

@@ -5,6 +5,7 @@
 # Top-level files needed
 !Dockerfile
 !requirements.txt
+!VERSION
 !README.md
 !envgen.sh
 
