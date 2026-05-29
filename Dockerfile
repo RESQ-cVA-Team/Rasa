@@ -4,8 +4,23 @@ ENV RASA_TELEMETRY_ENABLED=false
 ENV SQLALCHEMY_SILENCE_UBER_WARNING=1
 ENV PYTHONPATH=/app:/app/src
 
+ARG RASA_VERSION=""
+ARG RASA_COMMIT_SHA=""
+ARG RASA_IMAGE_TAG=""
+ARG RASA_BUILD_DATE=""
+ARG RASA_SSOT_VERSION=""
+
 ARG LAYERS
+ENV RASA_VERSION=${RASA_VERSION}
+ENV RASA_COMMIT_SHA=${RASA_COMMIT_SHA}
+ENV RASA_IMAGE_TAG=${RASA_IMAGE_TAG}
+ENV RASA_BUILD_DATE=${RASA_BUILD_DATE}
+ENV RASA_SSOT_VERSION=${RASA_SSOT_VERSION}
 ENV LAYERS=${LAYERS}
+
+LABEL org.opencontainers.image.version=${RASA_VERSION}
+LABEL org.opencontainers.image.revision=${RASA_COMMIT_SHA}
+LABEL org.opencontainers.image.created=${RASA_BUILD_DATE}
 
 USER root
 
@@ -45,5 +60,5 @@ EXPOSE 5005
 USER 1001
 
 # Always run with API, native token auth, bounded timeouts, and the core endpoints file.
-ENTRYPOINT ["sh", "-lc", "test -n \"${RASA_AUTH_TOKEN:-}\" || { echo 'RASA_AUTH_TOKEN is required' >&2; exit 1; }; exec rasa run --enable-api --auth-token \"$RASA_AUTH_TOKEN\" --endpoints src/core/endpoints.yml --request-timeout 300 --response-timeout 300"]
+ENTRYPOINT ["python3", "-m", "src.run_rasa"]
 CMD []
