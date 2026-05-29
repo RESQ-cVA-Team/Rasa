@@ -144,7 +144,7 @@ jobs:
           set -euo pipefail
           RASA_VERSION="$(tr -d '[:space:]' < VERSION)"
           BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-          RASA_SSOT_SHA="$(git ls-tree HEAD src/shared/SSOT | awk '{print $3}')"
+          RASA_SSOT_SHA="$(git ls-files -s src/shared/SSOT | awk '{print $2}' || echo 'unknown')"
           LANG_SPEC='${{ matrix.lang }}'
           SAFE_TAG=${LANG_SPEC//\//-}
           LANG_CODE="$LANG_SPEC"; REGION=""
