@@ -47,6 +47,7 @@ TRACKER_STORE_URL=redis
 TRACKER_STORE_DB=0
 LOCK_STORE_URL=redis
 LOCK_STORE_DB=1
+RASA_AUTH_TOKEN=<shared-rasa-token>
 DUCKLING_ENDPOINT_URL=http://duckling:8000
 RASA_SHELL_STREAM_READING_TIMEOUT_IN_SECONDS=3600
 ```
@@ -75,13 +76,13 @@ bash scripts/layer_rasa_lang.sh --dry-run=stdout en/US
 Run API:
 
 ```bash
-rasa run --enable-api --cors '*' --model models --endpoints src/core/endpoints.yml --request-timeout 3600 --response-timeout 7200
+rasa run --enable-api --auth-token "$RASA_AUTH_TOKEN" --model models --endpoints src/core/endpoints.yml --request-timeout 300 --response-timeout 300
 ```
 
 Run interactive shell:
 
 ```bash
-rasa shell --model models --endpoints src/core/endpoints.yml --request-timeout 3600 --response-timeout 7200
+rasa shell --model models --endpoints src/core/endpoints.yml --request-timeout 300 --response-timeout 300
 ```
 
 ### VS Code tasks (optional)
@@ -120,9 +121,12 @@ TRACKER_STORE_URL=<redis-host>
 TRACKER_STORE_DB=<unique-int>
 LOCK_STORE_URL=<redis-host>
 LOCK_STORE_DB=<unique-int>
+RASA_AUTH_TOKEN=<shared-rasa-token>
 ```
 
 For multi-language deployment, run one container per locale image and assign unique Redis tracker/lock DB pairs.
+Keep Rasa on a private service network behind the Webapp; the published image
+ships with CORS disabled for browser clients.
 
 ### Minimal production compose snippet (single locale)
 
@@ -131,14 +135,13 @@ services:
   rasa-en:
     image: ghcr.io/09c7b0ed-f907-45d2-bc7c-48b17f2d9940/rasa:en-US-latest
     depends_on: [action, redis, duckling]
-    ports:
-      - "5005:5005"
     environment:
       ACTION_ENDPOINT_URL: http://action:5055/webhook
       TRACKER_STORE_URL: redis
       TRACKER_STORE_DB: 0
       LOCK_STORE_URL: redis
       LOCK_STORE_DB: 1
+      RASA_AUTH_TOKEN: "<shared-rasa-token>"
 
   action:
     image: ghcr.io/09c7b0ed-f907-45d2-bc7c-48b17f2d9940/action:latest
@@ -153,14 +156,15 @@ services:
 Production image runtime command:
 
 ```bash
-rasa run --enable-api --endpoints src/core/endpoints.yml
+rasa run --enable-api --auth-token "$RASA_AUTH_TOKEN" --endpoints src/core/endpoints.yml --request-timeout 300 --response-timeout 300
 ```
 
 ---
 
 ## 3) Quick verification
 
-- Check health endpoint: `curl -s http://localhost:5005/status`
+- Check auth enforcement: `curl -s -o /dev/null -w "%{http_code}\n" http://localhost:5005/status` should return `401`
+- Check authenticated health endpoint: `curl -s "http://localhost:5005/status?token=<shared-rasa-token>"`
 - Verify Action is reachable from each Rasa container
 - Verify Redis DB allocation does not overlap across locales
 - Send a test message through REST webhook and confirm Action callbacks
@@ -184,7 +188,7 @@ bash scripts/layer_rasa_lang.sh --dry-run=stdout <lang>/<REGION>
 Run API with latest local model:
 
 ```bash
-rasa run --enable-api --cors '*' --model models --endpoints src/core/endpoints.yml
+rasa run --enable-api --auth-token "$RASA_AUTH_TOKEN" --model models --endpoints src/core/endpoints.yml --request-timeout 300 --response-timeout 300
 ```
 
 Run local interactive shell:

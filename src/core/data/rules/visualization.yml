@@ -19,20 +19,29 @@ rules:
       - intent: generate_visualization
       - action: action_oneshot_generate_visualization
 
-  - rule: clarify visualization request while awaiting clarification
+  - rule: update visualization while not awaiting clarification
+    condition:
+      - active_loop: null
+      - slot_was_set:
+          - awaiting_visualization_clarification: false
+    steps:
+      - intent: update_visualization
+      - action: action_oneshot_generate_visualization
+
+  - rule: update visualization while awaiting clarification
     condition:
       - active_loop: null
       - slot_was_set:
           - awaiting_visualization_clarification: true
     steps:
-      - intent: clarify_visualization
-      - action: action_clarify_visualization_request
+      - intent: update_visualization
+      - action: action_oneshot_generate_visualization
 
-  - rule: clarify visualization request while not awaiting clarification
+  - rule: clarify visualization request while awaiting clarification
     condition:
       - active_loop: null
       - slot_was_set:
-          - awaiting_visualization_clarification: false
+          - awaiting_visualization_clarification: true
     steps:
       - intent: clarify_visualization
       - action: action_clarify_visualization_request
@@ -54,7 +63,3 @@ rules:
     steps:
       - intent: fallback
       - action: action_clarify_visualization_request
-  #- rule: update visualization
-  #  steps:
-  #    - intent: update_visualization
-  #    - action: action_update_visualization

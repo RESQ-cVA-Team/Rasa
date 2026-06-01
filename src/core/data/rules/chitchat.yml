@@ -8,8 +8,6 @@ rules:
     steps:
       - intent: greet
       - action: utter_greet_guided_offer
-      - slot_was_set:
-          - guided_offer_shown: true
 
   - rule: Greet after guided offer has been shown
     condition:

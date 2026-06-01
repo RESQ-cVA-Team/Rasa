@@ -1,11 +1,26 @@
-FROM rasa/rasa:3.6.21
+FROM rasa/rasa:3.6.21@sha256:7c0204065d4859e1b7a691c972ca3d26f5d39ad23fbd992b654084721226d813
 
 ENV RASA_TELEMETRY_ENABLED=false
 ENV SQLALCHEMY_SILENCE_UBER_WARNING=1
 ENV PYTHONPATH=/app:/app/src
 
+ARG RASA_VERSION=""
+ARG RASA_COMMIT_SHA=""
+ARG RASA_IMAGE_TAG=""
+ARG RASA_BUILD_DATE=""
+ARG RASA_SSOT_VERSION=""
+
 ARG LAYERS
+ENV RASA_VERSION=${RASA_VERSION}
+ENV RASA_COMMIT_SHA=${RASA_COMMIT_SHA}
+ENV RASA_IMAGE_TAG=${RASA_IMAGE_TAG}
+ENV RASA_BUILD_DATE=${RASA_BUILD_DATE}
+ENV RASA_SSOT_VERSION=${RASA_SSOT_VERSION}
 ENV LAYERS=${LAYERS}
+
+LABEL org.opencontainers.image.version=${RASA_VERSION}
+LABEL org.opencontainers.image.revision=${RASA_COMMIT_SHA}
+LABEL org.opencontainers.image.created=${RASA_BUILD_DATE}
 
 USER root
 
@@ -44,6 +59,6 @@ EXPOSE 5005
 
 USER 1001
 
-# Always run with API, CORS, timeout settings, and core endpoints file
-ENTRYPOINT ["rasa", "run", "--enable-api", "--cors", "*", "--endpoints", "src/core/endpoints.yml", "--request-timeout", "3600", "--response-timeout", "7200"]
-CMD []
+# Always run with API, native token auth, bounded timeouts, and the core endpoints file.
+ENTRYPOINT ["python3", "-m", "src.run_rasa"]
+CMD ["run", "--enable-api", "--model", "models", "--endpoints", "src/core/endpoints.yml", "--request-timeout", "300", "--response-timeout", "300"]

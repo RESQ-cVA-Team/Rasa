@@ -5,11 +5,9 @@ nlu:
     examples: |
       - list hospitals
       - show hospitals
-      - which hospitals can I compare?
       - what hospitals are available?
       - list available providers
       - show me the provider list
-      - which providers can I compare against?
       - display hospitals for comparison
       - give me the hospital list
       - show available hospitals

@@ -32,6 +32,14 @@ rules:
       - action: guided_visualization_form
       - active_loop: guided_visualization_form
 
+  - rule: Handle update intent while guided mode is active
+    condition:
+      - active_loop: guided_visualization_form
+    steps:
+      - intent: update_visualization
+      - action: guided_visualization_form
+      - active_loop: guided_visualization_form
+
   - rule: Handle guided hospital scope intent while guided mode is active
     condition:
       - active_loop: guided_visualization_form

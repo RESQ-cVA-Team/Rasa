@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - dev
   workflow_dispatch:
     inputs:
       force_all:
@@ -25,10 +26,10 @@ jobs:
     outputs:
       langs: ${{ steps.langs.outputs.langs }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: "3.x"
       - name: Get language/region matrix
@@ -44,7 +45,7 @@ jobs:
       changed_langs: ${{ steps.filter.outputs.changed_langs }}
       changed_langs_json: ${{ steps.filter.outputs.changed_langs_json }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
           fetch-depth: 0
       - name: Determine base ref
@@ -109,7 +110,9 @@ jobs:
   build:
     needs: [get-langs, filter]
     runs-on: ubuntu-latest
-    permissions: write-all
+    permissions:
+      contents: read
+      packages: write
     strategy:
       matrix:
         lang: ${{ fromJson(needs.filter.outputs.changed_langs_json) }}
@@ -117,13 +120,13 @@ jobs:
     if: needs.filter.outputs.changed_langs_json != '[]'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
 
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -139,6 +142,9 @@ jobs:
           PUSH_IMAGES: ${{ github.event.inputs.push }}
         run: |
           set -euo pipefail
+          RASA_VERSION="$(tr -d '[:space:]' < VERSION)"
+          BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          RASA_SSOT_SHA="$(git ls-files -s src/shared/SSOT | awk '{print $2}' || echo 'unknown')"
           LANG_SPEC='${{ matrix.lang }}'
           SAFE_TAG=${LANG_SPEC//\//-}
           LANG_CODE="$LANG_SPEC"; REGION=""
@@ -153,14 +159,29 @@ jobs:
           echo "Using layers: $LAYERS_STR"
           # Decide whether to push or load locally (manual runs can set push=false)
           DOCKER_OUTPUT_FLAG="--push"
+          ATTEST_ARGS=(--provenance=mode=max --sbom=true)
           if [ "${PUSH_IMAGES:-true}" = "false" ]; then
             DOCKER_OUTPUT_FLAG="--load"
+            ATTEST_ARGS=()
+          fi
+          # Determine channel tag based on branch
+          BRANCH="${{ github.ref_name }}"
+          if [[ "$BRANCH" == "master" ]]; then
+            CHANNEL_TAG="${SAFE_TAG}-latest"
+          else
+            CHANNEL_TAG="${SAFE_TAG}-dev"
           fi
           docker buildx build \
+            --build-arg RASA_VERSION="$RASA_VERSION" \
+            --build-arg RASA_COMMIT_SHA="${{ github.sha }}" \
+            --build-arg RASA_IMAGE_TAG="$CHANNEL_TAG" \
+            --build-arg RASA_BUILD_DATE="$BUILD_DATE" \
+            --build-arg RASA_SSOT_VERSION="$RASA_SSOT_SHA" \
             --build-arg LAYERS="$LAYERS_STR" \
             --cache-from type=gha,scope=rasa-build \
             --cache-to type=gha,scope=rasa-build,mode=max \
             --platform linux/amd64 \
-            -t ghcr.io/$REPO_NAME_LC:${SAFE_TAG}-latest \
-            -t ghcr.io/$REPO_NAME_LC:${SAFE_TAG}-${{ github.sha }} \
+            "${ATTEST_ARGS[@]}" \
+            -t ghcr.io/$REPO_NAME_LC:${CHANNEL_TAG} \
+            -t ghcr.io/$REPO_NAME_LC:${SAFE_TAG}-${BRANCH}-${{ github.sha }} \
             $DOCKER_OUTPUT_FLAG .

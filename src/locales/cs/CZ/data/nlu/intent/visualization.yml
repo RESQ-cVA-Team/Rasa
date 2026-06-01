@@ -15,6 +15,17 @@ nlu:
       - Aktualizuj tak, aby zobrazoval pouze [ženské](sex) pacienty
       - Změň rozsah dat na [2023]{"entity": "date", "role": "lower"} až [2024]{"entity": "date", "role": "upper"}
       - Přepni na [hemoragický](stroke_type) typ mrtvice
+      - Přidej metriku [DIDO](metric)
+      - Odeber [mužské](sex) pacienty
+      - Seskup data podle [typu mrtvice](group_by)
+      - Změň metriku na [AdmissionNihss](metric)
+      - Přepni vizualizaci na [koláčový](chart_type)
+      - Uprav věkové rozmezí na [55]{"entity": "age", "role": "lower"} až [75]{"entity": "age", "role": "upper"}
+      - Filtruj pouze [ischemická](stroke_type) mrtvice
+      - Zobraz data po [2024-01-01]{"entity": "date", "role": "lower"}
+      - Změň seskupení na [měsíc](group_by)
+      - Udělej z toho [bodový](chart_type) graf
+      - Aktualizuj filtr na posledních [6 měsíců]{"entity": "date", "role": "lower"}
   - intent: clarify_visualization
     examples: |
       - [DTN](metric)

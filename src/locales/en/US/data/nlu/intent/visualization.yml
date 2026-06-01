@@ -68,15 +68,29 @@ nlu:
       - Chart [male](sex) and [female](sex) patient outcomes
       - Compare [ischemic](stroke_type) and [hemorrhagic](stroke_type) stroke data
       - Show [DTN](metric) and [DIDO](metric) and [door to imaging](metric) times
+      - Compare my hospital's [DTN](metric) to the national mean in the UK
+      - Compare [DTN](metric) for my hospital against the UK national mean
+      - Show a [line](chart_type) chart of [DTN](metric) for my hospital vs UK national mean
+      - Run a Mann Whitney test comparing my hospital [DTN](metric) to the national mean
+      - Generate a test to compare my hospital [DTN](metric) to the national mean with Mann Whitney
+      - Perform a Mann-Whitney U test for [DTN](metric) between my hospital and the national mean
+      - Compare my hospital [DTN](metric) with the UK national average using Mann Whitney
       - Display data from [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} vs [Q3 2023]{"entity": "date", "role": "lower"} to [Q4 2023]{"entity": "date", "role": "upper"}
       - Compare patients aged [30]{"entity": "age", "role": "lower"} to [45]{"entity": "age", "role": "upper"} with those aged [60]{"entity": "age", "role": "lower"} to [80]{"entity": "age", "role": "upper"}
   - intent: update_visualization
     examples: |
       - Change the chart to a [bar](chart_type) graph
       - Update to show [female](sex) patients only
+      - Filter for [male](sex) patients only
+      - Filter for [males](sex) only
+      - Filter for [female](sex) patients only
       - Modify the date range to [2023]{"entity": "date", "role": "lower"} to [2024]{"entity": "date", "role": "upper"}
       - Switch to [hemorrhagic](stroke_type) stroke type
       - Group the data by [treatment facility](group_by)
+      - Now group by [initial point of contact](group_by)
+      - Group by [initial point of contact](group_by)
+      - Now group by [first contact place](group_by)
+      - Group by [first contact place](group_by)
       - Add [DIDO](metric) to the current visualization
       - Remove [male](sex) patients from the chart
       - Change age range to [55]{"entity": "age", "role": "lower"} to [75]{"entity": "age", "role": "upper"}
@@ -99,11 +113,9 @@ nlu:
       - From [January 1, 2024]{"entity": "date", "role": "lower"} to [March 31, 2024]{"entity": "date", "role": "upper"}
       - [line](chart_type)
       - make it [bar](chart_type)
-      - group by [stroke type](group_by)
       - for [female](sex) patients
       - [ischemic](stroke_type)
       - The metric is [door to needle](metric)
-      - By [month](group_by)
       - Time window is [Q1 2025](date)
       - Use [admission nihss](metric)
       - [this year](date)
