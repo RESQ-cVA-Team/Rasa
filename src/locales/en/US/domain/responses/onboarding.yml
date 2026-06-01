@@ -1,0 +1,11 @@
+version: "3.1"
+responses:
+  utter_user_prompt:
+    - text: "How can I help you?"
+      buttons:
+        - title: "How to use this bot?"
+          payload: "/how_to_use_bot"
+        - title: "Show me a guided visualization"
+          payload: "/request_guided_visualization"
+        - title: "I want to describe my graph in one message"
+          payload: "/request_freeform_visualization"
