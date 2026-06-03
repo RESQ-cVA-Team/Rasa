@@ -26,15 +26,16 @@ USER root
 
 WORKDIR /app
 
-RUN mkdir -p /app/.data && chown -R 1001:1001 /app/.data
+RUN mkdir -p /app/.data && chown -R 1001:1001 /app/.data && chmod 700 /app/.data
 
-COPY src/ src/
-COPY scripts/ scripts/
+COPY --chown=1001:1001 src/ src/
+COPY --chown=1001:1001 scripts/ scripts/
 
 RUN chmod +x /app/scripts/*.sh
 
 # Ensure local 'src' is a real package to shadow any site-packages 'src'
-RUN test -f /app/src/__init__.py || echo "# project package root" > /app/src/__init__.py
+RUN test -f /app/src/__init__.py || echo "# project package root" > /app/src/__init__.py \
+	&& chown 1001:1001 /app/src/__init__.py
 
 RUN echo "Using PYTHONPATH=$PYTHONPATH" && \
 	python -c "import sys; print('Container sys.path:', sys.path)" && \

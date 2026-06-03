@@ -1,9 +1,6 @@
 mypy==1.15.0
 ruff==0.11.2
 PyYAML>=6.0.2
-pydantic>=2.10.6
-ruamel.yaml>=0.17.21
 typing-extensions>=4.14.1
 pydantic==2.11.9
-python-dotenv>=1.1.1
 types-PyYAML==6.0.12.20250915
