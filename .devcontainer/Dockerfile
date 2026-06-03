@@ -1,4 +1,4 @@
-FROM rasa/rasa:3.6.21
+FROM rasa/rasa:3.6.21@sha256:7c0204065d4859e1b7a691c972ca3d26f5d39ad23fbd992b654084721226d813
 
 USER root
 
