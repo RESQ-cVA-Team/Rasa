@@ -1,0 +1,10 @@
+action_endpoint:
+  url: ${ACTION_ENDPOINT_URL}
+  timeout: 300
+tracker_store:
+  type: sql
+  dialect: sqlite
+  db: ${TRACKER_STORE_DB}
+cors:
+  enabled: false
+  allowed_origins: []

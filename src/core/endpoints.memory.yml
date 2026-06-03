@@ -1,0 +1,6 @@
+action_endpoint:
+  url: ${ACTION_ENDPOINT_URL}
+  timeout: 300
+cors:
+  enabled: false
+  allowed_origins: []

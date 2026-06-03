@@ -26,6 +26,8 @@ USER root
 
 WORKDIR /app
 
+RUN mkdir -p /app/.data && chown -R 1001:1001 /app/.data
+
 COPY src/ src/
 COPY scripts/ scripts/
 
@@ -59,6 +61,6 @@ EXPOSE 5005
 
 USER 1001
 
-# Always run with API, native token auth, bounded timeouts, and the core endpoints file.
+# Always run through the wrapper; it resolves endpoints from env presets.
 ENTRYPOINT ["python3", "-m", "src.run_rasa"]
-CMD ["run", "--enable-api", "--model", "models", "--endpoints", "src/core/endpoints.yml", "--request-timeout", "300", "--response-timeout", "300"]
+CMD []

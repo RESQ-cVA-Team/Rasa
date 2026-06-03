@@ -1,0 +1,15 @@
+action_endpoint:
+  url: ${ACTION_ENDPOINT_URL}
+  timeout: 300
+tracker_store:
+  type: ${TRACKER_STORE_TYPE}
+  dialect: ${TRACKER_STORE_DIALECT}
+  url: ${TRACKER_STORE_URL}
+  port: ${TRACKER_STORE_PORT}
+  db: ${TRACKER_STORE_DB}
+  username: ${TRACKER_STORE_USERNAME}
+  password: ${TRACKER_STORE_PASSWORD}
+  login_db: ${TRACKER_STORE_LOGIN_DB}
+cors:
+  enabled: false
+  allowed_origins: []

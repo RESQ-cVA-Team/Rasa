@@ -66,19 +66,20 @@ def _resolve_endpoints_file() -> str:
     backend = (_read_env("RASA_TRACKER_STORE_BACKEND") or "redis").lower()
     presets = {
         "memory": "src/core/endpoints.memory.yml",
-        "redis": "src/core/endpoints.yml",
+        "redis": "src/core/endpoints.redis.yml",
         "sql": "src/core/endpoints.sql.yml",
         "mongo": "src/core/endpoints.mongo.yml",
         "dynamo": "src/core/endpoints.dynamo.yml",
+        "sqlite": "src/core/endpoints.sqlite.yml",
     }
-    return presets.get(backend, "src/core/endpoints.yml")
+    return presets.get(backend, "src/core/endpoints.redis.yml")
 
 
 def main() -> None:
     _install_version_route()
     endpoints_file = _resolve_endpoints_file()
     # Docker runs this entrypoint without CLI args by default; in that case,
-    # provide the same sensible defaults we used previously.
+    # provide sensible defaults and resolve the backend endpoints from env.
     if len(sys.argv) == 1:
         sys.argv.extend(
             [
