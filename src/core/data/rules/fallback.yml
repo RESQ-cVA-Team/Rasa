@@ -2,11 +2,19 @@ version: "3.1"
 
 rules:
   - rule: fallback
+    condition:
+      - active_loop: null
+      - slot_was_set:
+          - awaiting_visualization_clarification: false
     steps:
       - intent: fallback
       - action: utter_default
 
   - rule: Handle NLU fallback
+    condition:
+      - active_loop: null
+      - slot_was_set:
+          - awaiting_visualization_clarification: false
     steps:
       - intent: nlu_fallback
       - action: utter_default

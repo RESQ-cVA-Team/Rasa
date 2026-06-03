@@ -75,6 +75,16 @@ nlu:
       - Generate a test to compare my hospital [DTN](metric) to the national mean with Mann Whitney
       - Perform a Mann-Whitney U test for [DTN](metric) between my hospital and the national mean
       - Compare my hospital [DTN](metric) with the UK national average using Mann Whitney
+      - Show me [DTN](metric) per [quarter](group_by) for the [last 2 years](date)
+      - Show [DTN](metric) [quarterly](group_by) over the [last 2 years](date)
+      - Chart [DTN](metric) by [quarter](group_by) for the [past year](date)
+      - Show [DIDO](metric) [monthly](group_by) for the [last 6 months](date)
+      - Give me [DTN](metric) [weekly](group_by) for the [last 3 months](date)
+      - Show [DTN](metric) trends [by month](group_by) over the [last year](date)
+      - Display [LOS](metric) [per quarter](group_by) for the [past 2 years](date)
+      - Chart [DTN](metric) [by quarter](group_by) from [2023](date) to [2024](date)
+      - Show me [NIHSS](metric) [monthly](group_by) since [January 2023](date)
+      - Give me [DTN](metric) performance [by quarter](group_by) over [the last 12 months](date)
       - Display data from [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} vs [Q3 2023]{"entity": "date", "role": "lower"} to [Q4 2023]{"entity": "date", "role": "upper"}
       - Compare patients aged [30]{"entity": "age", "role": "lower"} to [45]{"entity": "age", "role": "upper"} with those aged [60]{"entity": "age", "role": "lower"} to [80]{"entity": "age", "role": "upper"}
   - intent: update_visualization
@@ -103,6 +113,14 @@ nlu:
       - Add [TIA](stroke_type) patients to the analysis
       - Show only patients above [70]{"entity": "age", "role": "lower"}
       - Filter dates after [2024-01-01]{"entity": "date", "role": "lower"}
+      - make it a [line](chart_type) graph instead
+      - change to a [bar](chart_type) chart
+      - update to a [pie](chart_type) chart
+      - switch to a [line](chart_type) plot
+      - only for patients [in 2026]{"entity": "date"}
+      - show only patients [from 2023]{"entity": "date"}
+      - filter to [2024]{"entity": "date"} only
+      - only data from [2025]{"entity": "date"}
 
   - intent: clarify_visualization
     examples: |
@@ -137,3 +155,21 @@ nlu:
       - make it rolling instead
       - use the calendar-year option
       - use the rolling option
+      - all quarters
+      - all time
+      - show all quarters
+      - every quarter
+      - all available quarters
+      - use all quarters
+      - for all quarters
+      - across all quarters
+      - [Q1](date)
+      - [Q2](date)
+      - [Q3](date)
+      - [Q4](date)
+      - [Q1 2024](date)
+      - [Q2 2025](date)
+      - first quarter
+      - second quarter
+      - third quarter
+      - fourth quarter

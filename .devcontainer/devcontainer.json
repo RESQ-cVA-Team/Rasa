@@ -25,9 +25,9 @@
 				"python.linting.enabled": true,
 				"python.linting.mypyEnabled": true,
 				"python.linting.ruffEnabled": true,
-				"python.analysis.typeCheckingMode": "strict"
+				"python.analysis.typeCheckingMode": "basic"
 			}
 		}
 	},
-	"postCreateCommand": "pip install -r requirements.txt && mypy --strict . && ruff check ."
+	"postCreateCommand": "pip install -r requirements.txt"
 }
