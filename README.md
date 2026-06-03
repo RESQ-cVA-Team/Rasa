@@ -76,13 +76,13 @@ bash scripts/layer_rasa_lang.sh --dry-run=stdout en/US
 Run API:
 
 ```bash
-rasa run --enable-api --auth-token "$RASA_AUTH_TOKEN" --model models --endpoints src/core/endpoints.yml --request-timeout 300 --response-timeout 300
+rasa run --enable-api --auth-token "$RASA_AUTH_TOKEN" --model models --endpoints src/core/endpoints.redis.yml --request-timeout 300 --response-timeout 300
 ```
 
 Run interactive shell:
 
 ```bash
-rasa shell --model models --endpoints src/core/endpoints.yml --request-timeout 300 --response-timeout 300
+rasa shell --model models --endpoints src/core/endpoints.redis.yml --request-timeout 300 --response-timeout 300
 ```
 
 ### VS Code tasks (optional)
@@ -156,7 +156,7 @@ services:
 Production image runtime command:
 
 ```bash
-rasa run --enable-api --auth-token "$RASA_AUTH_TOKEN" --endpoints src/core/endpoints.yml --request-timeout 300 --response-timeout 300
+rasa run --enable-api --auth-token "$RASA_AUTH_TOKEN" --endpoints src/core/endpoints.redis.yml --request-timeout 300 --response-timeout 300
 ```
 
 ---
@@ -188,11 +188,11 @@ bash scripts/layer_rasa_lang.sh --dry-run=stdout <lang>/<REGION>
 Run API with latest local model:
 
 ```bash
-rasa run --enable-api --auth-token "$RASA_AUTH_TOKEN" --model models --endpoints src/core/endpoints.yml --request-timeout 300 --response-timeout 300
+rasa run --enable-api --auth-token "$RASA_AUTH_TOKEN" --model models --endpoints src/core/endpoints.redis.yml --request-timeout 300 --response-timeout 300
 ```
 
 Run local interactive shell:
 
 ```bash
-rasa shell --model models --endpoints src/core/endpoints.yml
+rasa shell --model models --endpoints src/core/endpoints.redis.yml
 ```
