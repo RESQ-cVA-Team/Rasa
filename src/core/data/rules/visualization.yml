@@ -1,43 +1,30 @@
 version: "3.1"
 
 rules:
-  - rule: generate visualization while not awaiting clarification
+  # Fresh visualization request - not mid-clarification
+  - rule: generate visualization
     condition:
       - active_loop: null
       - slot_was_set:
           - awaiting_visualization_clarification: false
     steps:
       - intent: generate_visualization
-      - action: action_oneshot_generate_visualization
+      - action: action_clarify_visualization_request
 
-  - rule: generate visualization while awaiting clarification
-    condition:
-      - active_loop: null
-      - slot_was_set:
-          - awaiting_visualization_clarification: true
-    steps:
-      - intent: generate_visualization
-      - action: action_oneshot_generate_visualization
-
-  - rule: update visualization while not awaiting clarification
+  # Update visualization - not mid-clarification
+  - rule: update visualization
     condition:
       - active_loop: null
       - slot_was_set:
           - awaiting_visualization_clarification: false
     steps:
       - intent: update_visualization
-      - action: action_oneshot_generate_visualization
+      - action: action_clarify_visualization_request
 
-  - rule: update visualization while awaiting clarification
-    condition:
-      - active_loop: null
-      - slot_was_set:
-          - awaiting_visualization_clarification: true
-    steps:
-      - intent: update_visualization
-      - action: action_oneshot_generate_visualization
-
-  - rule: clarify visualization request while awaiting clarification
+  # Any user reply while we're waiting for clarification
+  # (covers generate_visualization, update_visualization, clarify_visualization,
+  #  and any reasonably recognised intent that is a clarification answer)
+  - rule: handle reply while awaiting clarification
     condition:
       - active_loop: null
       - slot_was_set:
@@ -46,7 +33,26 @@ rules:
       - intent: clarify_visualization
       - action: action_clarify_visualization_request
 
-  - rule: re-ask pending visualization clarification on nlu fallback
+  - rule: handle generate intent while awaiting clarification
+    condition:
+      - active_loop: null
+      - slot_was_set:
+          - awaiting_visualization_clarification: true
+    steps:
+      - intent: generate_visualization
+      - action: action_clarify_visualization_request
+
+  - rule: handle update intent while awaiting clarification
+    condition:
+      - active_loop: null
+      - slot_was_set:
+          - awaiting_visualization_clarification: true
+    steps:
+      - intent: update_visualization
+      - action: action_clarify_visualization_request
+
+  # NLU fallback while awaiting clarification
+  - rule: re-ask on nlu fallback while awaiting clarification
     condition:
       - active_loop: null
       - slot_was_set:
@@ -55,11 +61,20 @@ rules:
       - intent: nlu_fallback
       - action: action_clarify_visualization_request
 
-  - rule: re-ask pending visualization clarification on fallback intent
+  - rule: re-ask on fallback while awaiting clarification
     condition:
       - active_loop: null
       - slot_was_set:
           - awaiting_visualization_clarification: true
     steps:
       - intent: fallback
+      - action: action_clarify_visualization_request
+
+  - rule: handle hospital scope intent while awaiting clarification
+    condition:
+      - active_loop: null
+      - slot_was_set:
+          - awaiting_visualization_clarification: true
+    steps:
+      - intent: provide_guided_hospital_scope
       - action: action_clarify_visualization_request
