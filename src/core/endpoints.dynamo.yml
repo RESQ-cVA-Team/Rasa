@@ -1,0 +1,10 @@
+action_endpoint:
+  url: ${ACTION_ENDPOINT_URL}
+  timeout: 300
+tracker_store:
+  type: dynamo
+  table_name: ${TRACKER_STORE_TABLE_NAME}
+  region: ${TRACKER_STORE_REGION}
+cors:
+  enabled: false
+  allowed_origins: []

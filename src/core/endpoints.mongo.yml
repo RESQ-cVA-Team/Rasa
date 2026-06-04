@@ -1,0 +1,14 @@
+action_endpoint:
+  url: ${ACTION_ENDPOINT_URL}
+  timeout: 300
+tracker_store:
+  type: mongo
+  url: ${TRACKER_STORE_URL}
+  db: ${TRACKER_STORE_DB}
+  username: ${TRACKER_STORE_USERNAME}
+  password: ${TRACKER_STORE_PASSWORD}
+  auth_source: ${TRACKER_STORE_AUTH_SOURCE}
+  collection: ${TRACKER_STORE_COLLECTION}
+cors:
+  enabled: false
+  allowed_origins: []

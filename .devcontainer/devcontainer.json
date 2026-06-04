@@ -29,5 +29,5 @@
 			}
 		}
 	},
-	"postCreateCommand": "pip install -r requirements.txt"
+	"postCreateCommand": "pip install -r requirements.txt mypy==1.15.0 ruff==0.11.2 types-PyYAML==6.0.12.20250915 && mypy --strict . && ruff check ."
 }
