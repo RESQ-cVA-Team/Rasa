@@ -87,6 +87,12 @@ nlu:
       - Give me [DTN](metric) performance [by quarter](group_by) over [the last 12 months](date)
       - Display data from [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} vs [Q3 2023]{"entity": "date", "role": "lower"} to [Q4 2023]{"entity": "date", "role": "upper"}
       - Compare patients aged [30]{"entity": "age", "role": "lower"} to [45]{"entity": "age", "role": "upper"} with those aged [60]{"entity": "age", "role": "lower"} to [80]{"entity": "age", "role": "upper"}
+      - Show me [DTN](metric) in [2025](date)
+      - Chart [DTN](metric) for [2024](date)
+      - Display [DTN](metric) from [2025](date)
+      - Give me [DIDO](metric) data for [2023](date)
+      - Show [DTN](metric) during [2025](date)
+
   - intent: update_visualization
     examples: |
       - Change the chart to a [bar](chart_type) graph
@@ -121,6 +127,25 @@ nlu:
       - show only patients [from 2023]{"entity": "date"}
       - filter to [2024]{"entity": "date"} only
       - only data from [2025]{"entity": "date"}
+      - filter for patients below [50]{"entity": "age", "role": "upper"}
+      - filter for age under [65]{"entity": "age", "role": "upper"}
+      - only show patients younger than [40]{"entity": "age", "role": "upper"}
+      - show patients below the age of [30]{"entity": "age", "role": "upper"}
+      - restrict to patients under [55]{"entity": "age", "role": "upper"}
+      - filter for [ischemic](stroke_type) strokes
+      - filter for [transient ischemic](stroke_type) strokes
+      - show only [intracerebral hemorrhage](stroke_type) patients
+      - Include only patients from [2025](date)
+      - Show data from [2025](date) only
+      - Filter for [2024](date) patients
+      - Only show [2025](date) records
+      - show data from [2024](date) and [2025](date)
+      - show data from [2023](date) to [2025](date)
+      - show [2024](date) and [2025](date) data
+      - display data for [2023](date) and [2024](date)
+      - show data from [2024](date) and [2025](date)
+      - include [2024](date) and [2025](date)
+      - show data for [2024](date) and [2025](date)
 
   - intent: clarify_visualization
     examples: |
