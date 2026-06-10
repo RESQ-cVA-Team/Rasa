@@ -29,35 +29,33 @@ pipeline:
     use_regexes: true
 
   # Entity Extraction with roles and groups support
-  #- name: CRFEntityExtractor
-  #  # BILOU_flag determines whether to use BILOU tagging or not.
-  #  BILOU_flag: true
-  #  # features to extract in the sliding window
-  #  features: [
-  #    ["low", "title", "upper"],
-  #    [
-  #      "bias",
-  #      "low",
-  #      "prefix5",
-  #      "prefix2",
-  #      "suffix5",
-  #      "suffix3",
-  #      "suffix2",
-  #      "upper",
-  #      "title",
-  #      "digit",
-  #      "pattern",
-  #      "text_dense_features"
-  #    ],
-  #    ["low", "title", "upper"],
-  #  ]
-  #  max_iterations: 50
-  #  L1_c: 0.1
-  #  L2_c: 0.1
+  - name: CRFEntityExtractor
+    # Keep BILOU enabled so role/group labels are more stable on multi-token scopes.
+    BILOU_flag: true
+    features:
+      - ["low", "title", "upper"]
+      - [
+          "bias",
+          "low",
+          "prefix5",
+          "prefix2",
+          "suffix5",
+          "suffix3",
+          "suffix2",
+          "upper",
+          "title",
+          "digit",
+          "pattern",
+          "text_dense_features",
+        ]
+      - ["low", "title", "upper"]
+    max_iterations: 80
+    L1_c: 0.1
+    L2_c: 0.1
 
   # Post-processing
   - name: EntitySynonymMapper
-    # Only apply synonyms to these entities, skip numeric entities with roles
+    # Keep synonym normalization for lexical scope entities. Numeric IDs remain extractor-driven.
     entities:
       [
         "metric",
@@ -67,6 +65,8 @@ pipeline:
         "group_by",
         "boolean_type",
         "country_code",
+        "hospital_scope_reference",
+        "scope_kind",
       ]
 
   # Canonicalize SSOT-backed entity values (e.g. metric -> DTN)

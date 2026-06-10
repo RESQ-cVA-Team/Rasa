@@ -31,6 +31,24 @@ nlu:
       - ακύρωσε την καθοδηγούμενη ροή
       - ακύρωσε τον καθοδηγούμενο τρόπο
 
+  - intent: provide_guided_hospital_scope
+    examples: |
+      - provider [289](provider_id)
+      - χρήση provider id [281](provider_id)
+      - provider group [10](provider_group_id)
+      - group id [25](provider_group_id)
+      - [mine](scope_kind)
+      - χρήση [my hospital](scope_kind)
+      - [my provider group](scope_kind)
+      - [our group](scope_kind)
+      - χρήση [GR](country_code)
+      - [Greece](country_code)
+      - [ES](country_code)
+      - [Spain](country_code)
+      - [Mexico](country_code)
+      - στην [EMEA](region)
+      - [LATAM](region)
+
   - intent: skip_guided_step
     examples: |
       - παράλειψη

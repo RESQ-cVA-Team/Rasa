@@ -34,7 +34,12 @@ slots:
     influence_conversation: false
     mappings:
       - type: from_entity
-        entity: hospital_scope_reference
+        entity: provider_id
+        conditions:
+          - active_loop: guided_visualization_form
+            requested_slot: guided_hospital_scope
+      - type: from_entity
+        entity: provider_group_id
         conditions:
           - active_loop: guided_visualization_form
             requested_slot: guided_hospital_scope
@@ -44,12 +49,12 @@ slots:
           - active_loop: guided_visualization_form
             requested_slot: guided_hospital_scope
       - type: from_entity
-        entity: hospital_name
+        entity: scope_kind
         conditions:
           - active_loop: guided_visualization_form
             requested_slot: guided_hospital_scope
       - type: from_entity
-        entity: group_id
+        entity: region
         conditions:
           - active_loop: guided_visualization_form
             requested_slot: guided_hospital_scope
@@ -152,3 +157,4 @@ slots:
         conditions:
           - active_loop: guided_visualization_form
             requested_slot: chart_type
+

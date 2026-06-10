@@ -8,12 +8,6 @@ entities:
         - group_by
         - chart_type
         - country_code
-        - hospital_name
-        - hospital_scope_reference
-        - sort
-        - group_id
-        - limit
-        - offset
         - nihss:
                   roles: [lower, upper]
         - age:

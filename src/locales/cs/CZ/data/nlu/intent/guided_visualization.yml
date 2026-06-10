@@ -31,6 +31,24 @@ nlu:
       - zruš vedený postup
       - zruš vedený režim
 
+  - intent: provide_guided_hospital_scope
+    examples: |
+      - provider [289](provider_id)
+      - použij provider id [281](provider_id)
+      - provider group [10](provider_group_id)
+      - group id [25](provider_group_id)
+      - [mine](scope_kind)
+      - použij [my hospital](scope_kind)
+      - [my provider group](scope_kind)
+      - [our group](scope_kind)
+      - použij [CZ](country_code)
+      - [Czech Republic](country_code)
+      - [ES](country_code)
+      - [Spain](country_code)
+      - [Mexico](country_code)
+      - v [EMEA](region)
+      - [LATAM](region)
+
   - intent: skip_guided_step
     examples: |
       - přeskočit

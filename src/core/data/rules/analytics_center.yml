@@ -1,7 +1,0 @@
-version: "3.1"
-
-rules:
-  - rule: List hospitals
-    steps:
-      - intent: list_hospitals
-      - action: action_list_hospitals

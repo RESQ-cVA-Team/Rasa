@@ -26,9 +26,9 @@ responses:
 
   utter_ask_guided_visualization_form_guided_hospital_scope:
     - text: >-
-        Which hospital scope should I use? You can provide a country code
-        (for example US or ES), a hospital name, a hospital group ID, or say
-        all hospitals. You can also say "mine".
+        Which hospital scope should I use? You can provide a provider ID,
+        provider group ID, or country code (for example US or ES). You can
+        also say "mine".
 
   utter_ask_guided_visualization_form_stroke_type:
     - text: Do you want to filter by stroke type? You can answer or skip this step.

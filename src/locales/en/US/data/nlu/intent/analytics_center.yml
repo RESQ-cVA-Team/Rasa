@@ -1,53 +1,6 @@
 version: "3.1"
 
 nlu:
-  - intent: list_hospitals
-    examples: |
-      - list hospitals
-      - show hospitals
-      - what hospitals are available?
-      - list available providers
-      - show me the provider list
-      - display hospitals for comparison
-      - give me the hospital list
-      - show available hospitals
-      - show hospitals in Spain
-      - available hospitals for mexico
-      - list hospitals country DE
-      - show next 20 hospitals in ES
-      - list hospitals in [US](country_code)
-      - show hospitals in [United States](country_code)
-      - list hospitals in [Canada](country_code)
-      - show hospitals in [United Kingdom](country_code)
-      - list hospitals in [Australia](country_code)
-      - show hospitals in [Germany](country_code)
-      - list hospitals in [France](country_code)
-      - show hospitals in [Spain](country_code)
-      - list hospitals in [Mexico](country_code)
-      - show hospitals in [Japan](country_code)
-      - show hospitals in [Spain](country_code) sorted by [name](sort)
-      - list hospitals in [Mexico](country_code) sorted by [created_at](sort)
-      - list hospitals named [General](hospital_name)
-      - show hospitals with name [Memorial](hospital_name)
-      - find hospitals containing [Saint](hospital_name)
-      - list hospitals matching [Children](hospital_name)
-      - show hospitals with name [Central](hospital_name)
-      - list hospitals, limit [10](limit)
-      - show hospitals, limit [25](limit)
-      - list hospitals, offset [0](offset)
-      - show hospitals, offset [50](offset)
-      - list hospitals in [US](country_code) limit [20](limit)
-      - show hospitals in [US](country_code) offset [40](offset)
-      - list hospitals in [US](country_code) limit [20](limit) offset [0](offset)
-      - show hospitals in [Canada](country_code) limit [50](limit) offset [50](offset)
-      - show next [20](limit) hospitals in [ES](country_code)
-      - show next [10](limit) hospitals offset [20](offset)
-      - list hospitals offset [100](offset) limit [20](limit)
-      - list hospitals sorted by [name](sort)
-      - show hospitals sorted by [created_at](sort)
-      - list hospitals for group [10](group_id)
-      - show hospitals for group [25](group_id)
-
   - lookup: country_code
     examples: |
       - US
@@ -125,10 +78,3 @@ nlu:
       - Japan
       - JP
 
-  - regex: limit
-    examples: |
-      - \b(?:[1-9]\d{0,2})\b
-
-  - regex: offset
-    examples: |
-      - \b(?:0|[1-9]\d{0,4})\b

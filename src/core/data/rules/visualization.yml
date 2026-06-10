@@ -78,3 +78,4 @@ rules:
     steps:
       - intent: provide_guided_hospital_scope
       - action: action_clarify_visualization_request
+

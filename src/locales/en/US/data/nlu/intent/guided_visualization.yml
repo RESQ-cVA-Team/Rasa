@@ -34,21 +34,21 @@ nlu:
 
   - intent: provide_guided_hospital_scope
     examples: |
+      - provider [289](provider_id)
+      - use provider id [281](provider_id)
+      - provider group [10](provider_group_id)
+      - group id [25](provider_group_id)
+      - [mine](scope_kind)
+      - use [my hospital](scope_kind)
+      - [my provider group](scope_kind)
+      - [our group](scope_kind)
       - use [US](country_code)
       - [United States](country_code)
       - [ES](country_code)
       - [Spain](country_code)
       - [Mexico](country_code)
-      - use hospital [Memorial](hospital_name)
-      - [General](hospital_name)
-      - hospital group [10](group_id)
-      - group [25](group_id)
-      - [all hospitals](hospital_scope_reference)
-      - [all](hospital_scope_reference)
-      - [my hospital](hospital_scope_reference)
-      - [mine](hospital_scope_reference)
-      - [ours](hospital_scope_reference)
-      - [our hospital](hospital_scope_reference)
+      - in [EMEA](region)
+      - [LATAM](region)
 
   - intent: skip_guided_step
     examples: |

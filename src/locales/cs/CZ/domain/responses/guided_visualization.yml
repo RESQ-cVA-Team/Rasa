@@ -25,7 +25,7 @@ responses:
     - text: Jaký je hlavní KPI nebo metrika, kterou chceš vizualizovat?
 
   utter_ask_guided_visualization_form_guided_hospital_scope:
-    - text: Kterou nemocnici, zemi nebo skupinu nemocnic mám použít?
+    - text: Jaký rozsah mám použít: provider ID, provider group ID nebo kód země? Můžeš také říct "mine".
 
   utter_ask_guided_visualization_form_stroke_type:
     - text: Chceš filtrovat podle typu mrtvice? Můžeš odpovědět, nebo tento krok přeskočit.

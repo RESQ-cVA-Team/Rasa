@@ -1,9 +1,40 @@
 version: "3.1"
 
 nlu:
-  - intent: list_hospitals
+  - lookup: scope_kind
     examples: |
-      - [placeholder] localized in en/us or locale overlays
+      - mine
+      - provider_group
+      - country
+      - country_average
+
+  - synonym: mine
+    examples: |
+      - my hospital
+      - our hospital
+      - my site
+      - my center
+      - my provider
+
+  - synonym: provider_group
+    examples: |
+      - my group
+      - our group
+      - my network
+      - our network
+      - my provider group
+
+  - synonym: country
+    examples: |
+      - my country
+      - our country
+
+  - synonym: country_average
+    examples: |
+      - national average
+      - national mean
+      - nationwide average
+      - nationwide mean
 
   - lookup: country_code
     examples: |
@@ -21,10 +52,10 @@ nlu:
     examples: |
       - [placeholder] localized in en/us or locale overlays
 
-  - regex: limit
+  - regex: provider_id
     examples: |
-      - [placeholder] localized in en/us or locale overlays
+      - (?i)\b(?:provider|hospital)\s+(\d{1,6})\b
 
-  - regex: offset
+  - regex: provider_group_id
     examples: |
-      - [placeholder] localized in en/us or locale overlays
+      - (?i)\b(?:provider\s+group|group|network)\s+(\d{1,6})\b

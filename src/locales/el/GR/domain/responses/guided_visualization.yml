@@ -27,7 +27,7 @@ responses:
     - text: Ποιο είναι το βασικό KPI ή η μετρική που θέλεις να οπτικοποιήσεις;
 
   utter_ask_guided_visualization_form_guided_hospital_scope:
-    - text: Ποιο νοσοκομείο, χώρα ή ομάδα νοσοκομείων θέλεις να χρησιμοποιήσω;
+    - text: Ποιο scope να χρησιμοποιήσω: provider ID, provider group ID ή κωδικό χώρας; Μπορείς επίσης να πεις "mine".
 
   utter_ask_guided_visualization_form_stroke_type:
     - text: Θέλεις φίλτρο ανά τύπο εγκεφαλικού; Μπορείς να απαντήσεις ή να παραλείψεις αυτό το βήμα.

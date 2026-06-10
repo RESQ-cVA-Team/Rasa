@@ -25,7 +25,7 @@ responses:
     - text: What is the main KPI or metric you want to visualise?
 
   utter_ask_guided_visualization_form_guided_hospital_scope:
-    - text: Which hospital, country, or hospital group should I use?
+    - text: Which scope should I use: provider ID, provider group ID, or country code? You can also say "mine".
 
   utter_ask_guided_visualization_form_stroke_type:
     - text: Do you want to filter by stroke type? You can answer or skip this step.

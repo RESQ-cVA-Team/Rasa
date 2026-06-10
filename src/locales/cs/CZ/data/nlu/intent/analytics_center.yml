@@ -1,37 +1,6 @@
 version: "3.1"
 
 nlu:
-  - intent: list_hospitals
-    examples: |
-      - vypiš nemocnice
-      - ukaž nemocnice
-      - které nemocnice mohu porovnat?
-      - jaké nemocnice jsou k dispozici?
-      - vypiš dostupné poskytovatele
-      - ukaž mi seznam poskytovatelů
-      - které poskytovatele mohu porovnat?
-      - zobraz nemocnice pro porovnání
-      - dej mi seznam nemocnic
-      - ukaž dostupné nemocnice
-      - ukaž nemocnice ve [Španělsku](country_code)
-      - dostupné nemocnice pro [Mexiko](country_code)
-      - vypiš nemocnice pro zemi [DE](country_code)
-      - ukaž dalších [20](limit) nemocnic v [ES](country_code)
-      - vypiš nemocnice v [USA](country_code)
-      - ukaž nemocnice ve [Spojených státech](country_code)
-      - vypiš nemocnice v [Kanadě](country_code)
-      - ukaž nemocnice ve [Spojeném království](country_code)
-      - vypiš nemocnice v [Austrálii](country_code)
-      - ukaž nemocnice ve [Francii](country_code)
-      - vypiš nemocnice v [Japonsku](country_code)
-      - ukaž nemocnice ve [Španělsku](country_code) seřazené podle [name](sort)
-      - vypiš nemocnice s názvem [General](hospital_name)
-      - ukaž nemocnice se jménem [Memorial](hospital_name)
-      - vypiš nemocnice, limit [10](limit)
-      - ukaž nemocnice, offset [50](offset)
-      - vypiš nemocnice seřazené podle [created_at](sort)
-      - ukaž nemocnice pro skupinu [25](group_id)
-
   - lookup: country_code
     examples: |
       - US
@@ -104,10 +73,3 @@ nlu:
       - Japonsko
       - JP
 
-  - regex: limit
-    examples: |
-      - \b(?:[1-9]\d{0,2})\b
-
-  - regex: offset
-    examples: |
-      - \b(?:0|[1-9]\d{0,4})\b

@@ -1,35 +1,6 @@
 version: "3.1"
 
 nlu:
-  - intent: list_hospitals
-    examples: |
-      - list hospitals
-      - show hospitals
-      - what hospitals are available?
-      - list available providers
-      - show me the provider list
-      - display hospitals for comparison
-      - give me the hospital list
-      - show available hospitals
-      - show hospitals in Spain
-      - available hospitals for Mexico
-      - list hospitals country DE
-      - show next 20 hospitals in ES
-      - list hospitals in [US](country_code)
-      - show hospitals in [United States](country_code)
-      - list hospitals in [Canada](country_code)
-      - show hospitals in [United Kingdom](country_code)
-      - list hospitals in [Australia](country_code)
-      - show hospitals in [France](country_code)
-      - list hospitals in [Japan](country_code)
-      - show hospitals in [Spain](country_code) sorted by [name](sort)
-      - list hospitals named [General](hospital_name)
-      - show hospitals with name [Memorial](hospital_name)
-      - list hospitals, limit [10](limit)
-      - show hospitals, offset [50](offset)
-      - list hospitals sorted by [name](sort)
-      - show hospitals for group [25](group_id)
-
   - lookup: country_code
     examples: |
       - US
@@ -100,10 +71,3 @@ nlu:
       - Japan
       - JP
 
-  - regex: limit
-    examples: |
-      - \b(?:[1-9]\d{0,2})\b
-
-  - regex: offset
-    examples: |
-      - \b(?:0|[1-9]\d{0,4})\b

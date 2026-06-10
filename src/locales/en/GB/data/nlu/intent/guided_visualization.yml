@@ -32,6 +32,24 @@ nlu:
       - cancel guided mode
       - end guided mode
 
+  - intent: provide_guided_hospital_scope
+    examples: |
+      - provider [289](provider_id)
+      - use provider id [281](provider_id)
+      - provider group [10](provider_group_id)
+      - group id [25](provider_group_id)
+      - [mine](scope_kind)
+      - use [my hospital](scope_kind)
+      - [my provider group](scope_kind)
+      - [our group](scope_kind)
+      - use [GB](country_code)
+      - [United Kingdom](country_code)
+      - [ES](country_code)
+      - [Spain](country_code)
+      - [Mexico](country_code)
+      - in [EMEA](region)
+      - [LATAM](region)
+
   - intent: skip_guided_step
     examples: |
       - skip
