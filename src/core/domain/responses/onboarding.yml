@@ -9,3 +9,5 @@ responses:
           payload: "/request_guided_visualization"
         - title: "[placeholder] localized in en/us or locale overlays"
           payload: "/request_freeform_visualization"
+  utter_who_are_you:
+    - text: "[placeholder] localized in en/us or locale overlays]"

@@ -3,3 +3,5 @@ version: "3.1"
 responses:
   utter_default:
     - text: "Sorry, I didn’t understand that. Could you rephrase?"
+  utter_out_of_scope:
+    - text: "Sorry, that is not something i can help with. Please ask me something related to RES-Q data."

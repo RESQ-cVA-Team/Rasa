@@ -1,20 +1,13 @@
 version: "3.1"
 
 rules:
-  # - rule: Greet with guided offer on first greeting
-  #   condition:
-  #     - slot_was_set:
-  #         - guided_offer_shown: false
-  #   steps:
-  #     - intent: greet
-  #     - action: utter_greet_guided_offer
   - rule: Greet and offer help
     steps:
       - intent: greet
       - action: utter_greet
       - action: utter_user_prompt
 
-  - rule: Greet after guided offer has been shown
+  - rule: Greet after guided offer has been shown #Should this be deleted?
     condition:
       - slot_was_set:
           - guided_offer_shown: true
