@@ -4,3 +4,7 @@ nlu:
   - intent: fallback
     examples: |
       - [placeholder] see en/us or locale overlays
+
+  - intent: out_of_scope
+    examples: |
+      - [placeholder] see en/us or locale overlays

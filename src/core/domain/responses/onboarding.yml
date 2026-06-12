@@ -1,0 +1,13 @@
+version: "3.1"
+responses:
+  utter_user_prompt:
+    - text: "[placeholder] localized in en/us or locale overlays"
+      buttons:
+        - title: "[placeholder] localized in en/us or locale overlays"
+          payload: "/how_to_use_bot"
+        - title: "[placeholder] localized in en/us or locale overlays"
+          payload: "/request_guided_visualization"
+        - title: "[placeholder] localized in en/us or locale overlays"
+          payload: "/request_freeform_visualization"
+  utter_who_are_you:
+    - text: "[placeholder] localized in en/us or locale overlays]"
