@@ -1,0 +1,17 @@
+version: "3.1"
+
+nlu:
+  - intent: who_are_you
+    examples: |
+      - how do I use this bot?
+      - who are you?
+      - what is this?
+      - what can you do?
+      - what is your purpose?
+      - why do you exist?
+      - what can i ask you?
+      - what is this bot for?
+      - what is your function?
+      - what is your role?
+      - what do you do?
+      - what is your job?

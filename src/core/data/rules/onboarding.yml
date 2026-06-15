@@ -1,0 +1,8 @@
+version: "3.1"
+
+rules:
+  - rule: Who are you? What can you do?
+    steps:
+      - intent: who_are_you
+      - action: utter_who_are_you
+      - action: utter_user_prompt
