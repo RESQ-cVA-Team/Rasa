@@ -142,6 +142,11 @@ nlu:
       - I'd like [NIHSS](metric) grouped by [arrival method](group_by) between [2023-01-01]{"entity":"date","role":"lower"} and [2023-12-31]{"entity":"date","role":"upper"}
       - Can you visualize [DIDO](metric) for [male](sex) patients between ages [40]{"entity":"age","role":"lower"} and [65]{"entity":"age","role":"upper"}?
       - Show a [bar](chart_type) chart of [mortality rate](metric) by [stroke subtype](group_by) for [hemorrhagic](stroke_type) strokes
+      - Show me [DTN](metric) grouped by [stroke type](stroke_type)
+      - Chart [NIHSS](metric) split by [stroke type](stroke_type)
+      - [admission nihss](metric) [per quarter](group_by) by [stroke type](stroke_type)
+      - Break down [DTN](metric) by [stroke type](stroke_type)
+      - Group [LOS](metric) by [stroke type](stroke_type)
 
   - intent: update_visualization
     examples: |
