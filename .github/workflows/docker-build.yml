@@ -151,6 +151,7 @@ jobs:
           TARGET_REF: ${{ github.event.inputs.target_ref }}
         run: |
           set -euo pipefail
+          SHORT_SHA="${GITHUB_SHA::7}"
           RASA_VERSION="$(tr -d '[:space:]' < VERSION)"
           BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
           RASA_SSOT_SHA="$(git ls-files -s src/shared/SSOT | awk '{print $2}' || echo 'unknown')"
@@ -173,15 +174,25 @@ jobs:
             DOCKER_OUTPUT_FLAG="--load"
             ATTEST_ARGS=()
           fi
-          # Determine channel tag based on branch
-          BRANCH="${TARGET_REF:-${{ github.ref_name }}}"
-          SAFE_BRANCH="$(echo "${BRANCH//\//-}" | tr '[:upper:]' '[:lower:]')"
-          if [[ "$SAFE_BRANCH" == "master" ]]; then
+          # Determine tags based on trigger and branch
+          RAW_REF="${TARGET_REF:-${{ github.ref_name }}}"
+          SAFE_BRANCH="$(echo "$RAW_REF" | tr '[:upper:]' '[:lower:]' | tr '/ ' '-' | tr -cd 'a-z0-9._-')"
+          if [[ -z "$SAFE_BRANCH" ]]; then
+            SAFE_BRANCH="manual"
+          fi
+
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            CHANNEL_TAG="${SAFE_TAG}-${SAFE_BRANCH}-manual"
+            SHA_TAG="${SAFE_TAG}-${SAFE_BRANCH}-${SHORT_SHA}"
+          elif [[ "$SAFE_BRANCH" == "master" ]]; then
             CHANNEL_TAG="${SAFE_TAG}-latest"
+            SHA_TAG="${SAFE_TAG}-master-${SHORT_SHA}"
           elif [[ "$SAFE_BRANCH" == "dev" ]]; then
             CHANNEL_TAG="${SAFE_TAG}-dev"
+            SHA_TAG="${SAFE_TAG}-dev-${SHORT_SHA}"
           else
             CHANNEL_TAG="${SAFE_TAG}-${SAFE_BRANCH}"
+            SHA_TAG="${SAFE_TAG}-${SAFE_BRANCH}-${SHORT_SHA}"
           fi
           docker buildx build \
             --build-arg RASA_VERSION="$RASA_VERSION" \
@@ -195,5 +206,5 @@ jobs:
             --platform linux/amd64 \
             "${ATTEST_ARGS[@]}" \
             -t ghcr.io/$REPO_NAME_LC:${CHANNEL_TAG} \
-            -t ghcr.io/$REPO_NAME_LC:${SAFE_TAG}-${SAFE_BRANCH}-${{ github.sha }} \
+            -t ghcr.io/$REPO_NAME_LC:${SHA_TAG} \
             $DOCKER_OUTPUT_FLAG .
