@@ -16,8 +16,8 @@ services:
       - "host.docker.internal:host-gateway"
 
   redis:
-    image: redis:alpine
+    image: redis:alpine@sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1
     command: ["redis-server", "--save", "20", "1", "--loglevel", "warning"]
 
   duckling:
-    image: rasa/duckling:latest
+    image: rasa/duckling:latest@sha256:459e6033f87b0f3f525ed0d0066ae89cfe31d512f32ac1d469431fa6ce1bdef5

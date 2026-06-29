@@ -3,3 +3,5 @@ version: "3.1"
 responses:
   utter_default:
     - text: "[placeholder] localized in fallback/en-us or locale overlays"
+  utter_out_of_scope:
+    - text: "[placeholder] localized in fallback/en-us or locale overlays"

@@ -3,16 +3,15 @@ version: "3.1"
 nlu:
   - intent: request_guided_visualization
     examples: |
-      - yes
-      - yes please
-      - sure
-      - okay
-      - let's do it
       - help me build a graph
       - guide me through creating a graph
       - walk me through a visualization
       - help me make a chart
       - can you guide me step by step
+      - show me a guided visualization
+      - i need guided help with a graph
+      - i want to do a guided visualization
+      - i require a step by step visualization
 
   - intent: request_freeform_visualization
     examples: |

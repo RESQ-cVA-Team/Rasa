@@ -36,6 +36,15 @@ def _as_list(value: Any) -> List[str]:
     return [str(value)]
 
 
+def _collect_synonyms(value: Any) -> List[str]:
+    if isinstance(value, dict):
+        out: List[str] = []
+        for localized in cast(Dict[Any, Any], value).values():
+            out.extend(_as_list(localized))
+        return out
+    return _as_list(value)
+
+
 @dataclass(frozen=True)
 class _SSOTIndex:
     canonicals: Set[str]
@@ -63,7 +72,9 @@ def _load_ssot_index(path: Path) -> _SSOTIndex:
     items: List[Dict[str, Any]] = []
     if isinstance(raw, list):
         raw_list = cast(List[Any], raw)
-        items = [cast(Dict[str, Any], item) for item in raw_list if isinstance(item, dict)]
+        items = [
+            cast(Dict[str, Any], item) for item in raw_list if isinstance(item, dict)
+        ]
     elif isinstance(raw, dict):
         # Be permissive; allow a dict form if present.
         items = [cast(Dict[str, Any], raw)]
@@ -78,7 +89,7 @@ def _load_ssot_index(path: Path) -> _SSOTIndex:
         canonical = str(canonical_any)
         canonicals.add(canonical)
 
-        synonyms = _as_list(item.get("synonyms"))
+        synonyms = _collect_synonyms(item.get("synonyms"))
         # Always accept the canonical itself.
         synonyms.append(canonical)
 
@@ -92,7 +103,9 @@ def _load_ssot_index(path: Path) -> _SSOTIndex:
                     key_any = cast(Dict[str, Any], e).get("key")
                     if key_any is not None:
                         synonyms.append(str(key_any))
-                    synonyms.extend(_as_list(cast(Dict[str, Any], e).get("synonyms")))
+                    synonyms.extend(
+                        _collect_synonyms(cast(Dict[str, Any], e).get("synonyms"))
+                    )
 
         for syn in synonyms:
             k = _norm_text(syn)
@@ -104,7 +117,9 @@ def _load_ssot_index(path: Path) -> _SSOTIndex:
     return _SSOTIndex(canonicals=canonicals, by_synonym=by_synonym)
 
 
-@DefaultV1Recipe.register(DefaultV1Recipe.ComponentType.ENTITY_EXTRACTOR, is_trainable=False)
+@DefaultV1Recipe.register(
+    DefaultV1Recipe.ComponentType.ENTITY_EXTRACTOR, is_trainable=False
+)
 class SSOTCanonicalizer(GraphComponent):
     """Normalizes SSOT-backed entity values to canonical codes.
 
@@ -136,7 +151,9 @@ class SSOTCanonicalizer(GraphComponent):
                 "statistical_test_type": "StatisticalTestType.yml",
             },
         )
-        self._entity_ssot_files: Dict[str, str] = {str(k): str(v) for k, v in cast(Dict[str, Any], mapping_any).items()}
+        self._entity_ssot_files: Dict[str, str] = {
+            str(k): str(v) for k, v in cast(Dict[str, Any], mapping_any).items()
+        }
 
         # Which entities are strict (unmapped values are dropped). Default: only `metric`.
         strict_any = self._config.get("strict_entities", ["metric"])
@@ -158,7 +175,9 @@ class SSOTCanonicalizer(GraphComponent):
             try:
                 self._indexes[entity_name] = _load_ssot_index(fpath)
                 if self._debug:
-                    logger.info(f"Loaded SSOT index for {entity_name} from {fpath} ({len(self._indexes[entity_name].canonicals)} canonicals)")
+                    logger.info(
+                        f"Loaded SSOT index for {entity_name} from {fpath} ({len(self._indexes[entity_name].canonicals)} canonicals)"
+                    )
             except Exception as e:
                 logger.warning(f"Failed loading SSOT file {fpath}: {e}")
 
@@ -208,7 +227,9 @@ class SSOTCanonicalizer(GraphComponent):
                 if mapped is None:
                     if entity_name in self._strict_entities:
                         if self._debug:
-                            logger.info(f"Dropping non-SSOT {entity_name} value: {raw_val!r}")
+                            logger.info(
+                                f"Dropping non-SSOT {entity_name} value: {raw_val!r}"
+                            )
                         continue
                     new_entities.append(ent)
                     continue

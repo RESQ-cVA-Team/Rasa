@@ -3,7 +3,13 @@ version: "3.1"
 nlu:
   - intent: fallback
     examples: |
-      - What's the weather like today?
+      - asdf
+      - sdsdsdssd
+      - lkogpksndf
+      - fbhtg
+
+  - intent: out_of_scope
+    examples: |
       - Can you help me with my homework?
       - Tell me a joke about doctors
       - How do I cook pasta?
@@ -18,3 +24,13 @@ nlu:
       - What movies are playing tonight?
       - How do I fix my car?
       - What's the meaning of life?
+      - Can you recommend a book?
+      - I want to learn about quantum physics
+      - Tell me about the history of the Roman Empire
+      - When does the narwhal bacon?
+      - What is the weather like in New York?
+      - Can you help me with my taxes?
+      - who is the current president of the united states?
+      - who made you?
+      - Who is the CEO of microsoft?
+      - what is the volume of a barrel of crude oil?

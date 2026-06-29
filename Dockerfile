@@ -26,13 +26,16 @@ USER root
 
 WORKDIR /app
 
-COPY src/ src/
-COPY scripts/ scripts/
+RUN mkdir -p /app/.data && chown -R 1001:1001 /app/.data && chmod 700 /app/.data
+
+COPY --chown=1001:1001 src/ src/
+COPY --chown=1001:1001 scripts/ scripts/
 
 RUN chmod +x /app/scripts/*.sh
 
 # Ensure local 'src' is a real package to shadow any site-packages 'src'
-RUN test -f /app/src/__init__.py || echo "# project package root" > /app/src/__init__.py
+RUN test -f /app/src/__init__.py || echo "# project package root" > /app/src/__init__.py \
+	&& chown 1001:1001 /app/src/__init__.py
 
 RUN echo "Using PYTHONPATH=$PYTHONPATH" && \
 	python -c "import sys; print('Container sys.path:', sys.path)" && \
@@ -59,6 +62,6 @@ EXPOSE 5005
 
 USER 1001
 
-# Always run with API, native token auth, bounded timeouts, and the core endpoints file.
+# Always run through the wrapper; it resolves endpoints from env presets.
 ENTRYPOINT ["python3", "-m", "src.run_rasa"]
-CMD ["run", "--enable-api", "--model", "models", "--endpoints", "src/core/endpoints.yml", "--request-timeout", "300", "--response-timeout", "300"]
+CMD []
