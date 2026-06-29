@@ -72,7 +72,7 @@ pipeline:
   # Canonicalize SSOT-backed entity values (e.g. metric -> DTN)
   - name: src.components.ssot_canonicalizer.SSOTCanonicalizer
     # Enforce canonical values for entities that can break downstream actions when noisy.
-    strict_entities: ["metric", "chart_type"]
+    strict_entities: ["metric", "chart_type", "group_by"]
   - name: ResponseSelector
     epochs: 100
     constrain_similarities: true
