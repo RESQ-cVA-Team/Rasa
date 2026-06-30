@@ -48,7 +48,7 @@ nlu:
       - Display [door to imaging](metric) times for urgent cases
       - Give me [LOS](metric) statistics for patients aged [18]{"entity": "age", "role": "lower"} to [45]{"entity": "age", "role": "upper"}
       - Show a [box plot](chart_type) of [DIDO](metric) by [severity level](group_by)
-      - Chart [functional outcome](metric) for [ischemic](stroke_type) patients by [sex](group_by)
+      - Chart [functional outcome](metric) for [ischemic](stroke_type) patients by sex
       - I need [DTN](metric) trends over the past year
       - Display [medication compliance](metric) rates by [age group](group_by)
       - Show [emergency response time](metric) for [hemorrhagic](stroke_type) cases
@@ -147,7 +147,16 @@ nlu:
       - [admission nihss](metric) [per quarter](group_by) by [stroke type](stroke_type)
       - Break down [DTN](metric) by [stroke type](stroke_type)
       - Group [LOS](metric) by [stroke type](stroke_type)
-
+      - Show [DTN](metric) grouped by sex
+      - Chart [DTN](metric) split by sex
+      - Give me [DTN](metric) by sex
+      - Show me a [line](chart_type) chart of [DTN](metric) grouped by sex
+      - Display [DIDO](metric) broken down by sex
+      - [NIHSS](metric) grouped by gender
+      - Show [DTN](metric) per sex
+      - Compare [DTN](metric) across sexes
+      - Chart [DTN](metric) for each sex
+      - Show [DIDO](metric) split by gender
   - intent: update_visualization
     examples: |
       - Change the chart to a [bar](chart_type) graph
