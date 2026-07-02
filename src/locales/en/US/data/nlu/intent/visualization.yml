@@ -75,7 +75,28 @@ nlu:
       - Generate a test to compare my hospital [DTN](metric) to the national mean with Mann Whitney
       - Perform a Mann-Whitney U test for [DTN](metric) between my hospital and the national mean
       - Compare my hospital [DTN](metric) with the UK national average using Mann Whitney
+      - Statistically compare [q1 2023](date) to [q2 2023](date) for [DTN](metric)
+      - using a man-whitney u test, compare [q1 2023](date) to [q2 2023](date) for [DTN](metric)
+      - Compare [DTN](metric) for [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} using Mann Whitney
       - Show me [DTN](metric) per [quarter](group_by) for the [last 2 years](date)
+      - Compare my hospital [DTN](metric) to the national average using Mann Whitney
+      - Run a Mann Whitney U test comparing my hospital [DTN](metric) with the national mean
+      - Perform a Mann-Whitney test for [DTN](metric) against the national benchmark
+      - Is my hospital's [DTN](metric) significantly different from the national average?
+      - Test whether my hospital differs from the national average for [DTN](metric)
+      - Compare [DTN](metric) for [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} using Mann Whitney
+      - Run a Mann Whitney U test comparing [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} for [DTN](metric)
+      - Perform a Mann Whitney test on [DTN](metric) between [Q1 2023]{"entity": "date", "role": "lower"} and [Q2 2023]{"entity": "date", "role": "upper"}
+      - Is there a significant difference in [DTN](metric) between [Q1 2023]{"entity": "date", "role": "lower"} and [Q2 2023]{"entity": "date", "role": "upper"}?
+      - Test [DTN](metric) between [Q1 2023]{"entity": "date", "role": "lower"} and [Q2 2023]{"entity": "date", "role": "upper"} using Mann Whitney
+      - Compare [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} against [Q3 2023]{"entity": "date", "role": "lower"} to [Q4 2023]{"entity": "date", "role": "upper"} using Mann Whitney for [DTN](metric)
+      - Run a Mann Whitney test comparing [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} with [Q3 2023]{"entity": "date", "role": "lower"} to [Q4 2023]{"entity": "date", "role": "upper"} for [DTN](metric)
+      - Compare patients aged [30]{"entity": "age", "role": "lower"} to [45]{"entity": "age", "role": "upper"} with patients aged [60]{"entity": "age", "role": "lower"} to [80]{"entity": "age", "role": "upper"} using Mann Whitney
+      - Perform a Mann Whitney U test comparing patients aged [30]{"entity": "age", "role": "lower"} to [45]{"entity": "age", "role": "upper"} and [60]{"entity": "age", "role": "lower"} to [80]{"entity": "age", "role": "upper"} for [DTN](metric)
+      - Run a Mann Whitney test for [DIDO](metric)
+      - Compare [LOS](metric) using a Mann Whitney U test
+      - Perform a Mann Whitney test on [NIHSS](metric)
+      - Test [Door to Needle Time](metric) using Mann Whitney
       - Show [DTN](metric) [quarterly](group_by) over the [last 2 years](date)
       - Chart [DTN](metric) by [quarter](group_by) for the [past year](date)
       - Show [DIDO](metric) [monthly](group_by) for the [last 6 months](date)
@@ -292,6 +313,9 @@ nlu:
       - use the rolling option
       - all quarters
       - all time
+      - quarter
+      - quarterly
+      - trimester
       - show all quarters
       - every quarter
       - all available quarters
