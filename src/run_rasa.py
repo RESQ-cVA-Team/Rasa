@@ -1,6 +1,7 @@
 import os
 import sys
 import warnings
+from datetime import datetime, timezone
 from typing import Optional
 from urllib.parse import urlsplit
 
@@ -16,6 +17,16 @@ import rasa.__main__ as rasa_main
 import rasa.core.run as core_run
 from sanic import response
 from sanic_routing.exceptions import RouteExists
+
+from src.thread_index import (
+    apply_index_action,
+    build_thread_list_from_payload,
+    build_thread_list_response,
+    extract_index_payload_from_events,
+    get_thread_index_tracker_id,
+    next_thread_id_from_payload,
+    serialize_index_payload,
+)
 
 
 def _read_env(name: str) -> Optional[str]:
@@ -34,10 +45,10 @@ def _env_flag(name: str, default: bool) -> bool:
     return value.lower() in {"1", "true", "yes", "on"}
 
 
-def _install_version_route() -> None:
+def _install_custom_routes() -> None:
     original_configure_app = core_run.configure_app
 
-    def configure_app_with_version(*args, **kwargs):
+    def configure_app_with_custom_routes(*args, **kwargs):
         app = original_configure_app(*args, **kwargs)
 
         async def version(_):
@@ -54,16 +65,204 @@ def _install_version_route() -> None:
                 status=200,
             )
 
-        # Rasa can call configure_app multiple times during startup. Avoid
-        # crashing when /version is already present.
-        try:
-            app.add_route(version, "/version", methods=["GET"])
-        except RouteExists:
-            pass
+        def _safe_add(handler, path: str, methods: list[str]) -> None:
+            try:
+                app.add_route(handler, path, methods=methods)
+            except RouteExists:
+                pass
+
+        async def _get_tracker_store():
+            agent = getattr(getattr(app, "ctx", None), "agent", None)
+            if not agent:
+                return None, response.json({"error": "Agent not initialized"}, status=500)
+            tracker_store = getattr(agent, "tracker_store", None)
+            if not tracker_store:
+                return None, response.json({"error": "Tracker store not available"}, status=500)
+            return tracker_store, None
+
+        def _authorized(request) -> bool:
+            expected = _read_env("RASA_AUTH_TOKEN")
+            if not expected:
+                return True
+
+            query_token = request.args.get("token") if hasattr(request, "args") else None
+            auth_header = request.headers.get("Authorization", "") if hasattr(request, "headers") else ""
+            header_token = auth_header[7:] if auth_header.startswith("Bearer ") else None
+            return (query_token or header_token) == expected
+
+        async def get_threads(request, user_sub: str):
+            if not _authorized(request):
+                return response.json({"error": "Unauthorized"}, status=401)
+
+            tracker_store, err = await _get_tracker_store()
+            if err:
+                return err
+
+            tracker = await tracker_store.retrieve(get_thread_index_tracker_id(user_sub))
+            if not tracker:
+                return response.json(build_thread_list_response({}), status=200)
+
+            payload = extract_index_payload_from_events(list(tracker.events))
+            threads = build_thread_list_from_payload(payload)
+            return response.json(build_thread_list_response(threads), status=200)
+
+        async def get_next_thread_id(request, user_sub: str):
+            if not _authorized(request):
+                return response.json({"error": "Unauthorized"}, status=401)
+
+            tracker_store, err = await _get_tracker_store()
+            if err:
+                return err
+
+            tracker = await tracker_store.retrieve(get_thread_index_tracker_id(user_sub))
+            payload = extract_index_payload_from_events(list(tracker.events)) if tracker else {}
+            return response.json(
+                {
+                    "next_thread_id": next_thread_id_from_payload(payload),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                },
+                status=200,
+            )
+
+        async def post_index_event(request, user_sub: str):
+            if not _authorized(request):
+                return response.json({"error": "Unauthorized"}, status=401)
+
+            payload = request.json if isinstance(request.json, dict) else None
+            if payload is None:
+                return response.json({"error": "Invalid JSON"}, status=400)
+
+            thread_id_raw = payload.get("thread_id")
+            action = payload.get("action")
+            name = payload.get("name", "")
+            try:
+                thread_id = int(thread_id_raw)
+            except (TypeError, ValueError):
+                thread_id = None
+
+            if thread_id is None or action not in {"create", "rename", "delete"}:
+                return response.json({"error": "Missing or invalid thread_id, action"}, status=400)
+
+            tracker_store, err = await _get_tracker_store()
+            if err:
+                return err
+
+            sender_id = get_thread_index_tracker_id(user_sub)
+            tracker = await tracker_store.retrieve(sender_id)
+            if tracker is None:
+                from rasa.shared.core.trackers import DialogueStateTracker
+
+                tracker = DialogueStateTracker(sender_id, [])
+
+            current_payload = extract_index_payload_from_events(list(tracker.events))
+            next_payload = apply_index_action(current_payload, thread_id, action, str(name))
+
+            from rasa.shared.core.events import UserUttered
+
+            tracker.update(
+                UserUttered(
+                    text=serialize_index_payload(next_payload),
+                    intent={"name": "__thread_index_update__", "confidence": 1.0},
+                    entities=[],
+                )
+            )
+            await tracker_store.save(tracker)
+
+            threads = build_thread_list_from_payload(next_payload)
+            thread_record = threads.get(thread_id)
+            return response.json(
+                {
+                    "ok": True,
+                    "action": action,
+                    "thread": thread_record,
+                    "next_thread_id": next_thread_id_from_payload(next_payload),
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                },
+                status=200,
+            )
+
+        async def delete_thread(request, user_sub: str, thread_id: str):
+            """DELETE /threads/<user_sub>/thread/<thread_id> - Delete a thread and its tracker."""
+            if not _authorized(request):
+                return response.json({"error": "Unauthorized"}, status=401)
+
+            try:
+                thread_id_int = int(thread_id)
+            except (TypeError, ValueError):
+                return response.json({"error": "Invalid thread_id"}, status=400)
+
+            tracker_store, err = await _get_tracker_store()
+            if err:
+                return err
+
+            # Check the thread exists in the index first.
+            index_sender_id = get_thread_index_tracker_id(user_sub)
+            index_tracker = await tracker_store.retrieve(index_sender_id)
+            if index_tracker is None:
+                return response.json({"error": "Thread not found"}, status=404)
+
+            current_payload = extract_index_payload_from_events(list(index_tracker.events))
+            threads = build_thread_list_from_payload(current_payload)
+            if thread_id_int not in threads:
+                return response.json({"error": "Thread not found"}, status=404)
+
+            # Attempt hard-delete of the conversation tracker for this thread.
+            conversation_sender_id = f"{user_sub}:thread:{thread_id_int}"
+            physically_deleted = False
+            delete_fn = getattr(tracker_store, "delete", None)
+            if callable(delete_fn):
+                try:
+                    result = delete_fn(conversation_sender_id)
+                    if hasattr(result, "__await__"):
+                        result = await result
+                    physically_deleted = bool(result)
+                except Exception:
+                    pass
+
+            if not physically_deleted:
+                # Fallback: if the store is Redis-backed, attempt direct key deletion.
+                redis_client = getattr(tracker_store, "red", None) or getattr(tracker_store, "redis", None)
+                if redis_client is not None:
+                    try:
+                        key_prefix = getattr(tracker_store, "key_prefix", "") or ""
+                        deleted = redis_client.delete(f"{key_prefix}{conversation_sender_id}")
+                        physically_deleted = bool(deleted)
+                    except Exception:
+                        pass
+
+            # Soft-mark as deleted in the index tracker regardless of hard-delete outcome.
+            next_payload = apply_index_action(current_payload, thread_id_int, "delete")
+
+            from rasa.shared.core.events import UserUttered
+
+            index_tracker.update(
+                UserUttered(
+                    text=serialize_index_payload(next_payload),
+                    intent={"name": "__thread_index_update__", "confidence": 1.0},
+                    entities=[],
+                )
+            )
+            await tracker_store.save(index_tracker)
+
+            return response.json(
+                {
+                    "ok": True,
+                    "thread_id": thread_id_int,
+                    "physically_deleted": physically_deleted,
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                },
+                status=200,
+            )
+
+        _safe_add(version, "/version", ["GET"])
+        _safe_add(get_threads, "/threads/by-user/<user_sub:str>", ["GET"])
+        _safe_add(get_next_thread_id, "/threads/by-user/<user_sub:str>/next-id", ["GET"])
+        _safe_add(post_index_event, "/threads/<user_sub:str>/index-event", ["POST"])
+        _safe_add(delete_thread, "/threads/<user_sub:str>/thread/<thread_id:str>", ["DELETE"])
 
         return app
 
-    core_run.configure_app = configure_app_with_version
+    core_run.configure_app = configure_app_with_custom_routes
 
 
 def _resolve_endpoints_file() -> str:
@@ -116,7 +315,7 @@ def _resolve_cors() -> Optional[str]:
 
 
 def main() -> None:
-    _install_version_route()
+    _install_custom_routes()
     endpoints_file = _resolve_endpoints_file()
     auth_token = _resolve_auth_token()
     cors = _resolve_cors()
