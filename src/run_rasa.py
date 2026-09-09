@@ -64,17 +64,18 @@ def _env_flag(name: str, default: bool) -> bool:
 # client credentials (KEYCLOAK_CLIENT_ID/_SECRET) rather than requiring a
 # separate dedicated introspection client -- Keycloak's introspection
 # endpoint only needs a valid confidential client, not a purpose-specific
-# one. Gated behind REQUIRE_USER_TOKEN_VERIFICATION (default off) for a
-# rollout window during which Webapp may not yet forward the header on
-# every deployed instance.
+# one. Required by default, same as RASA_AUTH_TOKEN below -- a deployment
+# that forgets to configure this should fail to boot, not silently fall
+# back to trusting caller-supplied identity.
 _KEYCLOAK_ISSUER = _read_env("KEYCLOAK_ISSUER")
 _KEYCLOAK_CLIENT_ID = _read_env("KEYCLOAK_CLIENT_ID")
 _KEYCLOAK_CLIENT_SECRET = _read_env("KEYCLOAK_CLIENT_SECRET")
-_REQUIRE_USER_TOKEN_VERIFICATION = _env_flag("REQUIRE_USER_TOKEN_VERIFICATION", default=False)
+_REQUIRE_USER_TOKEN_VERIFICATION = _env_flag("REQUIRE_USER_TOKEN_VERIFICATION", default=True)
 if _REQUIRE_USER_TOKEN_VERIFICATION and not (_KEYCLOAK_ISSUER and _KEYCLOAK_CLIENT_ID and _KEYCLOAK_CLIENT_SECRET):
     raise RuntimeError(
         "KEYCLOAK_ISSUER, KEYCLOAK_CLIENT_ID and KEYCLOAK_CLIENT_SECRET are all required when "
-        "REQUIRE_USER_TOKEN_VERIFICATION is enabled."
+        "REQUIRE_USER_TOKEN_VERIFICATION is enabled. Set them, or set "
+        "REQUIRE_USER_TOKEN_VERIFICATION=false only for local debugging."
     )
 
 _SENDER_THREAD_SUFFIX_RE = re.compile(r"^(.*):thread:(\d+)$")
