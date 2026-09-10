@@ -79,11 +79,6 @@ if _REQUIRE_USER_TOKEN_VERIFICATION and not (_KEYCLOAK_ISSUER and _KEYCLOAK_CLIE
 
 _SENDER_THREAD_SUFFIX_RE = re.compile(r"^(.*):thread:(\d+)$")
 
-# CVaLab's synthetic sender for a non-logged-in chat (server/liveChat.ts's
-# SENDER_PREFIX). There's no real Keycloak identity to verify for these --
-# job-routing and real-user-authorization are separate concerns there too.
-_ANONYMOUS_SENDER_PREFIX = "cvalab-chat:"
-
 
 def _sender_sub(sender_id: str) -> str:
     """Strip the `:thread:<id>` suffix, mirroring rasaSender.ts's parseRasaSenderId."""
@@ -286,11 +281,8 @@ def _install_custom_routes() -> None:
             """When REQUIRE_USER_TOKEN_VERIFICATION is on, verify the caller's
             Bearer token and require it to match claimed_sub. Returns an error
             response to return immediately, or None if the caller may proceed.
-
-            Exempts CVaLab's synthetic anonymous sender -- there's no real
-            Keycloak identity to verify for a non-logged-in chat.
             """
-            if not _REQUIRE_USER_TOKEN_VERIFICATION or claimed_sub.startswith(_ANONYMOUS_SENDER_PREFIX):
+            if not _REQUIRE_USER_TOKEN_VERIFICATION:
                 return None
             verified_sub = await _verify_user_token(request)
             if not verified_sub:
