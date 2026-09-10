@@ -1,7 +1,7 @@
 action_endpoint:
   url: ${ACTION_ENDPOINT_URL}
   timeout: 300
-  token: ${ACTION_TOKEN}
+  token: ${ACTION_AUTH_TOKEN}
 lock_store:
   type: redis
   url: ${LOCK_STORE_URL}
