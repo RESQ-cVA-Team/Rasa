@@ -1,7 +1,7 @@
 action_endpoint:
   url: ${ACTION_ENDPOINT_URL}
   timeout: 300
-  token: ${ACTION_TOKEN}
+  token: ${ACTION_AUTH_TOKEN}
 tracker_store:
   type: dynamo
   table_name: ${TRACKER_STORE_TABLE_NAME}
