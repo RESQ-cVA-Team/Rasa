@@ -147,12 +147,12 @@ nlu:
       - I need to inspect [door to needle time](metric)
       - What's the distribution of [age](metric)?
       - How does [PRESTROKE_MRS](metric) look?
-      - Can we look at [DischargeNihss](metric)?
+      - Can we look at [insulin on hyperglycemia](metric)?
       - Show the trend for [thrombolysis rate](metric)
       - I want an overview of [mRS](metric)
       - Display the values for [door in door out](metric)
       - Show [pre-stroke mrs](metric) for [women](sex)
-      - I'd like to see [door-to-needle ≤45 minutes](metric) among [men](sex)
+      - I'd like to see [anticoagulants at discharge in atrial fibrillation](metric) among [men](sex)
       - Plot [ivt](metric) for [female](sex) patients
       - Compare [perfusion core volume](metric) for [male](sex) patients
       - Visualize [secondary door to groin](metric) in [women](sex)
@@ -226,8 +226,10 @@ nlu:
       - make a [bar](chart_type) graph of [OCCLUSION_FOUND](metric) grouped by [inr measurement mode](group_by)
       - Make me a bar chart of [physiotherapy received](metric) grouped by [stroke type](group_by)
       - Show me a line graph of [HOSPITAL_STAY](metric)
-      - Plot [HOSPITAL_STAY](metric) in a line chart
-      - Visualize [HOSPITAL_STAY](metric) as a line graph per month([group_by])
+      - Plot [medication before onset in ais or tia](metric) in a line chart
+      - Visualize [anticoagulant type at discharge in atrial fibrillation](metric) as a line graph per month([group_by])
+      - Show me a line chart of [ivt drugs](metric) grouped by [stroke type](group_by)
+      - [ivt dose](metric) [area chart](chart_type) [monthly](group_by)
 
   - intent: update_visualization
     examples: |
