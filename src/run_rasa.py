@@ -52,30 +52,18 @@ def _env_flag(name: str, default: bool) -> bool:
     return value.lower() in {"1", "true", "yes", "on"}
 
 
-# Phase 2 of the cross-service auth redesign: RASA_AUTH_TOKEN (checked by
-# _authorized below, and by Rasa core's own global --auth-token middleware)
-# proves only that *a* trusted service is calling, never *which* user a
-# request is for -- user_sub/sender_id are otherwise just caller-supplied
-# strings, trusted as-is. This verifies the real Keycloak access token
-# Webapp forwards as `Authorization: Bearer <token>` (see
-# Webapp/src/lib/rasaConfig.ts's withUserBearerHeader) via Keycloak's
-# introspection endpoint, and requires the verified subject to match the
-# user_sub/sender_id being acted on. Reuses Webapp's own confidential
-# client credentials (KEYCLOAK_CLIENT_ID/_SECRET) rather than requiring a
-# separate dedicated introspection client -- Keycloak's introspection
-# endpoint only needs a valid confidential client, not a purpose-specific
-# one. Gated behind REQUIRE_USER_TOKEN_VERIFICATION (default off) for a
-# rollout window during which Webapp may not yet forward the header on
-# every deployed instance.
+# Verifies the real Keycloak access token Webapp forwards as
+# `Authorization: Bearer <token>` (see Webapp/src/lib/rasaConfig.ts's
+# withUserBearerHeader) via Keycloak's introspection endpoint, and requires
+# the verified subject to match the user_sub/sender_id being acted on --
+# RASA_AUTH_TOKEN alone only proves *a* trusted service is calling, never
+# *which* user. Reuses Webapp's own confidential client credentials
+# (KEYCLOAK_CLIENT_ID/_SECRET) rather than a separate introspection client.
 _KEYCLOAK_ISSUER = _read_env("KEYCLOAK_ISSUER")
 _KEYCLOAK_CLIENT_ID = _read_env("KEYCLOAK_CLIENT_ID")
 _KEYCLOAK_CLIENT_SECRET = _read_env("KEYCLOAK_CLIENT_SECRET")
-_REQUIRE_USER_TOKEN_VERIFICATION = _env_flag("REQUIRE_USER_TOKEN_VERIFICATION", default=False)
-if _REQUIRE_USER_TOKEN_VERIFICATION and not (_KEYCLOAK_ISSUER and _KEYCLOAK_CLIENT_ID and _KEYCLOAK_CLIENT_SECRET):
-    raise RuntimeError(
-        "KEYCLOAK_ISSUER, KEYCLOAK_CLIENT_ID and KEYCLOAK_CLIENT_SECRET are all required when "
-        "REQUIRE_USER_TOKEN_VERIFICATION is enabled."
-    )
+if not (_KEYCLOAK_ISSUER and _KEYCLOAK_CLIENT_ID and _KEYCLOAK_CLIENT_SECRET):
+    raise RuntimeError("KEYCLOAK_ISSUER, KEYCLOAK_CLIENT_ID and KEYCLOAK_CLIENT_SECRET are all required.")
 
 _SENDER_THREAD_SUFFIX_RE = re.compile(r"^(.*):thread:(\d+)$")
 
@@ -278,12 +266,10 @@ def _install_custom_routes() -> None:
             return (query_token or header_token) == expected
 
         async def _check_user_identity(request, claimed_sub: str):
-            """When REQUIRE_USER_TOKEN_VERIFICATION is on, verify the caller's
-            Bearer token and require it to match claimed_sub. Returns an error
-            response to return immediately, or None if the caller may proceed.
+            """Verify the caller's Bearer token matches claimed_sub. Returns an
+            error response to return immediately, or None if the caller may
+            proceed.
             """
-            if not _REQUIRE_USER_TOKEN_VERIFICATION:
-                return None
             verified_sub = await _verify_user_token(request)
             if not verified_sub:
                 return response.json({"error": "Unauthorized"}, status=401)
@@ -444,7 +430,7 @@ def _install_custom_routes() -> None:
             # hook point available to apply the same jobId-era identity check
             # to it. `sender` in the POST body is otherwise exactly as
             # caller-supplied/unverified as user_sub is on the custom routes.
-            if request.path != "/webhooks/rest/webhook" or not _REQUIRE_USER_TOKEN_VERIFICATION:
+            if request.path != "/webhooks/rest/webhook":
                 return None
             try:
                 body = request.json if isinstance(request.json, dict) else {}
