@@ -4,3 +4,6 @@ nlu:
   - intent: who_are_you
     examples: |
       - [placeholder] see en/us or locale overlays
+  - intent: help_me
+    examples: |
+      - [placeholder] see en/us or locale overlays

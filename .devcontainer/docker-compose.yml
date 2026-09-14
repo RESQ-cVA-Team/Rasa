@@ -10,6 +10,14 @@ services:
       - redis
     ports:
       - "5005:5005"
+    environment:
+      LOCK_STORE_URL: redis
+      LOCK_STORE_DB: "1"
+      TRACKER_STORE_URL: redis
+      TRACKER_STORE_PORT: "6379"
+      TRACKER_STORE_DB: "0"
+      RASA_TRACKER_STORE_BACKEND: redis
+      ACTION_ENDPOINT_URL: http://host.docker.internal:5055/webhook
     env_file:
       - .env
     extra_hosts:
@@ -17,7 +25,13 @@ services:
 
   redis:
     image: redis:alpine@sha256:09160599abd229764c0fb44cb6be640294e1d360a54b19985ab4843dcf2d90f1
-    command: ["redis-server", "--save", "20", "1", "--loglevel", "warning"]
+    command: >
+      redis-server --save 20 1 --loglevel warning
+      --requirepass ${REDIS_PASSWORD:?REDIS_PASSWORD must be set}
+    # Exposed to the host -- also serves as the shared token vault for
+    # Webapp/CVaLab, which run in separate devcontainers.
+    ports:
+      - "6379:6379"
 
   duckling:
     image: rasa/duckling:latest@sha256:459e6033f87b0f3f525ed0d0066ae89cfe31d512f32ac1d469431fa6ce1bdef5

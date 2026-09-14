@@ -15,3 +15,9 @@ nlu:
       - what is your role?
       - what do you do?
       - what is your job?
+  - intent: help_me
+    examples: |
+      - Help
+      - Help me
+      - Request help
+      - I need help

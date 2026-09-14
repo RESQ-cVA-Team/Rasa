@@ -1,0 +1,40 @@
+# Vulnerabilities accepted as known, currently-unfixable risk -- only
+# applied to the blocking CI check; the report step still surfaces these
+# for ongoing visibility. Each one was traced to rasa==3.6.21's own
+# dependency constraints and confirmed there's no version that both fixes
+# the CVE and keeps rasa itself working -- see chore/bump-vulnerable-python-deps
+# for the packages that *did* have real headroom to bump.
+#
+# tensorflow==2.12.0 -- hard-pinned exact by rasa==3.6.21, fix needs 2.12.1
+CVE-2023-33976
+# keras==2.12.0 -- tensorflow's own dependency, locked to tensorflow's
+# version in lockstep (Required-by: tensorflow); can't move independently
+# of the tensorflow pin above. Fixes need 2.13.1rc0/3.11.0-3.15.0.
+CVE-2024-3660
+CVE-2025-12060
+CVE-2025-9906
+CVE-2026-11816
+CVE-2026-12481
+CVE-2026-12484
+CVE-2026-1462
+# skops==0.9.0 -- hard-pinned exact by rasa==3.6.21, fixes need 0.12.0/0.13.0
+CVE-2025-54412
+CVE-2025-54413
+CVE-2025-54886
+# protobuf -- rasa==3.6.21 constrains to protobuf<4.23.4,>=4.23.3 (a single
+# patch release), fixes need 4.25.8/5.29.5/5.29.6/6.31.1/6.33.5
+CVE-2025-4565
+CVE-2026-0994
+# setuptools -- rasa==3.6.21 constrains to setuptools<70.4.0,>=70.3.0, fix
+# needs 78.1.1
+CVE-2025-47273
+# wheel -- fix (0.46.2) is the first release requiring packaging>=24.0,
+# which breaks rasa's own rasa.shared.utils.validation (still imports
+# packaging.version.LegacyVersion, removed in packaging 22.0) -- confirmed
+# by trying it, the container fails to boot. wheel is a build-time tool
+# never exercised at this container's actual runtime.
+CVE-2026-24049
+# aiohttp==3.9.4 -- rasa==3.6.21 constrains to aiohttp<3.10,>=3.9.0, fixes
+# need 3.13.3/3.14.3, both above the pin
+CVE-2025-69223
+CVE-2026-69244

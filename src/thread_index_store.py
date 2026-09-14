@@ -35,7 +35,8 @@ def _get_client() -> "redis.Redis":
         host = os.environ.get("TRACKER_STORE_URL", "redis")
         port = int(os.environ.get("TRACKER_STORE_PORT", "6379") or "6379")
         db = int(os.environ.get("TRACKER_STORE_DB", "0") or "0")
-        _client = redis.Redis(host=host, port=port, db=db, decode_responses=True)
+        password = os.environ.get("REDIS_PASSWORD") or None
+        _client = redis.Redis(host=host, port=port, db=db, password=password, decode_responses=True)
     return _client
 
 

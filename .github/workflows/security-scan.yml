@@ -11,8 +11,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  trivy:
-    name: Trivy Filesystem Scan
+  trivy-fs:
+    name: Trivy Filesystem Scan (manifest)
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,7 +20,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
 
-      - name: Run Trivy filesystem scan
+      - name: Trivy scan - blocking, fixable HIGH/CRITICAL
         uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8
         with:
           scan-type: fs
@@ -30,6 +30,67 @@ jobs:
           ignore-unfixed: true
           format: table
           exit-code: "1"
+
+      - name: Trivy scan - report, all MEDIUM+ including unfixed
+        if: always()
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8
+        with:
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln
+          severity: MEDIUM,HIGH,CRITICAL
+          ignore-unfixed: false
+          format: table
+          exit-code: "0"
+
+  trivy-image:
+    name: Trivy Image Scan (as shipped)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout code (with submodules)
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          submodules: recursive
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f
+
+      - name: Build image (local load only, not pushed)
+        run: |
+          set -euo pipefail
+          # One representative language build (en/US) is enough here: every
+          # language variant shares the same base image and Python
+          # dependency footprint, which is what a vulnerability scan looks
+          # at -- only the trained NLU data differs per language.
+          docker buildx build \
+            --build-arg LAYERS="src/core src/locales/en/US" \
+            --load \
+            -t rasa-security-scan:local \
+            .
+
+      - name: Trivy scan - blocking, fixable HIGH/CRITICAL
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8
+        with:
+          image-ref: rasa-security-scan:local
+          scanners: vuln
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          trivyignores: .trivyignore
+          format: table
+          exit-code: "1"
+
+      - name: Trivy scan - report, all MEDIUM+ including unfixed
+        if: always()
+        uses: aquasecurity/trivy-action@a9c7b0f06e461e9d4b4d1711f154ee024b8d7ab8
+        with:
+          image-ref: rasa-security-scan:local
+          scanners: vuln
+          severity: MEDIUM,HIGH,CRITICAL
+          ignore-unfixed: false
+          format: table
+          exit-code: "0"
 
   python-dependencies:
     name: Python Dependency Audit
@@ -69,21 +130,29 @@ jobs:
 
           payload = json.loads(Path(sys.argv[1]).read_text())
           actionable = []
+          unfixed = []
 
           for dependency in payload.get("dependencies", []):
             name = dependency.get("name", "<unknown>")
             version = dependency.get("version", "<unknown>")
             for vulnerability in dependency.get("vulns", []):
               fix_versions = vulnerability.get("fix_versions") or []
-              if fix_versions:
-                actionable.append(
-                  {
-                    "name": name,
-                    "version": version,
-                    "id": vulnerability.get("id", "<unknown>"),
-                    "fix_versions": fix_versions,
-                  }
-                )
+              entry = {
+                "name": name,
+                "version": version,
+                "id": vulnerability.get("id", "<unknown>"),
+                "fix_versions": fix_versions,
+              }
+              (actionable if fix_versions else unfixed).append(entry)
+
+          # Report every vulnerability found -- including ones with no fix
+          # yet -- so they stay visible instead of being silently dropped.
+          # Only the fixable ones (below) fail the build.
+          if unfixed:
+            print("Python vulnerabilities with no known fix yet (report only, does not fail the build):")
+            for vulnerability in unfixed:
+              print(f"- {vulnerability['name']} {vulnerability['version']}: {vulnerability['id']}")
+            print()
 
           if not actionable:
             print("No Python vulnerabilities with known fixes found.")

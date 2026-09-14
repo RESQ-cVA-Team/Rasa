@@ -156,6 +156,37 @@ class SSOTCanonicalizer(GraphComponent):
     ) -> "SSOTCanonicalizer":
         return cls(config)
 
+    def _drop_entities_subsumed_by_metric(
+        self, entities: List[Dict[str, Any]]
+    ) -> List[Dict[str, Any]]:
+        # A lookup-table match that falls entirely inside a metric entity's own
+        # span is just a substring of that metric's SSOT synonym text (e.g. "day"
+        # inside HOSPITALIZED_IN's "first-day bed type") -- not independent
+        # evidence of a separate entity, and misleading downstream (the LLM
+        # planner sometimes honors it as a real request).
+        metric_spans = [
+            (cast(int, e["start"]), cast(int, e["end"]))
+            for e in entities
+            if e.get("entity") == "metric"
+            and isinstance(e.get("start"), int)
+            and isinstance(e.get("end"), int)
+        ]
+        if not metric_spans:
+            return entities
+
+        filtered: List[Dict[str, Any]] = []
+        for ent in entities:
+            if ent.get("entity") != "metric" and isinstance(ent.get("start"), int) and isinstance(ent.get("end"), int):
+                start, end = cast(int, ent["start"]), cast(int, ent["end"])
+                if any(m_start <= start and end <= m_end for m_start, m_end in metric_spans):
+                    if self._debug:
+                        logger.info(
+                            f"Dropping {ent.get('entity')} entity subsumed by metric span: {ent.get('value')!r}"
+                        )
+                    continue
+            filtered.append(ent)
+        return filtered
+
     def process(self, messages: List[Message]) -> List[Message]:  # type: ignore[override]
         for message_any in cast(List[Any], messages):
             entities_any = message_any.get("entities")
@@ -199,6 +230,7 @@ class SSOTCanonicalizer(GraphComponent):
                     ent["value"] = mapped
                 new_entities.append(ent)
 
+            new_entities = self._drop_entities_subsumed_by_metric(new_entities)
             message_any.set("entities", new_entities)
 
         return messages

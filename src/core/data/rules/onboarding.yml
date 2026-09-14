@@ -6,3 +6,8 @@ rules:
       - intent: who_are_you
       - action: utter_who_are_you
       - action: utter_user_prompt
+  - rule: How can I visualize my data?
+    steps:
+      - intent: help_me
+      - action: utter_help_user
+      - action: utter_user_prompt

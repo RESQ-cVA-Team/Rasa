@@ -3,12 +3,16 @@ responses:
   utter_user_prompt:
     - text: "How can I help you?"
       buttons:
-        - title: "How do I use this bot?"
-          payload: "How do I use this bot?"
-        - title: "Show me a guided visualization"
-          payload: "Show me a guided visualization"
+        - title: "Who are you?"
+          payload: "/who_are_you"
+        - title: "How do I visualize my data?"
+          payload: "/help_me"
+        - title: "Guide me through a visualization"
+          payload: "/request_guided_visualization"
         - title: "I want to describe my graph in one message"
-          payload: "I want to describe my graph in one message"
+          payload: "/request_freeform_visualization"
 
   utter_who_are_you:
     - text: "I am a bot that can help you visualize RES-Q data. I can guide you step by step to build a graph, or you can describe the graph you want in one message and I'll try to build it for you."
+  utter_help_user:
+    - text: "I can help you visualize your RES-Q data. \n Guided Visualizations: You can always ask 'guide me' to have me guide you through creating a graph step by step. \n Freeform Visualizations: If you know exactly what you want, you can always describe the graph in one message and I'll try to build it for you.\n - Make a line chart of percentage of ischemic strokes per quarter \n - Show a graph with dtn per quarter for ischemic patients grouped by sex\n - Compare my dtn per quarter with [hospital/country] using a line chart\n Can you compare my dtn for Q4 2025 and Q1 2026 using a mann whitney u test \n - Make me an admission nihss of only patients older than 60 years"

@@ -18,15 +18,13 @@ nlu:
       - Display data for patients under [30]{"entity": "age", "role": "upper"} years
       - Show patients aged [18]{"entity": "age", "role": "lower"} and above
       - Chart for patients below [90]{"entity": "age", "role": "upper"}
-      - Chart of [swallowing screening (awards metric)](metric) grouped by [initial point of contact](group_by)
-      - Chart of [swallowing screening awards metric](metric) grouped by [initial point of contact](group_by)
+      - Chart of [swallowing screening](metric) grouped by [initial point of contact](group_by)
       - Show [occlusion found on cta or mra](metric) by [hospital department](group_by)
       - Give me average [time to thrombolysis](metric) grouped by [EMS prenotification](group_by)
       - Show [AA_ANTICOAGULANTS](metric) excluding [ischemic](stroke_type) stroke patients
       - Chart [OCCLUSION_SITE](metric) for [hemorrhagic](stroke_type) strokes
       - Give me [time until thrombolytic treatment](metric) scores excluding [TIA](stroke_type) patients
-      - Show [anticoagulants at discharge (awards metric)](metric) between [March 4th, 2023]{"entity": "date", "role": "lower"} and [July 5th, 2024]{"entity": "date", "role": "upper"}
-      - Show [anticoagulants at discharge awards metric](metric) between [March 4th, 2023]{"entity": "date", "role": "lower"} and [July 5th, 2024]{"entity": "date", "role": "upper"}
+      - Show [anticoagulants at discharge](metric) between [March 4th, 2023]{"entity": "date", "role": "lower"} and [July 5th, 2024]{"entity": "date", "role": "upper"}
       - Chart [occlusion site](metric) from [January 1, 2022]{"entity": "date", "role": "lower"} to [December 31, 2022]{"entity": "date", "role": "upper"}
       - Show data after [2023-01-01]{"entity": "date", "role": "lower"}
       - Display records before [2024-12-31]{"entity": "date", "role": "upper"}
@@ -35,8 +33,7 @@ nlu:
       - Show a [line](chart_type) graph of [AA_ANTITHROMBOTICS](metric)
       - Give me a [bar](chart_type) chart of [OLD_INFARCTS_SEEN](metric) for [female](sex) patients
       - Display a [pie](chart_type) chart of [time to iv tpa](metric) grouped by [stroke type](group_by)
-      - Show a [line](chart_type) graph for [antithrombotics at discharge (awards metric)](metric) and [old infarcts seen](metric) for [male](sex) and [female](sex) patients between [40]{"entity": "age", "role": "lower"} and [60]{"entity": "age", "role": "upper"}
-      - Show a [line](chart_type) graph for [antithrombotics at discharge awards metric](metric) and [old infarcts seen](metric) for [male](sex) and [female](sex) patients between [40]{"entity": "age", "role": "lower"} and [60]{"entity": "age", "role": "upper"}
+      - Show a [line](chart_type) graph for [antithrombotics at discharge](metric) and [old infarcts seen](metric) for [male](sex) and [female](sex) patients between [40]{"entity": "age", "role": "lower"} and [60]{"entity": "age", "role": "upper"}
       - Give me a chart of [age](metric) of patients grouped by [initial point of contact](group_by), excluding [ischemic](stroke_type) strokes, between ages [18]{"entity": "age", "role": "lower"} to [90]{"entity": "age", "role": "upper"}
       - Can you show [AA_DTN_LE60](metric) for [ischemic](stroke_type) stroke patients?
       - Display [DischargeNihss](metric) scores grouped by [treatment type](group_by)
@@ -45,10 +42,10 @@ nlu:
       - Chart [stroke mimics diagnosis](metric) by [stroke subtype](group_by) for [female](sex) patients
       - Give me [mRS](metric) scores for [hemorrhagic](stroke_type) strokes from [2023-01-01]{"entity": "date", "role": "lower"} to [2023-12-31]{"entity": "date", "role": "upper"}
       - Display a [histogram](chart_type) of [age](metric) distribution
+      - Show me a [histogram](chart_type) of [discharge Modified Rankin Scale](metric)
       - Show [thrombolysis rate](metric) grouped by [arrival method](group_by)
       - I want to see [time to treatment](metric) improvement between [admission]{"entity": "nihss", "role": "lower"} and [discharge]{"entity": "nihss", "role": "upper"}
-      - Chart [stroke unit or intensive care (awards metric)](metric) performance by [month](group_by) in a [line](chart_type) graph
-      - Chart [stroke unit or intensive care awards metric](metric) performance by [month](group_by) in a [line](chart_type) graph
+      - Chart [stroke unit or intensive care](metric) performance by [month](group_by) in a [line](chart_type) graph
       - Show [complications rate](metric) for [male](sex) patients with [TIA](stroke_type)
       - Display [door to imaging](metric) times for urgent cases
       - Give me [thrombolysis ≤60 minutes](metric) statistics for patients aged [18]{"entity": "age", "role": "lower"} to [45]{"entity": "age", "role": "upper"}
@@ -207,8 +204,7 @@ nlu:
       - Chart [MTICI_SCORE](metric) split by [stroke type](stroke_type)
       - [admission nihss](metric) [per quarter](group_by) by [stroke type](stroke_type)
       - Break down [IMAGING_DONE](metric) by [stroke type](stroke_type)
-      - Group [recanalization (awards metric)](metric) by [stroke type](stroke_type)
-      - Group [recanalization awards metric](metric) by [stroke type](stroke_type)
+      - Group [recanalization](metric) by [stroke type](stroke_type)
       - Show me [door to needle](metric) and [STROKE_TYPE](metric) scores
       - Show [brain imaging done](metric) excluding [ischaemic](stroke_type) stroke patients
       - Chart [stroke type](metric) for [haemorrhagic](stroke_type) strokes
@@ -229,6 +225,9 @@ nlu:
       - Show me a [line chart](chart_type) of [brain imaging type](metric) grouped by [inr measurement mode](group_by)
       - make a [bar](chart_type) graph of [OCCLUSION_FOUND](metric) grouped by [inr measurement mode](group_by)
       - Make me a bar chart of [physiotherapy received](metric) grouped by [stroke type](group_by)
+      - Show me a line graph of [HOSPITAL_STAY](metric)
+      - Plot [HOSPITAL_STAY](metric) in a line chart
+      - Visualize [HOSPITAL_STAY](metric) as a line graph per month([group_by])
 
   - intent: update_visualization
     examples: |
@@ -314,8 +313,7 @@ nlu:
       - Use data from [2022]{"entity":"date","role":"lower"} to [2023]{"entity":"date","role":"upper"}
       - Just show this year's data
       - Replace [DTN](metric) with [reason for no thrombectomy](metric)
-      - Show [imaging at first hospital (awards metric)](metric) instead
-      - Show [imaging at first hospital awards metric](metric) instead
+      - Show [imaging at first hospital](metric) instead
       - I'd like to look at [THROMBOLYSIS_ONLY](metric) instead
       - Use [AdmissionNihss](metric) instead
       - Change the metric to [thrombolysis rate](metric)

@@ -249,6 +249,7 @@ DEFAULT_SSOT_NLU_ENTITIES: Dict[str, str] = {
     "metric": "MetricType.yml",
     "country_code": "CountryType.yml",
     "statistical_test_type": "StatisticalTestType.yml",
+    "chart_type": "ChartType.yml",
 }
 
 

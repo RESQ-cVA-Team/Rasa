@@ -5,11 +5,11 @@ responses:
     - text: "Jak ti mohu pomoci?"
       buttons:
         - title: "Jak mám tohoto bota používat?"
-          payload: "Jak mám tohoto bota používat?"
+          payload: "/who_are_you"
         - title: "Pomoz mi vytvořit vizualizaci"
-          payload: "pomoz mi vytvořit vizualizaci"
+          payload: "/request_guided_visualization"
         - title: "Chci to zadat volně v jedné zprávě"
-          payload: "napíšu to v jedné zprávě"
+          payload: "/request_freeform_visualization"
 
   utter_who_are_you:
     - text: "Jsem bot, který ti pomůže vizualizovat data RES-Q. Mohu tě provést krok za krokem vytvořením grafu, nebo mi můžeš v jedné zprávě popsat graf, který chceš, a pokusím se ho pro tebe vytvořit."
