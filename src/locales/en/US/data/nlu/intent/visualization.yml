@@ -241,7 +241,7 @@ nlu:
       - Let's see [DTN](metric) data
       - Bring up [thrombolysis rate](metric)
       - I want to check [admission nihss](metric)
-      - Show me [door to needle time](metric) please
+      - Show me [reason for no neurosurgery](metric) please
       - Can you pull [DIDO](metric) for me
       - I'd like a look at [DTN](metric)
       - Get me [thrombolysis rate](metric) data
