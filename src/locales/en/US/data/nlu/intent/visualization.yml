@@ -230,6 +230,8 @@ nlu:
       - Visualize [anticoagulant type at discharge in atrial fibrillation](metric) as a line graph per month([group_by])
       - Show me a line chart of [ivt drugs](metric) grouped by [stroke type](group_by)
       - [ivt dose](metric) [area chart](chart_type) [monthly](group_by)
+      - Plot [HOSPITAL_STAY](metric) in a line chart
+      - Visualize [HOSPITAL_STAY](metric) as a line graph per month([group_by])
       - Show me a chart of [DIDO](metric)
       - I'd like to see [door to needle](metric)
       - Can I get a chart for [admission nihss](metric)
@@ -245,6 +247,7 @@ nlu:
       - Can you pull [DIDO](metric) for me
       - I'd like a look at [DTN](metric)
       - Get me [thrombolysis rate](metric) data
+      - Hello there, I would like a graph of [medication before onset in ais or tia](metric)
 
   - intent: update_visualization
     examples: |
