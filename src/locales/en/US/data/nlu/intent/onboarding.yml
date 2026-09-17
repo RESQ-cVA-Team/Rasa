@@ -15,6 +15,15 @@ nlu:
       - what is your role?
       - what do you do?
       - what is your job?
+      - are you a bot?
+      - tell me about yourself
+      - what kind of assistant are you?
+      - explain what you're for
+      - what's your purpose here?
+      - what should I ask you?
+      - how does this assistant work?
+      - what does this tool do?
+      - introduce yourself
   - intent: help_me
     examples: |
       - Help
