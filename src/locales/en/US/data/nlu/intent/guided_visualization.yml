@@ -20,6 +20,13 @@ nlu:
       - I want to do it freeform
       - I'll just say what I want
       - I'll do it in one message
+      - skip the guided steps, let me just ask
+      - I'll write out the whole request myself
+      - let me specify everything at once
+      - I don't need the step-by-step, I'll just describe it
+      - I'd rather just type my own request
+      - I'll handle it in a single message
+      - let me just tell you what I want directly
 
   - intent: cancel_guided_visualization
     examples: |
@@ -61,6 +68,21 @@ nlu:
       - [the whole network](hospital_scope_reference)
       - use group [50](group_id)
       - [everything](hospital_scope_reference)
+      - just my hospital
+      - only my hospital
+      - the whole country
+      - [all hospitals in my country](hospital_scope_reference)
+      - hospital [Saint Mary](hospital_name)
+      - use [Sweden](country_code)
+      - [UK](country_code)
+      - [United Kingdom](country_code)
+      - group number [42](group_id)
+      - [France](country_code)
+      - use [Italy](country_code)
+      - hospital [Central](hospital_name)
+      - [everywhere](hospital_scope_reference)
+      - [across all sites](hospital_scope_reference)
+      - just this one hospital
 
   - intent: skip_guided_step
     examples: |
