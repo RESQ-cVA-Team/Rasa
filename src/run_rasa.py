@@ -4,7 +4,6 @@
 import asyncio
 import logging
 import os
-import re
 import sys
 import warnings
 from datetime import datetime, timezone
@@ -25,6 +24,7 @@ os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", message="Matplotlib created a temporary config/cache directory*")
 
+from src.request_identity_policy import WEBHOOK_PATH, required_identity  # noqa: E402
 from src.thread_index import (  # noqa: E402
     apply_index_action,
     build_thread_list_from_payload,
@@ -45,33 +45,20 @@ def _read_env(name: str) -> Optional[str]:
     return normalized or None
 
 
-def _env_flag(name: str, default: bool) -> bool:
-    value = _read_env(name)
-    if value is None:
-        return default
-    return value.lower() in {"1", "true", "yes", "on"}
-
-
-# Verifies the real Keycloak access token Webapp forwards as
-# `Authorization: Bearer <token>` (see Webapp/src/lib/rasaConfig.ts's
-# withUserBearerHeader) via Keycloak's introspection endpoint, and requires
-# the verified subject to match the user_sub/sender_id being acted on --
-# RASA_AUTH_TOKEN alone only proves *a* trusted service is calling, never
-# *which* user. Reuses Webapp's own confidential client credentials
-# (KEYCLOAK_CLIENT_ID/_SECRET) rather than a separate introspection client.
+# Every request (except GET /version) must carry a real Keycloak access token
+# as `Authorization: Bearer <token>`, verified via Keycloak's introspection
+# endpoint, and its verified subject must match the user_sub/sender_id being
+# acted on -- see src/request_identity_policy.py for the per-route rules and
+# _enforce_request_identity below for the gate. There is no static shared
+# secret: Rasa is started without --auth-token, so this gate is the only
+# authentication in front of Rasa's built-in API. Reuses Webapp's own
+# confidential client credentials (KEYCLOAK_CLIENT_ID/_SECRET) rather than a
+# separate introspection client.
 _KEYCLOAK_ISSUER = _read_env("KEYCLOAK_ISSUER")
 _KEYCLOAK_CLIENT_ID = _read_env("KEYCLOAK_CLIENT_ID")
 _KEYCLOAK_CLIENT_SECRET = _read_env("KEYCLOAK_CLIENT_SECRET")
 if not (_KEYCLOAK_ISSUER and _KEYCLOAK_CLIENT_ID and _KEYCLOAK_CLIENT_SECRET):
     raise RuntimeError("KEYCLOAK_ISSUER, KEYCLOAK_CLIENT_ID and KEYCLOAK_CLIENT_SECRET are all required.")
-
-_SENDER_THREAD_SUFFIX_RE = re.compile(r"^(.*):thread:(\d+)$")
-
-
-def _sender_sub(sender_id: str) -> str:
-    """Strip the `:thread:<id>` suffix, mirroring rasaSender.ts's parseRasaSenderId."""
-    match = _SENDER_THREAD_SUFFIX_RE.match(sender_id)
-    return match.group(1) if match else sender_id
 
 
 def _introspect_token_sync(token: str) -> Optional[str]:
@@ -109,6 +96,39 @@ async def _verify_user_token(request) -> Optional[str]:
     if not token:
         return None
     return await asyncio.to_thread(_introspect_token_sync, token)
+
+
+async def _enforce_request_identity(request):
+    """Sanic on_request hook: the single authentication gate for every route.
+
+    Returns a response to short-circuit the request, or None to let it
+    through. A request is only let through if the policy allows it outright
+    (GET /version, CORS preflight) or its verified Keycloak subject matches
+    the user the path or webhook body says it acts for.
+    """
+    body_sender = None
+    if request.method == "POST" and request.path == WEBHOOK_PATH:
+        try:
+            body = request.json if isinstance(request.json, dict) else {}
+        except Exception:
+            body = {}
+        candidate = body.get("sender")
+        body_sender = candidate if isinstance(candidate, str) and candidate else None
+
+    decision = required_identity(request.method, request.path, body_sender)
+    if decision.kind == "open":
+        return None
+    if decision.kind == "deny":
+        return response.json({"error": "Forbidden"}, status=403)
+    if decision.kind == "malformed":
+        return response.json({"error": "Missing sender"}, status=400)
+
+    verified_sub = await _verify_user_token(request)
+    if not verified_sub:
+        return response.json({"error": "Unauthorized"}, status=401)
+    if verified_sub != decision.sub:
+        return response.json({"error": "Forbidden: token subject does not match the requested user"}, status=403)
+    return None
 
 
 async def _hard_delete_tracker(tracker_store: Any, sender_id: str) -> bool:
@@ -255,48 +275,12 @@ def _install_custom_routes() -> None:
                 return None, response.json({"error": "Tracker store not available"}, status=500)
             return cast(Any, tracker_store), None
 
-        def _authorized(request) -> bool:
-            expected = _read_env("RASA_AUTH_TOKEN")
-            if not expected:
-                return True
-
-            query_token = request.args.get("token") if hasattr(request, "args") else None
-            auth_header = request.headers.get("Authorization", "") if hasattr(request, "headers") else ""
-            header_token = auth_header[7:] if auth_header.startswith("Bearer ") else None
-            return (query_token or header_token) == expected
-
-        async def _check_user_identity(request, claimed_sub: str):
-            """Verify the caller's Bearer token matches claimed_sub. Returns an
-            error response to return immediately, or None if the caller may
-            proceed.
-            """
-            verified_sub = await _verify_user_token(request)
-            if not verified_sub:
-                return response.json({"error": "Unauthorized"}, status=401)
-            if verified_sub != claimed_sub:
-                return response.json(
-                    {"error": "Forbidden: token subject does not match the requested user"}, status=403
-                )
-            return None
-
         async def get_threads(request, user_sub: str):
-            if not _authorized(request):
-                return response.json({"error": "Unauthorized"}, status=401)
-            identity_err = await _check_user_identity(request, user_sub)
-            if identity_err:
-                return identity_err
-
             payload = get_index_payload(user_sub)
             threads = build_thread_list_from_payload(payload)
             return response.json(build_thread_list_response(threads), status=200)
 
         async def get_next_thread_id(request, user_sub: str):
-            if not _authorized(request):
-                return response.json({"error": "Unauthorized"}, status=401)
-            identity_err = await _check_user_identity(request, user_sub)
-            if identity_err:
-                return identity_err
-
             payload = get_index_payload(user_sub)
             return response.json(
                 {
@@ -307,12 +291,6 @@ def _install_custom_routes() -> None:
             )
 
         async def post_index_event(request, user_sub: str):
-            if not _authorized(request):
-                return response.json({"error": "Unauthorized"}, status=401)
-            identity_err = await _check_user_identity(request, user_sub)
-            if identity_err:
-                return identity_err
-
             payload = request.json if isinstance(request.json, dict) else None
             if payload is None:
                 return response.json({"error": "Invalid JSON"}, status=400)
@@ -349,12 +327,6 @@ def _install_custom_routes() -> None:
 
         async def delete_thread(request, user_sub: str, thread_id: str):
             """DELETE /threads/<user_sub>/thread/<thread_id> - Delete a thread and its tracker."""
-            if not _authorized(request):
-                return response.json({"error": "Unauthorized"}, status=401)
-            identity_err = await _check_user_identity(request, user_sub)
-            if identity_err:
-                return identity_err
-
             try:
                 thread_id_int = int(thread_id)
             except (TypeError, ValueError):
@@ -399,12 +371,6 @@ def _install_custom_routes() -> None:
             actual Webapp thread list) but still need real deletion, not
             just an orphaned tracker. Same naming convention as the existing
             GET/PUT /conversations/<conversation_id>/tracker routes."""
-            if not _authorized(request):
-                return response.json({"error": "Unauthorized"}, status=401)
-            identity_err = await _check_user_identity(request, _sender_sub(conversation_id))
-            if identity_err:
-                return identity_err
-
             tracker_store, err = await _get_tracker_store()
             if err:
                 return err
@@ -423,23 +389,9 @@ def _install_custom_routes() -> None:
                 status=200,
             )
 
-        @app.on_request
-        async def _verify_webhook_identity(request):
-            # The standard REST webhook is Rasa core's own built-in channel
-            # route, not one of the custom routes above -- this is the only
-            # hook point available to apply the same jobId-era identity check
-            # to it. `sender` in the POST body is otherwise exactly as
-            # caller-supplied/unverified as user_sub is on the custom routes.
-            if request.path != "/webhooks/rest/webhook":
-                return None
-            try:
-                body = request.json if isinstance(request.json, dict) else {}
-            except Exception:
-                body = {}
-            claimed_sender = body.get("sender")
-            if not isinstance(claimed_sender, str) or not claimed_sender:
-                return None  # malformed body -- let the route's own validation reject it
-            return await _check_user_identity(request, _sender_sub(claimed_sender))
+        # The handlers above do no authentication of their own; this hook
+        # runs before every route, built-in or custom.
+        app.on_request(_enforce_request_identity)
 
         _safe_add(version, "/version", ["GET"])
         _safe_add(get_threads, "/threads/by-user/<user_sub:str>", ["GET"])
@@ -470,14 +422,6 @@ def _resolve_endpoints_file() -> str:
     return presets.get(backend, "src/core/endpoints.redis.yml")
 
 
-def _resolve_auth_token() -> str:
-    require_auth = _env_flag("RASA_REQUIRE_AUTH_TOKEN", default=True)
-    token = _read_env("RASA_AUTH_TOKEN")
-    if require_auth and not token:
-        raise RuntimeError("RASA_AUTH_TOKEN is required when RASA_REQUIRE_AUTH_TOKEN is enabled. Set RASA_AUTH_TOKEN or set RASA_REQUIRE_AUTH_TOKEN=false only for local debugging.")
-    return token or ""
-
-
 def _resolve_cors() -> Optional[str]:
     cors = _read_env("RASA_CORS")
     if cors is None:
@@ -502,7 +446,6 @@ def _resolve_cors() -> Optional[str]:
 def main() -> None:
     _install_custom_routes()
     endpoints_file = _resolve_endpoints_file()
-    auth_token = _resolve_auth_token()
     cors = _resolve_cors()
     # Docker runs this entrypoint without CLI args by default; in that case,
     # provide sensible defaults and resolve the backend endpoints from env.
@@ -519,8 +462,6 @@ def main() -> None:
             "--response-timeout",
             os.getenv("RASA_RESPONSE_TIMEOUT", "300"),
         ]
-        if auth_token:
-            args.extend(["--auth-token", auth_token])
         if cors:
             args.extend(["--cors", cors])
         sys.argv.extend(args)

@@ -65,35 +65,12 @@ class RunRasaTests(unittest.TestCase):
         with mock.patch.dict(sys.modules["os"].environ, {"RASA_TEST": "   "}, clear=False):
             self.assertIsNone(run_rasa._read_env("RASA_TEST"))
 
-    def test_env_flag_parses_truthy_and_falsy_values(self) -> None:
-        with mock.patch.dict(sys.modules["os"].environ, {"RASA_FLAG": "yes"}, clear=False):
-            self.assertTrue(run_rasa._env_flag("RASA_FLAG", default=False))
-
-        with mock.patch.dict(sys.modules["os"].environ, {"RASA_FLAG": "no"}, clear=False):
-            self.assertFalse(run_rasa._env_flag("RASA_FLAG", default=True))
-
     def test_resolve_endpoints_file_uses_explicit_file_or_backend_preset(self) -> None:
         with mock.patch.dict(sys.modules["os"].environ, {"RASA_ENDPOINTS_FILE": "custom.yml"}, clear=False):
             self.assertEqual(run_rasa._resolve_endpoints_file(), "custom.yml")
 
         with mock.patch.dict(sys.modules["os"].environ, {"RASA_ENDPOINTS_FILE": "", "RASA_TRACKER_STORE_BACKEND": "memory"}, clear=False):
             self.assertEqual(run_rasa._resolve_endpoints_file(), "src/core/endpoints.memory.yml")
-
-    def test_resolve_auth_token_requires_token_when_enabled(self) -> None:
-        with mock.patch.dict(
-            sys.modules["os"].environ,
-            {"RASA_REQUIRE_AUTH_TOKEN": "true", "RASA_AUTH_TOKEN": ""},
-            clear=False,
-        ):
-            with self.assertRaises(RuntimeError):
-                run_rasa._resolve_auth_token()
-
-        with mock.patch.dict(
-            sys.modules["os"].environ,
-            {"RASA_REQUIRE_AUTH_TOKEN": "false", "RASA_AUTH_TOKEN": ""},
-            clear=False,
-        ):
-            self.assertEqual(run_rasa._resolve_auth_token(), "")
 
     def test_resolve_cors_accepts_only_bare_http_or_https_origins(self) -> None:
         with mock.patch.dict(sys.modules["os"].environ, {"RASA_CORS": "https://example.com"}, clear=False):
@@ -106,6 +83,116 @@ class RunRasaTests(unittest.TestCase):
         with mock.patch.dict(sys.modules["os"].environ, {"RASA_CORS": "*"}, clear=False):
             with self.assertRaises(RuntimeError):
                 run_rasa._resolve_cors()
+
+
+SUB = "3f2a9c1e-0000-4000-8000-000000000001"
+
+
+class FakeRequest:
+    def __init__(self, method: str, path: str, body=None, headers=None, body_raises: bool = False) -> None:
+        self.method = method
+        self.path = path
+        self.headers = headers or {}
+        self._body = body
+        self._body_raises = body_raises
+
+    @property
+    def json(self):
+        if self._body_raises:
+            raise ValueError("Bad JSON")
+        return self._body
+
+
+class VerifyUserTokenTests(unittest.IsolatedAsyncioTestCase):
+    async def test_missing_or_non_bearer_header_never_reaches_keycloak(self) -> None:
+        with mock.patch.object(run_rasa, "_introspect_token_sync") as introspect:
+            self.assertIsNone(await run_rasa._verify_user_token(FakeRequest("GET", "/x")))
+            self.assertIsNone(
+                await run_rasa._verify_user_token(FakeRequest("GET", "/x", headers={"Authorization": "Basic abc"}))
+            )
+            self.assertIsNone(
+                await run_rasa._verify_user_token(FakeRequest("GET", "/x", headers={"Authorization": "Bearer   "}))
+            )
+        introspect.assert_not_called()
+
+    async def test_static_token_query_param_is_not_an_identity(self) -> None:
+        request = FakeRequest("GET", "/x")
+        request.args = {"token": "legacy-static-token"}
+        with mock.patch.object(run_rasa, "_introspect_token_sync") as introspect:
+            self.assertIsNone(await run_rasa._verify_user_token(request))
+        introspect.assert_not_called()
+
+    async def test_bearer_token_is_introspected(self) -> None:
+        with mock.patch.object(run_rasa, "_introspect_token_sync", return_value=SUB) as introspect:
+            verified = await run_rasa._verify_user_token(
+                FakeRequest("GET", "/x", headers={"Authorization": "Bearer real-token"})
+            )
+        self.assertEqual(verified, SUB)
+        introspect.assert_called_once_with("real-token")
+
+
+class EnforceRequestIdentityTests(unittest.IsolatedAsyncioTestCase):
+    async def gate(self, request, verified_sub=None):
+        verify = mock.AsyncMock(return_value=verified_sub)
+        with mock.patch.object(run_rasa, "_verify_user_token", verify):
+            result = await run_rasa._enforce_request_identity(request)
+        return result, verify
+
+    async def test_version_passes_without_verifying_anything(self) -> None:
+        result, verify = await self.gate(FakeRequest("GET", "/version"))
+        self.assertIsNone(result)
+        verify.assert_not_awaited()
+
+    async def test_denied_routes_are_forbidden_without_verifying_anything(self) -> None:
+        for method, path in [("POST", "/model/parse"), ("GET", "/status"), ("GET", "/domain"), ("PUT", "/model")]:
+            with self.subTest(path=path):
+                result, verify = await self.gate(FakeRequest(method, path), verified_sub=SUB)
+                self.assertEqual(result["status"], 403)
+                verify.assert_not_awaited()
+
+    async def test_built_in_tracker_route_requires_a_verified_token(self) -> None:
+        result, _ = await self.gate(FakeRequest("GET", f"/conversations/{SUB}:thread:1/tracker"), verified_sub=None)
+        self.assertEqual(result["status"], 401)
+
+    async def test_built_in_tracker_route_rejects_another_users_conversation(self) -> None:
+        for method, suffix in [("GET", "tracker"), ("POST", "tracker/events")]:
+            with self.subTest(suffix=suffix):
+                result, _ = await self.gate(
+                    FakeRequest(method, f"/conversations/someone-else:thread:1/{suffix}"), verified_sub=SUB
+                )
+                self.assertEqual(result["status"], 403)
+
+    async def test_built_in_tracker_route_allows_the_owner(self) -> None:
+        result, _ = await self.gate(FakeRequest("GET", f"/conversations/{SUB}:thread:1/tracker"), verified_sub=SUB)
+        self.assertIsNone(result)
+
+    async def test_thread_routes_are_bound_to_the_path_sub(self) -> None:
+        result, _ = await self.gate(FakeRequest("GET", f"/threads/by-user/{SUB}"), verified_sub=SUB)
+        self.assertIsNone(result)
+        result, _ = await self.gate(FakeRequest("GET", "/threads/by-user/someone-else"), verified_sub=SUB)
+        self.assertEqual(result["status"], 403)
+
+    async def test_webhook_is_bound_to_the_sender_in_the_body(self) -> None:
+        request = FakeRequest("POST", "/webhooks/rest/webhook", body={"sender": f"{SUB}:thread:2", "message": "hi"})
+        result, _ = await self.gate(request, verified_sub=SUB)
+        self.assertIsNone(result)
+
+        request = FakeRequest("POST", "/webhooks/rest/webhook", body={"sender": "someone-else", "message": "hi"})
+        result, _ = await self.gate(request, verified_sub=SUB)
+        self.assertEqual(result["status"], 403)
+
+    async def test_webhook_without_a_usable_sender_is_rejected_not_skipped(self) -> None:
+        for body, raises in [({"message": "hi"}, False), ({"sender": ""}, False), ({"sender": 5}, False), (None, True)]:
+            with self.subTest(body=body, raises=raises):
+                request = FakeRequest("POST", "/webhooks/rest/webhook", body=body, body_raises=raises)
+                result, verify = await self.gate(request, verified_sub=SUB)
+                self.assertEqual(result["status"], 400)
+                verify.assert_not_awaited()
+
+    async def test_cors_preflight_passes(self) -> None:
+        result, verify = await self.gate(FakeRequest("OPTIONS", "/webhooks/rest/webhook"))
+        self.assertIsNone(result)
+        verify.assert_not_awaited()
 
 
 class FakeRedisClient:

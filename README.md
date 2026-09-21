@@ -19,7 +19,7 @@ Run instructions for:
 - `TRACKER_STORE_DB`
 - `LOCK_STORE_URL`
 - `LOCK_STORE_DB`
-- `RASA_AUTH_TOKEN`
+- `KEYCLOAK_ISSUER`, `KEYCLOAK_CLIENT_ID`, `KEYCLOAK_CLIENT_SECRET` (Rasa verifies every request's Bearer token via Keycloak introspection; there is no static shared token)
 
 Recommended:
 
@@ -62,7 +62,9 @@ docker run --rm -p 5005:5005 \
   -e TRACKER_STORE_DB=0 \
   -e LOCK_STORE_URL=redis \
   -e LOCK_STORE_DB=1 \
-  -e RASA_AUTH_TOKEN=<shared-rasa-token> \
+  -e KEYCLOAK_ISSUER=<issuer-url> \
+  -e KEYCLOAK_CLIENT_ID=<client-id> \
+  -e KEYCLOAK_CLIENT_SECRET=<client-secret> \
   -e RASA_CORS=http://localhost:3000 \
   -e RASA_REQUEST_TIMEOUT=300 \
   -e RASA_RESPONSE_TIMEOUT=300 \
