@@ -2,6 +2,7 @@
 # pyright: reportMissingImports=false, reportMissingModuleSource=false, reportMissingTypeStubs=false
 
 import asyncio
+import json
 import logging
 import os
 import sys
@@ -131,6 +132,38 @@ async def _enforce_request_identity(request):
     return None
 
 
+def _with_build_metadata(payload: dict[str, Any]) -> dict[str, Any]:
+    """Overlay the image's build metadata (set by the Dockerfile from CI build
+    args) on Rasa's own /version payload. Unset values are skipped, so a local
+    run keeps whatever Rasa reported itself."""
+    metadata = {
+        "service": "rasa",
+        "version": _read_env("RASA_VERSION"),
+        "frameworkVersion": rasa.__version__,
+        "commitSha": _read_env("RASA_COMMIT_SHA"),
+        "imageTag": _read_env("RASA_IMAGE_TAG"),
+        "buildDate": _read_env("RASA_BUILD_DATE"),
+        "ssotVersion": _read_env("RASA_SSOT_VERSION"),
+    }
+    return {**payload, **{key: value for key, value in metadata.items() if value is not None}}
+
+
+async def _add_build_metadata_to_version(request, resp) -> None:
+    """Sanic on_response hook. Rasa core registers GET /version itself and
+    answers with only its own version fields, so a handler of ours on that
+    path can never be added (the route already exists); merge the build
+    metadata into core's response instead."""
+    if request.method != "GET" or request.path != "/version" or resp is None or resp.status != 200:
+        return None
+    try:
+        payload = json.loads(resp.body)
+    except (TypeError, ValueError):
+        return None
+    if isinstance(payload, dict):
+        resp.body = json.dumps(_with_build_metadata(payload)).encode()
+    return None
+
+
 async def _hard_delete_tracker(tracker_store: Any, sender_id: str) -> bool:
     """Best-effort physical deletion of a tracker.
 
@@ -245,20 +278,6 @@ def _install_custom_routes() -> None:
 
     def configure_app_with_custom_routes(*args, **kwargs):
         app = original_configure_app(*args, **kwargs)
-
-        async def version(_):
-            return response.json(
-                {
-                    "service": "rasa",
-                    "version": _read_env("RASA_VERSION"),
-                    "frameworkVersion": rasa.__version__,
-                    "commitSha": _read_env("RASA_COMMIT_SHA"),
-                    "imageTag": _read_env("RASA_IMAGE_TAG"),
-                    "buildDate": _read_env("RASA_BUILD_DATE"),
-                    "ssotVersion": _read_env("RASA_SSOT_VERSION"),
-                },
-                status=200,
-            )
 
         def _safe_add(handler, path: str, methods: list[str]) -> None:
             try:
@@ -392,8 +411,8 @@ def _install_custom_routes() -> None:
         # The handlers above do no authentication of their own; this hook
         # runs before every route, built-in or custom.
         app.on_request(_enforce_request_identity)
+        app.on_response(_add_build_metadata_to_version)
 
-        _safe_add(version, "/version", ["GET"])
         _safe_add(get_threads, "/threads/by-user/<user_sub:str>", ["GET"])
         _safe_add(get_next_thread_id, "/threads/by-user/<user_sub:str>/next-id", ["GET"])
         _safe_add(post_index_event, "/threads/<user_sub:str>/index-event", ["POST"])

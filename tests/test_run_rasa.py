@@ -103,6 +103,66 @@ class FakeRequest:
         return self._body
 
 
+class FakeResponse:
+    def __init__(self, body: bytes, status: int = 200) -> None:
+        self.body = body
+        self.status = status
+
+
+class VersionMetadataTests(unittest.IsolatedAsyncioTestCase):
+    ENV = {
+        "RASA_VERSION": "1.4.0",
+        "RASA_COMMIT_SHA": "abc123",
+        "RASA_IMAGE_TAG": "en-US-latest",
+        "RASA_BUILD_DATE": "2026-09-21",
+        "RASA_SSOT_VERSION": "9a1fa46",
+    }
+
+    def test_build_metadata_overlays_rasas_own_version_payload(self) -> None:
+        with mock.patch.dict(sys.modules["os"].environ, self.ENV, clear=False):
+            merged = run_rasa._with_build_metadata({"version": "3.6.21", "minimum_compatible_version": "3.6.21"})
+
+        self.assertEqual(merged["version"], "1.4.0")
+        self.assertEqual(merged["commitSha"], "abc123")
+        self.assertEqual(merged["imageTag"], "en-US-latest")
+        self.assertEqual(merged["service"], "rasa")
+        self.assertEqual(merged["minimum_compatible_version"], "3.6.21")
+
+    def test_unset_metadata_does_not_erase_rasas_own_fields(self) -> None:
+        cleared = {name: "" for name in self.ENV}
+        with mock.patch.dict(sys.modules["os"].environ, cleared, clear=False):
+            merged = run_rasa._with_build_metadata({"version": "3.6.21"})
+
+        self.assertEqual(merged["version"], "3.6.21")
+        self.assertNotIn("commitSha", merged)
+
+    async def test_hook_rewrites_a_successful_version_response(self) -> None:
+        resp = FakeResponse(b'{"version": "3.6.21"}')
+        with mock.patch.dict(sys.modules["os"].environ, self.ENV, clear=False):
+            await run_rasa._add_build_metadata_to_version(FakeRequest("GET", "/version"), resp)
+
+        import json
+
+        self.assertEqual(json.loads(resp.body)["commitSha"], "abc123")
+
+    async def test_hook_leaves_other_paths_methods_and_statuses_alone(self) -> None:
+        original = b'{"version": "3.6.21"}'
+        for request, status in [
+            (FakeRequest("GET", "/status"), 200),
+            (FakeRequest("POST", "/version"), 200),
+            (FakeRequest("GET", "/version"), 403),
+        ]:
+            resp = FakeResponse(original, status)
+            await run_rasa._add_build_metadata_to_version(request, resp)
+            self.assertEqual(resp.body, original)
+
+    async def test_hook_ignores_a_body_that_is_not_a_json_object(self) -> None:
+        for body in (b"not json", b"[1, 2]"):
+            resp = FakeResponse(body)
+            await run_rasa._add_build_metadata_to_version(FakeRequest("GET", "/version"), resp)
+            self.assertEqual(resp.body, body)
+
+
 class VerifyUserTokenTests(unittest.IsolatedAsyncioTestCase):
     async def test_missing_or_non_bearer_header_never_reaches_keycloak(self) -> None:
         with mock.patch.object(run_rasa, "_introspect_token_sync") as introspect:
