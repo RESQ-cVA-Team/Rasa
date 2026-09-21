@@ -255,6 +255,38 @@ class EnforceRequestIdentityTests(unittest.IsolatedAsyncioTestCase):
         verify.assert_not_awaited()
 
 
+class ForwardUserTokenToActionTests(unittest.IsolatedAsyncioTestCase):
+    async def test_action_calls_carry_the_verified_request_token(self) -> None:
+        calls = []
+
+        class Endpoint:
+            async def request(self, *args, **kwargs):
+                calls.append(kwargs.get("headers"))
+
+        endpoint = Endpoint()
+        run_rasa._forward_user_token_to_action(endpoint)
+
+        verify = mock.AsyncMock(return_value=SUB)
+        request = FakeRequest("GET", f"/conversations/{SUB}/tracker", headers={"Authorization": "Bearer abc"})
+        with mock.patch.object(run_rasa, "_verify_user_token", verify):
+            await run_rasa._enforce_request_identity(request)
+        await endpoint.request("post", None, headers={"X-Other": "1"})
+        self.assertEqual(calls, [{"X-Other": "1", "Authorization": "Bearer abc"}])
+
+    async def test_no_token_is_sent_outside_a_verified_request(self) -> None:
+        calls = []
+
+        class Endpoint:
+            async def request(self, *args, **kwargs):
+                calls.append(kwargs.get("headers"))
+
+        endpoint = Endpoint()
+        run_rasa._forward_user_token_to_action(endpoint)
+        run_rasa._verified_user_token.set(None)
+        await endpoint.request("post")
+        self.assertEqual(calls, [None])
+
+
 class FakeRedisClient:
     def __init__(self) -> None:
         self.deleted_keys: list[str] = []

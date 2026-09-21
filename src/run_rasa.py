@@ -2,6 +2,8 @@
 # pyright: reportMissingImports=false, reportMissingModuleSource=false, reportMissingTypeStubs=false
 
 import asyncio
+import contextvars
+import inspect
 import json
 import logging
 import os
@@ -90,13 +92,38 @@ def _introspect_token_sync(token: str) -> Optional[str]:
 
 async def _verify_user_token(request) -> Optional[str]:
     """Extract and verify the Authorization: Bearer token; return the verified sub, or None."""
-    auth_header = request.headers.get("Authorization", "") if hasattr(request, "headers") else ""
-    if not auth_header.startswith("Bearer "):
-        return None
-    token = auth_header[7:].strip()
+    token = _bearer_token(request)
     if not token:
         return None
     return await asyncio.to_thread(_introspect_token_sync, token)
+
+
+# Bearer token of the request being served, verified by the gate below. Rasa's
+# outgoing action-server calls send it on so Action can verify the same user;
+# a contextvar because the action call happens deep inside Rasa's own message
+# handling, far from any handler of ours, but within the same request task.
+_verified_user_token: contextvars.ContextVar[Optional[str]] = contextvars.ContextVar(
+    "verified_user_token", default=None
+)
+
+
+def _bearer_token(request) -> str:
+    auth_header = request.headers.get("Authorization", "") if hasattr(request, "headers") else ""
+    return auth_header[7:].strip() if auth_header.startswith("Bearer ") else ""
+
+
+def _forward_user_token_to_action(action_endpoint: Any) -> None:
+    """Make every request Rasa sends to the action server carry the current
+    request's verified user token, replacing a static shared secret."""
+    original_request = action_endpoint.request
+
+    async def request_with_user_token(*args, **kwargs):
+        token = _verified_user_token.get()
+        if token:
+            kwargs["headers"] = {**kwargs.get("headers", {}), "Authorization": f"Bearer {token}"}
+        return await original_request(*args, **kwargs)
+
+    action_endpoint.request = request_with_user_token
 
 
 async def _enforce_request_identity(request):
@@ -129,6 +156,7 @@ async def _enforce_request_identity(request):
         return response.json({"error": "Unauthorized"}, status=401)
     if verified_sub != decision.sub:
         return response.json({"error": "Forbidden: token subject does not match the requested user"}, status=403)
+    _verified_user_token.set(_bearer_token(request))
     return None
 
 
@@ -278,6 +306,9 @@ def _install_custom_routes() -> None:
 
     def configure_app_with_custom_routes(*args, **kwargs):
         app = original_configure_app(*args, **kwargs)
+        endpoints = inspect.signature(original_configure_app).bind(*args, **kwargs).arguments.get("endpoints")
+        if getattr(endpoints, "action", None) is not None:
+            _forward_user_token_to_action(endpoints.action)
 
         def _safe_add(handler, path: str, methods: list[str]) -> None:
             try:
