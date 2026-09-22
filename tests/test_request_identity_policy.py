@@ -1,6 +1,6 @@
 import unittest
 
-from src.request_identity_policy import DENY, MALFORMED, OPEN, Decision, required_identity, sender_sub
+from src.request_identity_policy import DENY, MALFORMED, OPEN, Decision, has_required_role, required_identity, sender_sub
 
 SUB = "3f2a9c1e-0000-4000-8000-000000000001"
 
@@ -113,6 +113,26 @@ class DeniedByDefaultTests(unittest.TestCase):
         self.assertEqual(required_identity("GET", "/socket.io/", None), DENY)
         self.assertEqual(required_identity("GET", "//model/parse", None), DENY)
         self.assertEqual(required_identity("GET", "/version/", None), DENY)
+
+
+class HasRequiredRoleTests(unittest.TestCase):
+    def test_top_level_roles_claim(self) -> None:
+        self.assertTrue(has_required_role({"roles": ["offline_access", "cva"]}))
+
+    def test_realm_access_roles(self) -> None:
+        self.assertTrue(has_required_role({"realm_access": {"roles": ["default-roles-stroke", "cva"]}}))
+
+    def test_case_insensitive(self) -> None:
+        self.assertTrue(has_required_role({"roles": ["CVA"]}))
+
+    def test_missing_role_is_false(self) -> None:
+        self.assertFalse(has_required_role({"roles": ["offline_access"], "realm_access": {"roles": ["uma_authorization"]}}))
+
+    def test_no_roles_at_all_is_false(self) -> None:
+        self.assertFalse(has_required_role({}))
+
+    def test_client_or_resource_roles_do_not_count(self) -> None:
+        self.assertFalse(has_required_role({"resource_access": {"account": {"roles": ["cva"]}}}))
 
 
 if __name__ == "__main__":

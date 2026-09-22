@@ -163,6 +163,31 @@ class VersionMetadataTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(resp.body, body)
 
 
+class IntrospectTokenSyncTests(unittest.TestCase):
+    def _post(self, payload: dict, status: int = 200):
+        resp = mock.Mock()
+        resp.status_code = status
+        resp.json.return_value = payload
+        resp.raise_for_status = mock.Mock()
+        return mock.patch.object(run_rasa.requests, "post", return_value=resp)
+
+    def test_active_token_with_role_returns_sub(self) -> None:
+        with self._post({"active": True, "sub": SUB, "roles": ["cva"]}):
+            self.assertEqual(run_rasa._introspect_token_sync("tok"), SUB)
+
+    def test_active_token_without_role_is_rejected(self) -> None:
+        with self._post({"active": True, "sub": SUB, "roles": ["offline_access"]}):
+            self.assertIsNone(run_rasa._introspect_token_sync("tok"))
+
+    def test_inactive_token_is_rejected(self) -> None:
+        with self._post({"active": False}):
+            self.assertIsNone(run_rasa._introspect_token_sync("tok"))
+
+    def test_request_failure_is_rejected(self) -> None:
+        with mock.patch.object(run_rasa.requests, "post", side_effect=OSError("down")):
+            self.assertIsNone(run_rasa._introspect_token_sync("tok"))
+
+
 class VerifyUserTokenTests(unittest.IsolatedAsyncioTestCase):
     async def test_missing_or_non_bearer_header_never_reaches_keycloak(self) -> None:
         with mock.patch.object(run_rasa, "_introspect_token_sync") as introspect:

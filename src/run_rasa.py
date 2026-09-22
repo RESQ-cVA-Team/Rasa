@@ -27,7 +27,7 @@ os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", message="Matplotlib created a temporary config/cache directory*")
 
-from src.request_identity_policy import WEBHOOK_PATH, required_identity  # noqa: E402
+from src.request_identity_policy import WEBHOOK_PATH, has_required_role, required_identity  # noqa: E402
 from src.thread_index import (  # noqa: E402
     apply_index_action,
     build_thread_list_from_payload,
@@ -84,7 +84,7 @@ def _introspect_token_sync(token: str) -> Optional[str]:
         logger.warning("Keycloak token introspection request failed", exc_info=True)
         return None
 
-    if not payload.get("active"):
+    if not payload.get("active") or not has_required_role(payload):
         return None
     sub = payload.get("sub")
     return sub if isinstance(sub, str) and sub else None

@@ -14,6 +14,10 @@ from typing import Optional
 
 WEBHOOK_PATH = "/webhooks/rest/webhook"
 
+# Keycloak realm role a token must carry to use cVA at all -- mirrors
+# Webapp's REQUIRED_CVA_ROLE (src/lib/cvaAccess.ts) and Action's own check.
+REQUIRED_ROLE = "cva"
+
 _SENDER_THREAD_SUFFIX_RE = re.compile(r"^(.*):thread:(\d+)$")
 
 # Rasa's built-in conversation routes plus the custom DELETE .../tracker route.
@@ -32,6 +36,18 @@ def sender_sub(sender_id: str) -> str:
     """Strip the `:thread:<id>` suffix, mirroring rasaSender.ts's parseRasaSenderId."""
     match = _SENDER_THREAD_SUFFIX_RE.match(sender_id)
     return match.group(1) if match else sender_id
+
+
+def has_required_role(introspection_payload: dict) -> bool:
+    """Realm roles only, matching Webapp's cvaAccess.ts: Keycloak's introspect
+    response mirrors the token's own claims for an active token, so this reads
+    the top-level `roles` claim and `realm_access.roles` -- never groups or
+    client/resource roles, so a group or client role named "cva" doesn't count."""
+    roles: list[str] = []
+    for value in (introspection_payload.get("roles"), (introspection_payload.get("realm_access") or {}).get("roles")):
+        if isinstance(value, list):
+            roles.extend(entry.strip().lower() for entry in value if isinstance(entry, str) and entry.strip())
+    return REQUIRED_ROLE in roles
 
 
 @dataclass(frozen=True)
