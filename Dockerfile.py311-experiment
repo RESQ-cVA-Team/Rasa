@@ -1,0 +1,45 @@
+# EXPERIMENTAL, throwaway: does rasa==3.6.21 actually run correctly on
+# Python 3.11, despite its own requires_python (<3.11,>=3.8) saying no?
+# Not wired into any build pipeline; not the real Dockerfile.
+FROM python:3.11-slim-bookworm
+
+ENV DEBIAN_FRONTEND=noninteractive
+ENV RASA_TELEMETRY_ENABLED=false
+ENV SQLALCHEMY_SILENCE_UBER_WARNING=1
+ENV PYTHONPATH=/app:/app/src
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+		build-essential git curl libgomp1 \
+	&& rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# rasa==3.6.21 declares requires_python <3.11 -- that's what this whole
+# experiment is testing, so deliberately overridden. Unconstrained, pip's
+# resolver wanders off tensorflow's loose jax>=0.3.15 into a completely
+# different, untested dependency graph (ending up trying to build
+# scipy==1.18.1 from source, which itself needs Python >=3.12) -- not
+# actually answering the question. py311-constraints.txt is `pip freeze`
+# from the real, untouched rasa/rasa:3.6.21 image (production's actual
+# baseline, not the devcontainer's -- that one force-overrides pydantic to
+# 2.11.9 for mypy/ruff, which production's own Dockerfile never installs
+# and which directly conflicts with rasa's own pydantic<1.10.10). Installed
+# as -r, not -c: some of these (dask) are pulled in by an extras group
+# rasa's bare install doesn't request, so a constraint alone won't install
+# them, only pin them if something else already wants them.
+COPY --chown=root:root py311-constraints.txt py311-constraints.txt
+RUN pip install --no-cache-dir --ignore-requires-python -r py311-constraints.txt \
+		"rasa==3.6.21" "tensorflow==2.12.0" "skops==0.9.0"
+
+COPY --chown=root:root src/ src/
+COPY --chown=root:root scripts/ scripts/
+RUN chmod +x /app/scripts/*.sh
+
+RUN test -f /app/src/__init__.py || echo "# project package root" > /app/src/__init__.py
+
+RUN PYTHONPATH=/app:/app/src ./scripts/layer_rasa_projects.sh src/core src/locales/en/US
+
+EXPOSE 5005
+
+ENTRYPOINT ["python", "-m", "src.run_rasa"]
+CMD []
