@@ -31,17 +31,29 @@ from src.components.intent_matching import bucket_examples, build_intent_list_bl
 from src.components.layered_importer import OverlayImporter
 from src.components.llm_client import ChatMessage, OpenAICompatibleLLMClient, build_default_client
 from src.components.locale_detection import detect_locale_overlay_domain
+from src.components.prompt_template import render_system_prompt
 
 logger = logging.getLogger(__name__)
 
 _EXCLUDED_INTENTS = {"nlu_fallback"}
 
-_SYSTEM_PROMPT_TEMPLATE = """You are an intent classifier. Read the user's message and reply with \
+# Editable via config.yml's system_prompt_template (and, in CVaLab's pipeline
+# editor, a text field on this component) -- see render_system_prompt.
+# {intent_list} is required: the whole point of this component is picking
+# from the real intent set, so a template that drops it gets rejected back
+# to this default rather than silently sending an unconstrained prompt.
+# {fallback_label} is optional -- match_intent_strict() is what actually
+# keeps this component safe (a raw response has to byte-for-byte match a
+# real intent regardless of what the prompt says), so an edited template
+# omitting it is a quality choice, not a safety one.
+_DEFAULT_SYSTEM_PROMPT_TEMPLATE = """You are an intent classifier. Read the user's message and reply with \
 exactly one label from this list, and nothing else -- no punctuation, no explanation:
 
 {intent_list}
 
 If none of the labels genuinely fit, reply with: {fallback_label}"""
+
+_REQUIRED_PROMPT_PLACEHOLDERS = ["{intent_list}"]
 
 _DEFAULT_BASE_DOMAIN = ["src/core/domain"]
 _DEFAULT_EXAMPLES_PER_INTENT = 2
@@ -120,10 +132,16 @@ class LLMIntentFallback(GraphComponent):
 
         self._intents: List[str] = _load_domain_intents(base_domain, overlay_domain)
         examples = _load_intent_examples(base_domain, overlay_domain, examples_per_intent) if self._intents else {}
-        self._system_prompt = _SYSTEM_PROMPT_TEMPLATE.format(
+        template = self._config.get("system_prompt_template", _DEFAULT_SYSTEM_PROMPT_TEMPLATE)
+        self._system_prompt, prompt_warning = render_system_prompt(
+            template,
+            _DEFAULT_SYSTEM_PROMPT_TEMPLATE,
+            _REQUIRED_PROMPT_PLACEHOLDERS,
             intent_list=build_intent_list_block(self._intents, examples),
             fallback_label="none",
         )
+        if prompt_warning:
+            logger.warning(f"LLMIntentFallback: {prompt_warning}")
 
         if self._enabled and not self._client.enabled:
             logger.info("LLMIntentFallback: LLM client not configured, component will be a no-op")
