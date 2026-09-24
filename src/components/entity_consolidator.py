@@ -191,6 +191,11 @@ class EntityConsolidator(GraphComponent):
             "start": ent.get("start"),
             "end": ent.get("end"),
             "value": ent.get("value"),
+            # Single-string key Rasa's own built-in evaluator expects
+            # (entities_by_extractors[p["extractor"]] in align_entity_predictions) --
+            # first-write-wins, matching how start/end/value are already handled here.
+            # Additive only: the richer per-extractor "extractors" list below is unchanged.
+            "extractor": ent.get("extractor"),
             "extractors": [],
             "role_extractors": [],
         }

@@ -8,6 +8,14 @@ nlu:
       - What are your metric, stroke, and chart types?
       - What structured types can I ask you about?
       - Tell me about the concepts behind your KPIs and filters.
+      - What is the SSOT?
+      - Can you walk me through your data dictionary?
+      - What do you mean by canonical values?
+      - How is your terminology standardized?
+      - What reference data backs your answers?
+      - Where do your metric definitions come from?
+      - Is there a glossary I can look at?
+      - What's the source of truth for these categories?
 
   - intent: faq_metric_types
     examples: |
@@ -16,6 +24,14 @@ nlu:
       - What does metric type mean here?
       - What kind of stroke metrics do you track?
       - What does a KPI like DTN or DIDO represent?
+      - Which metrics are available?
+      - List the KPIs I can chart.
+      - What data points can I visualize?
+      - Tell me about DTN and DIDO.
+      - What metrics does the dashboard track?
+      - What kind of clinical measurements do you have?
+      - Give me a list of trackable metrics.
+      - What KPIs exist for treatment timing?
 
   - intent: faq_stroke_types
     examples: |
@@ -23,6 +39,13 @@ nlu:
       - What stroke subtypes are there in your data?
       - Explain your stroke type categories.
       - What do you mean by ischemic or hemorrhagic stroke?
+      - What are the different stroke subtypes?
+      - Can you list the stroke categories?
+      - What does TIA mean?
+      - How do you classify stroke type?
+      - What counts as a stroke mimic?
+      - Explain subarachnoid hemorrhage as a category.
+      - What's the difference between ischemic and hemorrhagic in your data?
 
   - intent: faq_chart_types
     examples: |
@@ -30,6 +53,13 @@ nlu:
       - What kinds of visualizations are available?
       - Explain the chart types you support.
       - Do you support line, bar, or pie charts?
+      - What visualization types are available?
+      - Can I get a scatter plot or histogram?
+      - List the chart formats you support.
+      - What kind of graphs can you make?
+      - Do you support box plots?
+      - Can you make a radar or waterfall chart?
+      - What chart options do I have for distributions?
 
   - intent: faq_group_by_types
     examples: |
@@ -37,6 +67,13 @@ nlu:
       - What group-by dimensions do you support?
       - Explain your grouping options.
       - What are the main grouping fields?
+      - Can I break the data down by hospital?
+      - What dimensions can I split the data by?
+      - List the available group-by fields.
+      - Can I group by age or sex?
+      - Can I split results by quarter or month?
+      - What fields can I use to segment the data?
+      - Can I group by NIHSS score?
 
   - intent: faq_statistical_test_types
     examples: |
@@ -51,18 +88,37 @@ nlu:
       - Explain operators like greater than or equal.
       - What do GE and LE mean?
       - What relational operators are supported?
+      - What filter comparisons are available?
+      - Can I filter using less than or equal?
+      - Explain the filter operators.
+      - What does NE mean in a filter?
+      - How do I filter for values equal to something?
+      - What symbols can I use to compare numbers?
+      - Can I filter for "at least" or "at most" a value?
 
   - intent: faq_sex_types
     examples: |
       - How do you categorize sex in the data?
       - What sex categories do you support?
       - Explain the biological sex types you use.
+      - What sex values are in the data?
+      - Do you track male, female, and other?
+      - How do you record patient sex?
+      - What options are there besides male and female?
+      - Is there an unknown category for sex?
+      - How is sex recorded when it's not provided?
 
   - intent: faq_boolean_types
     examples: |
       - What kind of yes or no flags do you track?
       - Explain your boolean types.
       - What boolean indicators are available in the data?
+      - What yes/no metrics do you track?
+      - Do you track thrombectomy and thrombolysis as flags?
+      - What true/false fields are available?
+      - Which medication-before-onset flags exist?
+      - Is thrombectomy tracked as a yes/no value?
+      - What are the available treatment flags?
 
   - intent: ask_metric_definition
     examples: |

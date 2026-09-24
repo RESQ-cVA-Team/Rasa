@@ -1,7 +1,6 @@
 action_endpoint:
   url: ${ACTION_ENDPOINT_URL}
   timeout: 300
-  token: ${ACTION_AUTH_TOKEN}
 tracker_store:
   type: sql
   dialect: sqlite

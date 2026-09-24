@@ -56,7 +56,7 @@
         {
             "label": "Rasa: Shell (latest)",
             "type": "shell",
-            "command": "python -m src.run_rasa shell --enable-api --auth-token \"${env:RASA_AUTH_TOKEN}\" --cors \"http://localhost:3000\" --model models --endpoints src/core/endpoints.redis.yml --request-timeout 300 --response-timeout 300",
+            "command": "python -m src.run_rasa shell --enable-api --cors \"http://localhost:3000\" --model models --endpoints src/core/endpoints.redis.yml --request-timeout 300 --response-timeout 300",
             "group": "test",
             "options": {
                 "cwd": "${workspaceFolder}",
@@ -86,7 +86,7 @@
         {
             "label": "Rasa: Run (latest) - DEBUG",
             "type": "shell",
-            "command": "python -m src.run_rasa run --enable-api --auth-token \"${env:RASA_AUTH_TOKEN}\" --cors \"http://localhost:3000\" --model models --endpoints src/core/endpoints.redis.yml --request-timeout 300 --response-timeout 300 --debug",
+            "command": "python -m src.run_rasa run --enable-api --cors \"http://localhost:3000\" --model models --endpoints src/core/endpoints.redis.yml --request-timeout 300 --response-timeout 300 --debug",
             "group": "test",
             "options": {
                 "cwd": "${workspaceFolder}",
@@ -181,7 +181,7 @@
         {
             "label": "Rasa: Train + Shell (lang spec)",
             "type": "shell",
-            "command": "bash scripts/layer_rasa_lang.sh ${input:langSpec} && python -m src.run_rasa shell --enable-api --auth-token \"${env:RASA_AUTH_TOKEN}\" --cors \"http://localhost:3000\" --model models --endpoints src/core/endpoints.redis.yml --request-timeout 300 --response-timeout 300",
+            "command": "bash scripts/layer_rasa_lang.sh ${input:langSpec} && python -m src.run_rasa shell --enable-api --cors \"http://localhost:3000\" --model models --endpoints src/core/endpoints.redis.yml --request-timeout 300 --response-timeout 300",
             "group": "test",
             "options": {
                 "cwd": "${workspaceFolder}",
