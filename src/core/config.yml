@@ -15,18 +15,15 @@ pipeline:
     min_ngram: 1
     max_ngram: 4
 
-  # Intent Classification
-  - name: DIETClassifier
-    epochs: 100
-    constrain_similarities: true
-    model_confidence: softmax
-    entity_recognition: true
-
-  # Entity Extraction
-  - name: RegexEntityExtractor
-    case_sensitive: false
-    use_lookup_tables: true
-    use_regexes: true
+  # EXPERIMENTAL: LLM-only intent classification + entity extraction, replacing
+  # DIETClassifier + RegexEntityExtractor. See src/components/llm_nlu_classifier.py.
+  # Tokenizer/featurizers above are kept (ResponseSelector below still needs
+  # them); everything downstream of this (EntitySynonymMapper,
+  # SSOTCanonicalizer, EntityConsolidator, FallbackClassifier,
+  # LLMIntentFallback) is unmodified -- this produces the same message.data
+  # shape those two components would have.
+  - name: src.components.llm_nlu_classifier.LLMNluClassifier
+    debug_logging: false
 
   # Entity Extraction with roles and groups support
   #- name: CRFEntityExtractor

@@ -27,14 +27,14 @@ from rasa.nlu.classifiers.fallback_classifier import is_fallback_classifier_pred
 from rasa.shared.nlu.constants import INTENT, INTENT_NAME_KEY, INTENT_RANKING_KEY, PREDICTED_CONFIDENCE_KEY
 from rasa.shared.nlu.training_data.message import Message
 
-from src.components.intent_matching import bucket_examples, build_intent_list_block, match_intent_strict
-from src.components.layered_importer import OverlayImporter
+from src.components.domain_intents import DEFAULT_BASE_DOMAIN as _DEFAULT_BASE_DOMAIN
+from src.components.domain_intents import load_domain_intents as _load_domain_intents
+from src.components.domain_intents import load_intent_examples as _load_intent_examples
+from src.components.intent_matching import build_intent_list_block, match_intent_strict
 from src.components.llm_client import ChatMessage, OpenAICompatibleLLMClient, build_default_client
 from src.components.locale_detection import detect_locale_overlay_domain
 
 logger = logging.getLogger(__name__)
-
-_EXCLUDED_INTENTS = {"nlu_fallback"}
 
 _SYSTEM_PROMPT_TEMPLATE = """You are an intent classifier. Read the user's message and reply with \
 exactly one label from this list, and nothing else -- no punctuation, no explanation:
@@ -43,57 +43,7 @@ exactly one label from this list, and nothing else -- no punctuation, no explana
 
 If none of the labels genuinely fit, reply with: {fallback_label}"""
 
-_DEFAULT_BASE_DOMAIN = ["src/core/domain"]
 _DEFAULT_EXAMPLES_PER_INTENT = 2
-
-
-def _load_domain_intents(base_domain: List[str], overlay_domain: List[str]) -> List[str]:
-    """Reuse OverlayImporter (the same code that builds the real domain at
-    train time) rather than re-deriving the intent list from scratch.
-
-    Deliberately does NOT rely on the OVERLAY_BASE_DOMAIN/OVERLAY_DOMAIN env
-    vars that the training scripts export: those only exist for the lifetime
-    of the separate `bash scripts/layer_rasa_lang.sh ...` subprocess that
-    builds the model, not in the actual serving process afterwards (verified
-    against the real container: `docker exec rasa env | grep OVERLAY` finds
-    nothing). Defaults to the same base domain path already hardcoded in
-    config.yml's own `importers:` section, so this works out of the box in
-    real deployment; OverlayImporter will still honor those env vars on top
-    of these defaults if a caller does set them (e.g. manual testing)."""
-    try:
-        domain = OverlayImporter(base_domain=base_domain, overlay_domain=overlay_domain).get_domain()
-        intents = getattr(domain, "intents", None) or []
-        return sorted({str(i) for i in intents if str(i) not in _EXCLUDED_INTENTS})
-    except Exception:
-        logger.warning("Could not load domain intents for LLM fallback; component will be a no-op", exc_info=True)
-        return []
-
-
-def _load_intent_examples(
-    base_domain: List[str],
-    overlay_domain: List[str],
-    examples_per_intent: int,
-) -> Dict[str, List[str]]:
-    """Real NLU training example utterances, grouped by intent, from
-    whichever locale this deployment actually serves (overlay_domain --
-    see locale_detection.py). Filtering/capping/dedup logic lives in
-    bucket_examples() (intent_matching.py) so it's testable without rasa;
-    this function is just the rasa-dependent data-loading half."""
-    if examples_per_intent <= 0:
-        return {}
-
-    try:
-        nlu_data = OverlayImporter(base_domain=base_domain, overlay_domain=overlay_domain).get_nlu_data()
-    except Exception:
-        logger.warning("Could not load NLU examples for LLM fallback; continuing without them", exc_info=True)
-        return {}
-
-    raw_examples = [
-        (example.get("intent"), example.get("text"))
-        for example in getattr(nlu_data, "training_examples", [])
-        if isinstance(example.get("intent"), str) and isinstance(example.get("text"), str)
-    ]
-    return bucket_examples(raw_examples, examples_per_intent)
 
 
 @DefaultV1Recipe.register(DefaultV1Recipe.ComponentType.INTENT_CLASSIFIER, is_trainable=False)
