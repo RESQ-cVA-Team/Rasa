@@ -51,8 +51,15 @@ from src.components.domain_intents import (
 )
 from src.components.intent_matching import build_intent_list_block
 from src.components.llm_client import ChatMessage, OpenAICompatibleLLMClient, build_default_client
-from src.components.llm_nlu_parsing import build_entity_type_block, build_system_prompt, parse_llm_nlu_response
+from src.components.llm_nlu_parsing import (
+    DEFAULT_INSTRUCTIONS_TEMPLATE,
+    REQUIRED_PROMPT_PLACEHOLDERS,
+    build_entity_type_block,
+    build_system_prompt,
+    parse_llm_nlu_response,
+)
 from src.components.locale_detection import detect_locale_overlay_domain
+from src.components.prompt_template import render_system_prompt
 
 logger = logging.getLogger(__name__)
 
@@ -90,10 +97,17 @@ class LLMNluClassifier(GraphComponent):
         entity_examples = (
             load_entity_examples(self._entity_types, ssot_dir, "en", examples_per_entity) if self._entity_types else {}
         )
-        self._system_prompt = build_system_prompt(
-            build_intent_list_block(self._intents, intent_examples),
-            build_entity_type_block(self._entity_types, entity_examples),
+        template = self._config.get("system_prompt_template", DEFAULT_INSTRUCTIONS_TEMPLATE)
+        instructions, prompt_warning = render_system_prompt(
+            template,
+            DEFAULT_INSTRUCTIONS_TEMPLATE,
+            REQUIRED_PROMPT_PLACEHOLDERS,
+            intent_list=build_intent_list_block(self._intents, intent_examples),
+            entity_type_list=build_entity_type_block(self._entity_types, entity_examples),
         )
+        if prompt_warning:
+            logger.warning(f"LLMNluClassifier: {prompt_warning}")
+        self._system_prompt = build_system_prompt(instructions)
 
         if not self._client.enabled:
             logger.warning("LLMNluClassifier: LLM client not configured, every message will go unclassified")

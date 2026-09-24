@@ -200,10 +200,9 @@ class PromptBuildingTests(unittest.TestCase):
             '- metric\n  e.g. "door to needle"\n  e.g. "pre-stroke mrs"\n- sex',
         )
 
-    def test_system_prompt_includes_intents_and_entities_and_schema(self) -> None:
-        prompt = build_system_prompt("- greet", "- metric")
-        self.assertIn("- greet", prompt)
-        self.assertIn("- metric", prompt)
+    def test_system_prompt_appends_the_fixed_json_schema_after_the_instructions(self) -> None:
+        prompt = build_system_prompt("Custom instructions.\n- greet\n- metric")
+        self.assertIn("Custom instructions.\n- greet\n- metric", prompt)
         self.assertIn('"intent"', prompt)
         self.assertIn('"entities"', prompt)
 

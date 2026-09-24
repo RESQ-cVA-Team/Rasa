@@ -182,21 +182,43 @@ def build_entity_type_block(entity_types: List[str], examples: Optional[Dict[str
     return "\n".join(lines)
 
 
+# Fixed, never editable via config: parse_llm_nlu_response() reads these
+# exact JSON key names ("intent", "confidence", "entities", "entity", "text",
+# "role"). Unlike LLMIntentFallback's prompt (where safety comes entirely
+# from match_intent_strict()'s closed-set check on the raw response, with no
+# coupling to prompt wording at all), an edit that changed these field names
+# here wouldn't just degrade quality -- parsing would silently find nothing,
+# since it looks up these exact keys. The editable part is DEFAULT_INSTRUCTIONS_TEMPLATE
+# below; this stays code-owned.
 _JSON_SCHEMA_HINT = """Reply with a single JSON object and nothing else -- no prose, no markdown fences:
-{{
+{
   "intent": "<one label from the intent list, or \\"none\\" if nothing fits>",
   "confidence": <your confidence in that intent, 0.0 to 1.0>,
   "entities": [
-    {{"entity": "<one type from the entity list>", "text": "<verbatim substring from the message>", "role": "<optional, e.g. upper/lower for a numeric range>"}}
+    {"entity": "<one type from the entity list>", "text": "<verbatim substring from the message>", "role": "<optional, e.g. upper/lower for a numeric range>"}
   ]
-}}
+}
 Only include entities whose type is in the entity list below, and only when the value is a verbatim substring of the message -- never paraphrase or invent one."""
 
+# Editable via config.yml's system_prompt_template (and, in CVaLab's pipeline
+# editor, a text field on this component) -- see render_system_prompt.
+# {intent_list} and {entity_type_list} are both required: dropping either
+# means the model gets no grounding for that half of its job, so a template
+# missing one gets rejected back to this default rather than silently
+# running unconstrained.
+DEFAULT_INSTRUCTIONS_TEMPLATE = """You are an NLU engine: classify the user's intent and extract entities.
 
-def build_system_prompt(intent_list_block: str, entity_type_block: str) -> str:
-    return (
-        "You are an NLU engine: classify the user's intent and extract entities.\n\n"
-        f"Valid intents:\n{intent_list_block}\n\n"
-        f"Valid entity types:\n{entity_type_block}\n\n"
-        f"{_JSON_SCHEMA_HINT}"
-    )
+Valid intents:
+{intent_list}
+
+Valid entity types:
+{entity_type_list}"""
+
+REQUIRED_PROMPT_PLACEHOLDERS = ["{intent_list}", "{entity_type_list}"]
+
+
+def build_system_prompt(instructions: str) -> str:
+    """`instructions` is the (possibly admin-edited) rendered instructions
+    block -- see render_system_prompt() in prompt_template.py. The JSON
+    schema hint is always appended after it, unconditionally."""
+    return f"{instructions}\n\n{_JSON_SCHEMA_HINT}"
