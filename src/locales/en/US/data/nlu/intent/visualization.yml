@@ -243,7 +243,7 @@ nlu:
       - Let's see [DTN](metric) data
       - Bring up [thrombolysis rate](metric)
       - I want to check [day 2 hyperglycemia checks](metric)
-      - Show me [reason for no neurosurgery](metric) please
+      - Show me [DIDO](metric) please
       - Can you pull [DIDO](metric) for me
       - I'd like a look at [day 3 hyperglycemia checks](metric)
       - Get me [thrombolysis rate](metric) data
