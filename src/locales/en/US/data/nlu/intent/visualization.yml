@@ -229,7 +229,7 @@ nlu:
       - Plot [medication before onset in ais or tia](metric) in a line chart
       - Visualize [anticoagulant type at discharge in atrial fibrillation](metric) as a line graph per month([group_by])
       - Show me a line chart of [ivt drugs](metric) grouped by [stroke type](group_by)
-      - [ivt dose](metric) [area chart](chart_type) [monthly](group_by)
+      - [ivt dose](metric) [area chart](chart_type) [monthly period](group_by)
       - Plot [HOSPITAL_STAY](metric) in a line chart
       - Visualize [HOSPITAL_STAY](metric) as a line graph per month([group_by])
       - Show me a chart of [how patient was admitted](metric)
