@@ -243,8 +243,8 @@ nlu:
       - Let's see [DTN](metric) data
       - Bring up [thrombolysis rate](metric)
       - I want to check [day 2 hyperglycemia checks](metric)
-      - Show me [DIDO](metric) please
-      - Can you pull [DIDO](metric) for me
+      - Show me [unfiltered dtn](metric) please
+      - Can you pull [unfiltered dtg](metric) for me
       - I'd like a look at [day 3 hyperglycemia checks](metric)
       - Get me [thrombolysis rate](metric) data
       - Hello there, I would like a graph of [medication before onset in ais or tia](metric)
