@@ -74,3 +74,20 @@ rules:
           - requested_slot: null
       - action: utter_guided_visualization_summary
       - action: action_guided_generate_visualization
+
+  # skip_guided_step is wired into guided_visualization_form's own slot
+  # mappings (src/core/domain/slots/visualization.yml) -- while the form is
+  # active, Rasa's default form behavior routes it there automatically, no
+  # rule needed. But its training examples are ordinary words ("skip",
+  # "next", "no", "continue", "none" -- src/locales/*/data/nlu/intent/
+  # guided_visualization.yml), easily said outside the form too, and
+  # RulePolicy's enable_fallback_prediction is off (src/core/config.yml),
+  # so nothing else catches it there. Without this rule, the only form in
+  # the domain not being active meant a plain "no thanks" produced zero bot
+  # response at all -- confirmed live, not a rare edge case.
+  - rule: Handle skip intent with no guided step to skip
+    condition:
+      - active_loop: null
+    steps:
+      - intent: skip_guided_step
+      - action: action_default_fallback
