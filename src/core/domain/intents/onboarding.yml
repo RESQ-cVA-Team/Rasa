@@ -3,3 +3,5 @@ version: "3.1"
 intents:
   - who_are_you
   - help_me
+  - faq_help
+  - return_to_user_prompt

@@ -15,3 +15,13 @@ nlu:
       - Jaká je tvoje role?
       - Co děláš?
       - Jaká je tvoje práce?
+  - intent: faq_help
+    examples: |
+      - Zobraz rozšířenou sekci nápovědy
+      - Zobraz rozšířenou nápovědu
+  - intent: return_to_user_prompt
+    examples: |
+      - Zpět
+      - Zpět do hlavní nabídky
+      - Vrať mě zpět
+      - Vrať se na začátek

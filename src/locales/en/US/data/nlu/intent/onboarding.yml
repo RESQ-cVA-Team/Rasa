@@ -30,3 +30,13 @@ nlu:
       - Help me
       - Request help
       - I need help
+  - intent: faq_help
+    examples: |
+      - Show me the expanded help section
+      - Show me the expanded help
+  - intent: return_to_user_prompt
+    examples: |
+      - Go back
+      - Back to the main menu
+      - Take me back
+      - Return to the start
