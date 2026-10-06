@@ -52,11 +52,14 @@ RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 # fix (3.13.3+) requires aiohttp>=3.10, which violates rasa's own
 # aiohttp<3.10 pin -- same unfixable category as tensorflow/skops/protobuf
 # above. Tracked via .trivyignore instead.
+# fsspec is only required by dask's dataframe IO and huggingface-hub
+# (fsspec>=2023.5.0); rasa's dask graph runner never touches it, so it moves
+# freely to the fixed release.
 RUN pip install --no-cache-dir --upgrade \
 	python-engineio==4.13.2 \
 	python-socketio==5.16.2 \
 	ujson==5.12.1 \
-	urllib3==2.7.0 \
+	urllib3==2.8.0 \
 	msgpack==1.2.1 \
 	pyasn1==0.6.4 \
 	Pillow==12.3.0 \
@@ -65,7 +68,8 @@ RUN pip install --no-cache-dir --upgrade \
 	aiohttp==3.9.4 \
 	cryptography==50.0.1 \
 	fonttools==4.43.0 \
-	grpcio==1.56.2
+	grpcio==1.56.2 \
+	fsspec==2026.6.0
 
 WORKDIR /app
 
