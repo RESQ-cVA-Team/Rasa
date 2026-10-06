@@ -38,3 +38,9 @@ CVE-2026-24049
 # need 3.13.3/3.14.3, both above the pin
 CVE-2025-69223
 CVE-2026-69244
+# pymongo==4.3.3 -- rasa==3.6.21 constrains to pymongo<4.4,>=3.8 and imports it
+# at module level in rasa.core.tracker_store, so it can neither move to the
+# fixed 4.18.2 nor be dropped from the image. Mongo is not the tracker store
+# used here (Redis is), so the vulnerable client paths are never exercised.
+CVE-2026-96748
+CVE-2026-96749
