@@ -6,6 +6,8 @@ responses:
       buttons:
         - title: "Jak mám tohoto bota používat?"
           payload: "/who_are_you"
+        - title: "Zobraz rozšířenou sekci nápovědy"
+          payload: "/faq_help"
         - title: "Pomoz mi vytvořit vizualizaci"
           payload: "/request_guided_visualization"
         - title: "Chci to zadat volně v jedné zprávě"
@@ -13,3 +15,53 @@ responses:
 
   utter_who_are_you:
     - text: "Jsem bot, který ti pomůže vizualizovat data RES-Q. Mohu tě provést krok za krokem vytvořením grafu, nebo mi můžeš v jedné zprávě popsat graf, který chceš, a pokusím se ho pro tebe vytvořit."
+
+  utter_faq_help:
+    - text: |-
+        Zde je seznam prvků a proměnných, které můžeš použít při tvorbě vizualizací.
+        Můžeš mě také požádat o definici metriky otázkou „Co je [název metriky]?“ nebo „Co znamená [název metriky]?“.
+      buttons:
+        - title: Typy metrik
+          payload: /faq_metric_types
+        - title: Typy mrtvice
+          payload: /faq_stroke_types
+        - title: Typy grafů
+          payload: /faq_chart_types
+        - title: Typy seskupení
+          payload: /faq_group_by_types
+        - title: Typy statistických testů
+          payload: /faq_statistical_test_types
+        - title: Typy pohlaví
+          payload: /faq_sex_types
+        - title: Booleovské typy
+          payload: /faq_boolean_types
+        - title: Typy operátorů
+          payload: /faq_operator_types
+        - title: SSOT
+          payload: /faq_ssot_help
+        - title: Zpět
+          payload: /return_to_user_prompt
+
+  utter_faq_again:
+    - text: "Chceš vědět ještě něco?"
+      buttons:
+        - title: Typy metrik
+          payload: /faq_metric_types
+        - title: Typy mrtvice
+          payload: /faq_stroke_types
+        - title: Typy grafů
+          payload: /faq_chart_types
+        - title: Typy seskupení
+          payload: /faq_group_by_types
+        - title: Typy statistických testů
+          payload: /faq_statistical_test_types
+        - title: Typy pohlaví
+          payload: /faq_sex_types
+        - title: Booleovské typy
+          payload: /faq_boolean_types
+        - title: Typy operátorů
+          payload: /faq_operator_types
+        - title: SSOT
+          payload: /faq_ssot_help
+        - title: Zpět
+          payload: /return_to_user_prompt

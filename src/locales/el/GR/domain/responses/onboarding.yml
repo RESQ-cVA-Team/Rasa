@@ -6,6 +6,8 @@ responses:
       buttons:
         - title: "Πώς χρησιμοποιώ αυτό το bot;"
           payload: "/who_are_you"
+        - title: "Εμφάνισε την αναλυτική ενότητα βοήθειας"
+          payload: "/faq_help"
         - title: "Βοήθησέ με να φτιάξω μια οπτικοποίηση"
           payload: "/request_guided_visualization"
         - title: "Θέλω να το περιγράψω ελεύθερα σε ένα μήνυμα"
@@ -13,3 +15,53 @@ responses:
 
   utter_who_are_you:
     - text: "Είμαι ένα bot που μπορεί να σε βοηθήσει να οπτικοποιήσεις τα δεδομένα RES-Q. Μπορώ να σε καθοδηγήσω βήμα βήμα για να φτιάξεις ένα γράφημα, ή μπορείς να περιγράψεις σε ένα μήνυμα το γράφημα που θέλεις και θα προσπαθήσω να το φτιάξω για σένα."
+
+  utter_faq_help:
+    - text: |-
+        Ακολουθεί μια λίστα με στοιχεία και μεταβλητές που μπορείς να χρησιμοποιήσεις για να δομήσεις τις οπτικοποιήσεις σου.
+        Μπορείς επίσης να μου ζητήσεις να ορίσω μια μετρική ρωτώντας «Τι είναι [όνομα μετρικής];» ή «Τι σημαίνει [όνομα μετρικής];».
+      buttons:
+        - title: Τύποι μετρικών
+          payload: /faq_metric_types
+        - title: Τύποι εγκεφαλικού
+          payload: /faq_stroke_types
+        - title: Τύποι γραφημάτων
+          payload: /faq_chart_types
+        - title: Τύποι ομαδοποίησης
+          payload: /faq_group_by_types
+        - title: Τύποι στατιστικών δοκιμών
+          payload: /faq_statistical_test_types
+        - title: Τύποι φύλου
+          payload: /faq_sex_types
+        - title: Δυαδικοί τύποι
+          payload: /faq_boolean_types
+        - title: Τύποι τελεστών
+          payload: /faq_operator_types
+        - title: SSOT
+          payload: /faq_ssot_help
+        - title: Πίσω
+          payload: /return_to_user_prompt
+
+  utter_faq_again:
+    - text: "Θέλεις να μάθεις κάτι άλλο;"
+      buttons:
+        - title: Τύποι μετρικών
+          payload: /faq_metric_types
+        - title: Τύποι εγκεφαλικού
+          payload: /faq_stroke_types
+        - title: Τύποι γραφημάτων
+          payload: /faq_chart_types
+        - title: Τύποι ομαδοποίησης
+          payload: /faq_group_by_types
+        - title: Τύποι στατιστικών δοκιμών
+          payload: /faq_statistical_test_types
+        - title: Τύποι φύλου
+          payload: /faq_sex_types
+        - title: Δυαδικοί τύποι
+          payload: /faq_boolean_types
+        - title: Τύποι τελεστών
+          payload: /faq_operator_types
+        - title: SSOT
+          payload: /faq_ssot_help
+        - title: Πίσω
+          payload: /return_to_user_prompt
