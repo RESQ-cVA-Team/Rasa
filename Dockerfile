@@ -56,7 +56,7 @@ RUN pip install --no-cache-dir --upgrade \
 	python-engineio==4.13.2 \
 	python-socketio==5.16.2 \
 	ujson==5.12.1 \
-	urllib3==2.7.0 \
+	urllib3==2.8.0 \
 	msgpack==1.2.1 \
 	pyasn1==0.6.4 \
 	Pillow==12.3.0 \
