@@ -66,7 +66,7 @@ nlu:
       - Show NIHSS improvements above [10]{"entity": "nihss", "role": "lower"} points
       - Show me a [bar](chart_type) chart of [DTN](metric) grouped by [NIHSS](group_by) score, split into 0-10 and 10-25
       - Chart [DIDO](metric) grouped by [NIHSS](group_by) score, split into 0-5 and 5-21
-      - Give me [DTN](metric) split by [NIHSS](group_by) severity buckets 0-10 and 10-25
+      - Give me [occlusion found on cta or mra](metric) split by [NIHSS](group_by) severity buckets 0-10 and 10-25
       - Break down [Thombolytics](metric) by [NIHSS](group_by) score in buckets 0-4, 5-15, and 16-25
       - Show [DTN](metric) grouped by [age](group_by) in buckets 0-20, 20-40, and 40-60
       - Show me a [bar](chart_type) chart of [DIDO](metric) grouped by [age](group_by) in 10-year buckets
