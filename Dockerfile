@@ -60,7 +60,7 @@ RUN pip install --no-cache-dir --upgrade \
 	msgpack==1.2.1 \
 	pyasn1==0.6.4 \
 	Pillow==12.3.0 \
-	PyJWT==2.13.0 \
+	PyJWT==2.14.0 \
 	Werkzeug==3.0.3 \
 	aiohttp==3.9.4 \
 	cryptography==50.0.1 \
