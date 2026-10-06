@@ -22,12 +22,9 @@ nlu:
       - What metrics or KPIs can I ask about?
       - Explain your metric types.
       - What does metric type mean here?
-      - What kind of stroke metrics do you track?
-      - What does a KPI like DTN or DIDO represent?
       - Which metrics are available?
       - List the KPIs I can chart.
       - What data points can I visualize?
-      - Tell me about DTN and DIDO.
       - What metrics does the dashboard track?
       - What kind of clinical measurements do you have?
       - Give me a list of trackable metrics.
@@ -38,14 +35,10 @@ nlu:
       - What stroke types do you support?
       - What stroke subtypes are there in your data?
       - Explain your stroke type categories.
-      - What do you mean by ischemic or hemorrhagic stroke?
       - What are the different stroke subtypes?
       - Can you list the stroke categories?
-      - What does TIA mean?
       - How do you classify stroke type?
       - What counts as a stroke mimic?
-      - Explain subarachnoid hemorrhage as a category.
-      - What's the difference between ischemic and hemorrhagic in your data?
 
   - intent: faq_chart_types
     examples: |
@@ -70,10 +63,7 @@ nlu:
       - Can I break the data down by hospital?
       - What dimensions can I split the data by?
       - List the available group-by fields.
-      - Can I group by age or sex?
-      - Can I split results by quarter or month?
       - What fields can I use to segment the data?
-      - Can I group by NIHSS score?
 
   - intent: faq_statistical_test_types
     examples: |
@@ -114,10 +104,7 @@ nlu:
       - Explain your boolean types.
       - What boolean indicators are available in the data?
       - What yes/no metrics do you track?
-      - Do you track thrombectomy and thrombolysis as flags?
       - What true/false fields are available?
-      - Which medication-before-onset flags exist?
-      - Is thrombectomy tracked as a yes/no value?
       - What are the available treatment flags?
 
   - intent: ask_metric_definition

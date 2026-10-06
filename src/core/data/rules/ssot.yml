@@ -5,46 +5,55 @@ rules:
     steps:
       - intent: faq_ssot_help
       - action: utter_faq_ssot_help
+      - action: utter_faq_again
 
   - rule: SSOT metric types FAQ
     steps:
       - intent: faq_metric_types
       - action: utter_faq_metric_types
+      - action: utter_faq_again
 
   - rule: SSOT stroke types FAQ
     steps:
       - intent: faq_stroke_types
       - action: utter_faq_stroke_types
+      - action: utter_faq_again
 
   - rule: SSOT chart types FAQ
     steps:
       - intent: faq_chart_types
       - action: utter_faq_chart_types
+      - action: utter_faq_again
 
   - rule: SSOT group-by types FAQ
     steps:
       - intent: faq_group_by_types
       - action: utter_faq_group_by_types
+      - action: utter_faq_again
 
   - rule: SSOT statistical test types FAQ
     steps:
       - intent: faq_statistical_test_types
       - action: utter_faq_statistical_test_types
+      - action: utter_faq_again
 
   - rule: SSOT operator types FAQ
     steps:
       - intent: faq_operator_types
       - action: utter_faq_operator_types
+      - action: utter_faq_again
 
   - rule: SSOT sex types FAQ
     steps:
       - intent: faq_sex_types
       - action: utter_faq_sex_types
+      - action: utter_faq_again
 
   - rule: SSOT boolean types FAQ
     steps:
       - intent: faq_boolean_types
       - action: utter_faq_boolean_types
+      - action: utter_faq_again
 
   - rule: Explain metric definition
     steps:
