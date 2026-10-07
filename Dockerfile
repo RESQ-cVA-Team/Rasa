@@ -78,6 +78,11 @@ RUN mkdir -p /app/.data && chown -R 1001:1001 /app/.data && chmod 700 /app/.data
 COPY --chown=1001:1001 src/ src/
 COPY --chown=1001:1001 scripts/ scripts/
 
+# The SSOT submodule must be checked out: without it the model trains without
+# the SSOT lookups and synonyms, and the canonicalizer passes raw values through.
+RUN test -f /app/src/shared/SSOT/ChartType.yml \
+	|| (echo "[ERROR] SSOT files missing: run 'git submodule update --init --recursive' before building." && exit 1)
+
 RUN chmod +x /app/scripts/*.sh
 
 # Ensure local 'src' is a real package to shadow any site-packages 'src'
