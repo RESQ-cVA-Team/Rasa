@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - dev
+  workflow_dispatch:
+
+jobs:
+  pytest:
+    name: pytest
+    runs-on: ubuntu-latest
+    # The same base image as the published one: Rasa 3.6 pins packaging < 21,
+    # which a fresh pip install of rasa on a plain runner does not reproduce.
+    container:
+      image: rasa/rasa:3.6.21@sha256:7c0204065d4859e1b7a691c972ca3d26f5d39ad23fbd992b654084721226d813
+      options: --user root
+    permissions:
+      contents: read
+    env:
+      # Placeholders: the server wrapper requires these at import time; no test calls Keycloak.
+      KEYCLOAK_ISSUER: http://keycloak.invalid/realms/ci
+      KEYCLOAK_CLIENT_ID: ci
+      KEYCLOAK_CLIENT_SECRET: ci
+    steps:
+      - name: Checkout code (with submodules)
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
+        with:
+          submodules: recursive
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest "packaging<21"
+
+      - name: Run the test suite
+        run: python -m pytest tests -q -p no:cacheprovider
