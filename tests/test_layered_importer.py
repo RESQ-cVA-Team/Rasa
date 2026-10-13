@@ -37,3 +37,27 @@ class BuildSsotNluDocTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CanonicalSpellingVariantTests(unittest.TestCase):
+    def test_metric_lookup_includes_camelcase_and_spaced_spellings_of_canonicals(self) -> None:
+        # "AdmissionNihss" typed as a bare reply matched nothing: no synonym has
+        # that shape and the lookup only carried ADMISSION_NIHSS verbatim.
+        doc = _build_ssot_nlu_doc(_SSOT_DIR, "en", DEFAULT_SSOT_NLU_ENTITIES)
+        assert doc is not None
+        metric_lookup = next(item for item in doc["nlu"] if item.get("lookup") == "metric")
+        self.assertIn("- AdmissionNihss\n", metric_lookup["examples"])
+        self.assertIn("- admission nihss\n", metric_lookup["examples"])
+        self.assertIn("- ADMISSION_NIHSS\n", metric_lookup["examples"])
+
+    def test_multi_word_synonyms_get_camelcase_spellings_too(self) -> None:
+        doc = _build_ssot_nlu_doc(_SSOT_DIR, "en", DEFAULT_SSOT_NLU_ENTITIES)
+        assert doc is not None
+        metric_lookup = next(item for item in doc["nlu"] if item.get("lookup") == "metric")
+        self.assertIn("- DoorToNeedle\n", metric_lookup["examples"])
+
+    def test_single_word_canonicals_get_no_variants(self) -> None:
+        doc = _build_ssot_nlu_doc(_SSOT_DIR, "en", DEFAULT_SSOT_NLU_ENTITIES)
+        assert doc is not None
+        metric_lookup = next(item for item in doc["nlu"] if item.get("lookup") == "metric")
+        self.assertEqual(metric_lookup["examples"].count("- DTN\n"), 1)

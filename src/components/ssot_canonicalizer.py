@@ -79,6 +79,10 @@ def _load_ssot_index(path: Path) -> _SSOTIndex:
                 continue
             # First-one-wins to avoid accidental churn if duplicates exist.
             by_synonym.setdefault(k, canonical)
+            # "DoorToNeedle" and "doortoneedle" normalize to the synonym with
+            # its spaces dropped; accept that spelling of every synonym too.
+            if " " in k:
+                by_synonym.setdefault(k.replace(" ", ""), canonical)
 
     return _SSOTIndex(canonicals=canonicals, by_synonym=by_synonym)
 

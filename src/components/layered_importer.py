@@ -276,6 +276,20 @@ def _default_ssot_dir(domain_paths: List[Path]) -> Path:
     return Path("src/shared/SSOT")
 
 
+def _spelling_variants(text: str) -> List[str]:
+    """Spellings of a multi-part name typed without its separators:
+    "AdmissionNihss" for ADMISSION_NIHSS, "DoorToNeedle" for "door to
+    needle", plus the spaced lowercase form of a canonical. Lookup matching
+    is case-insensitive, so these also cover "admissionnihss"; the
+    canonicalizer maps every one of them back to the canonical."""
+    parts = [part for part in text.replace("_", " ").replace("-", " ").split() if part]
+    if len(parts) < 2:
+        return []
+    camel = "".join(part[:1].upper() + part[1:].lower() for part in parts)
+    spaced = " ".join(parts).lower()
+    return [camel] + ([spaced] if spaced != text.lower() else [])
+
+
 def _build_ssot_nlu_doc(ssot_dir: Path, locale: str, entities: Dict[str, str]) -> Optional[Dict[str, Any]]:
     """Synthesize `lookup`/`synonym` NLU items straight from SSOT for one locale."""
     nlu_items: List[Dict[str, Any]] = []
@@ -314,7 +328,11 @@ def _build_ssot_nlu_doc(ssot_dir: Path, locale: str, entities: Dict[str, str]) -
             # from the real "[US](country_code)"-style training examples.
             if entity_name != "country_code":
                 lookup_examples.append(canonical)
+                lookup_examples.extend(_spelling_variants(canonical))
             lookup_examples.extend(names)
+            if entity_name != "country_code":
+                for name in names:
+                    lookup_examples.extend(_spelling_variants(name))
             synonym_items.append(
                 {"synonym": canonical, "examples": "".join(f"- {n}\n" for n in names)}
             )
