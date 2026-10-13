@@ -25,6 +25,10 @@ jobs:
       KEYCLOAK_CLIENT_ID: ci
       KEYCLOAK_CLIENT_SECRET: ci
     steps:
+      # The Rasa image ships without git; without it checkout cannot fetch submodules.
+      - name: Install git
+        run: apt-get update && apt-get install -y --no-install-recommends git ca-certificates
+
       - name: Checkout code (with submodules)
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5
         with:
