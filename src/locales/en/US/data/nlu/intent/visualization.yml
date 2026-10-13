@@ -7,13 +7,13 @@ nlu:
       - I want [treatment delay](metric) for all patients
       - Give me [AdmissionNihss](metric) and [DischargeNihss](metric)
       - Show me [DTN](metric) for [male](sex) patients
-      - Chart of [DIDO](metric) in [female](sex) stroke patients
-      - [Line chart](chart_type) of [DTN](metric) in [female](sex) stroke patients
+      - Chart of [iv antihypertensive to systolic bp below 140](metric) in [female](sex) stroke patients
+      - [Line chart](chart_type) of [iv antihypertensive to systolic blood pressure](metric) in [female](sex) stroke patients
       - Give me [DTG_PRIMARY](metric) data for [men](sex) and [women](sex) patients
       - Show me [door to needle time](metric) for patients aged [50]{"entity": "age", "role": "lower"} to [90]{"entity": "age", "role": "upper"}
       - Give me [door in door out](metric) between ages [30]{"entity": "age", "role": "lower"} and [50]{"entity": "age", "role": "upper"}
       - Display [AdmissionNihss](metric) for patients aged from [60]{"entity": "age", "role": "lower"} to [80]{"entity": "age", "role": "upper"}
-      - Show me [DTN](metric) for patients above [50]{"entity": "age", "role": "lower"}
+      - Show me [angels awards swallowing screening](metric) for patients above [50]{"entity": "age", "role": "lower"}
       - Give me [door in door out time](metric) for patients over [65]{"entity": "age", "role": "lower"} years old
       - Display data for patients under [30]{"entity": "age", "role": "upper"} years
       - Show patients aged [18]{"entity": "age", "role": "lower"} and above
@@ -64,13 +64,13 @@ nlu:
       - Display mild strokes with NIHSS below [5]{"entity": "nihss", "role": "upper"}
       - Chart severe cases with NIHSS over [20]{"entity": "nihss", "role": "lower"}
       - Show NIHSS improvements above [10]{"entity": "nihss", "role": "lower"} points
-      - Show me a [bar](chart_type) chart of [DTN](metric) grouped by [NIHSS](group_by) score, split into 0-10 and 10-25
-      - Chart [DIDO](metric) grouped by [NIHSS](group_by) score, split into 0-5 and 5-21
+      - Show me a [bar](chart_type) chart of [angels awards recanalization](metric) grouped by [NIHSS](group_by) score, split into 0-10 and 10-25
+      - Chart [angels awards stroke unit or intensive care](metric) grouped by [NIHSS](group_by) score, split into 0-5 and 5-21
       - Give me [occlusion found on cta or mra](metric) split by [NIHSS](group_by) severity buckets 0-10 and 10-25
       - Break down [Thombolytics](metric) by [NIHSS](group_by) score in buckets 0-4, 5-15, and 16-25
-      - Show [DTN](metric) grouped by [age](group_by) in buckets 0-20, 20-40, and 40-60
+      - Show [aa recanalization](metric) grouped by [age](group_by) in buckets 0-20, 20-40, and 40-60
       - Show me a [bar](chart_type) chart of [DIDO](metric) grouped by [age](group_by) in 10-year buckets
-      - Chart [DTN](metric) grouped by [age](group_by) in 5-year buckets
+      - Chart [aa swallowing screening](metric) grouped by [age](group_by) in 5-year buckets
       - Compare [age at stroke onset](metric) and [PERFUSION_DEFICIT_TYPE](metric) scores
       - Show [THROMBOLYSIS](metric) and [thrombolysis only](metric) together
       - Display [AdmissionNihss](metric) vs [DischargeNihss](metric) scores
@@ -84,13 +84,13 @@ nlu:
       - Generate a test to compare my hospital [stroke during hospitalization](metric) to the national mean with Mann Whitney
       - Perform a Mann-Whitney U test for [ARRIVAL_MODE](metric) between my hospital and the national mean
       - Compare my hospital [arrival mode](metric) with the UK national average using Mann Whitney
-      - Can you compare [mine](hospital_scope_reference) [DTN](metric) against [Army Alhama de Murcia Hospital](hospital_name) using Mann Whitney
+      - Can you compare [mine](hospital_scope_reference) [angels awards anticoagulants at discharge](metric) against [Army Alhama de Murcia Hospital](hospital_name) using Mann Whitney
       - Run a Mann Whitney U test comparing [my hospital](hospital_scope_reference) with [Army Alhama de Murcia Hospital](hospital_name) for [DTN](metric)
       - Can you compare [my](hospital_scope_reference) dtn against [Army Alhama de Murcia Hospital](hospital_name) using a mann whitney u test
       - Compare [my](hospital_scope_reference) [DIDO](metric) against [Central Hospital](hospital_name) using Mann Whitney
       - Compare [my](hospital_scope_reference) dtn per quarter with [Army Alhama de Murcia Hospital](hospital_name) using a line chart
       - Show a [bar](chart_type) chart of [my](hospital_scope_reference) [NIHSS](metric) versus [Memorial Hospital](hospital_name)
-      - Perform a Mann Whitney test on [DTN](metric) between [Q1 2023]{"entity": "date", "role": "lower"} and [Q2 2023]{"entity": "date", "role": "upper"}
+      - Perform a Mann Whitney test on [aa anticoagulants at discharge](metric) between [Q1 2023]{"entity": "date", "role": "lower"} and [Q2 2023]{"entity": "date", "role": "upper"}
       - Is there a significant difference in [DTN](metric) between [Q1 2023]{"entity": "date", "role": "lower"} and [Q2 2023]{"entity": "date", "role": "upper"}?
       - Run a Mann Whitney U test for [DTN](metric) between provider group [289](group_id) and provider group [252](group_id)
       - Compare [DTN](metric) between provider group [10](group_id) and provider group [25](group_id) using Mann Whitney
@@ -175,8 +175,8 @@ nlu:
       - Chart [systolic pressure](metric) for each [sex](group_by)
       - Show [initial diastolic blood pressure](metric) split by [gender](group_by)
       - Show a [line](chart_type) graph of [age](metric) grouped by [sex](group_by)
-      - Chart [DTN](metric) grouped by [age](group_by)
-      - Plot [DIDO](metric) split by [age](group_by)
+      - Chart [aa stroke unit intensive care](metric) grouped by [age](group_by)
+      - Plot [ich treatment type extended](metric) split by [age](group_by)
       - Show [Admission Nihss](metric) grouped by patient [age](group_by)
       - I'd like [mechanical thrombectomy](metric) grouped by [EMS prenotification](group_by)
       - Compare [HYPOPERFUSION](metric) across [treatment type](group_by)
