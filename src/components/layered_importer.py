@@ -320,6 +320,7 @@ def _build_ssot_nlu_doc(ssot_dir: Path, locale: str, entities: Dict[str, str]) -
             )
 
         if lookup_examples:
+            lookup_examples = sorted(dict.fromkeys(lookup_examples), key=len, reverse=True)
             nlu_items.append(
                 {"lookup": entity_name, "examples": "".join(f"- {e}\n" for e in lookup_examples)}
             )
