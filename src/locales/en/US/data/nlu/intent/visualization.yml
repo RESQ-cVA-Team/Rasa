@@ -84,7 +84,7 @@ nlu:
       - Generate a test to compare my hospital [stroke during hospitalization](metric) to the national mean with Mann Whitney
       - Perform a Mann-Whitney U test for [ARRIVAL_MODE](metric) between my hospital and the national mean
       - Compare my hospital [arrival mode](metric) with the UK national average using Mann Whitney
-      - Can you compare [mine](hospital_scope_reference) [monitoring intensity first day](metric) against [Army Alhama de Murcia Hospital](hospital_name) using Mann Whitney
+      - Can you compare [mine](hospital_scope_reference) [PRESTROKE_MRS](metric) against [Army Alhama de Murcia Hospital](hospital_name) using Mann Whitney
       - Run a Mann Whitney U test comparing [my hospital](hospital_scope_reference) with [Army Alhama de Murcia Hospital](hospital_name) for [DTN](metric)
       - Can you compare [my](hospital_scope_reference) dtn against [Army Alhama de Murcia Hospital](hospital_name) using a mann whitney u test
       - Compare [my](hospital_scope_reference) [DIDO](metric) against [Central Hospital](hospital_name) using Mann Whitney
@@ -146,7 +146,7 @@ nlu:
       - Create a visualization for [admission nihss](metric)
       - I need to inspect [door to needle time](metric)
       - What's the distribution of [age](metric)?
-      - How does [PRESTROKE_MRS](metric) look?
+      - How does [monitoring intensity first day](metric) look?
       - Can we look at [insulin on hyperglycemia](metric)?
       - Show the trend for [thrombolysis rate](metric)
       - I want an overview of [mRS](metric)
