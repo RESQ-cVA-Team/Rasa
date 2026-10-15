@@ -12,7 +12,7 @@ nlu:
       - Give me [DTG_PRIMARY](metric) data for [men](sex) and [women](sex) patients
       - Show me [door to needle time](metric) for patients aged [50]{"entity": "age", "role": "lower"} to [90]{"entity": "age", "role": "upper"}
       - Give me [door in door out](metric) between ages [30]{"entity": "age", "role": "lower"} and [50]{"entity": "age", "role": "upper"}
-      - Display [nihss at admission](metric) for patients aged from [60]{"entity": "age", "role": "lower"} to [80]{"entity": "age", "role": "upper"}
+      - Display [aa swallowing screening metric](metric) for patients aged from [60]{"entity": "age", "role": "lower"} to [80]{"entity": "age", "role": "upper"}
       - Show me [angels awards swallowing screening](metric) for patients above [50]{"entity": "age", "role": "lower"}
       - Give me [door in door out time](metric) for patients over [65]{"entity": "age", "role": "lower"} years old
       - Display data for patients under [30]{"entity": "age", "role": "upper"} years
@@ -41,7 +41,7 @@ nlu:
       - Show me [STROKE_MIMICS_DIAGNOSIS](metric) for patients aged [65]{"entity": "age", "role": "lower"} and above
       - Chart [stroke mimics diagnosis](metric) by [stroke subtype](group_by) for [female](sex) patients
       - Give me [mRS](metric) scores for [hemorrhagic](stroke_type) strokes from [2023-01-01]{"entity": "date", "role": "lower"} to [2023-12-31]{"entity": "date", "role": "upper"}
-      - Display a [frequency distribution](chart_type) of [age](metric)
+      - Display a [frequency distribution](chart_type) of [nihss at admission](metric)
       - Show me a [histogram](chart_type) of [discharge Modified Rankin Scale](metric)
       - Show [thrombolysis rate](metric) grouped by [arrival method](group_by)
       - I want to see [time to treatment](metric) improvement between [admission]{"entity": "nihss", "role": "lower"} and [discharge]{"entity": "nihss", "role": "upper"}
@@ -84,7 +84,7 @@ nlu:
       - Generate a test to compare my hospital [stroke during hospitalization](metric) to the national mean with [Mann Whitney](statistical_test_type)
       - Perform a Mann-Whitney U test for [ARRIVAL_MODE](metric) between my hospital and the national mean
       - Compare my hospital [arrival mode](metric) with the UK national average using [Mann Whitney](statistical_test_type)
-      - Can you compare [mine](hospital_scope_reference) [angels awards anticoagulants at discharge](metric) against [Army Alhama de Murcia Hospital](hospital_name) using [Mann Whitney](statistical_test_type)
+      - Can you compare [mine](hospital_scope_reference) [monitoring intensity first day](metric) against [Army Alhama de Murcia Hospital](hospital_name) using [Mann Whitney](statistical_test_type)
       - Run a [Mann Whitney U test](statistical_test_type) comparing [my hospital](hospital_scope_reference) with [Army Alhama de Murcia Hospital](hospital_name) for [DTN](metric)
       - Can you compare [my](hospital_scope_reference) dtn against [Army Alhama de Murcia Hospital](hospital_name) using a [Mann Whitney U test](statistical_test_type)
       - Compare [my](hospital_scope_reference) [DIDO](metric) against [Central Hospital](hospital_name) using [Mann Whitney](statistical_test_type)
@@ -107,7 +107,7 @@ nlu:
       - Compare [first contact place](metric) for [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} using [Mann Whitney](statistical_test_type)
       - Run a [Mann Whitney U test](statistical_test_type) comparing [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} for [DTN](metric)
       - Perform a [Mann Whitney test](statistical_test_type) on [HOSPITALIZED_IN](metric) between [Q1 2023]{"entity": "date", "role": "lower"} and [Q2 2023]{"entity": "date", "role": "upper"}
-      - Is there a significant difference in [monitoring intensity first day](metric) between [Q1 2023]{"entity": "date", "role": "lower"} and [Q2 2023]{"entity": "date", "role": "upper"}?
+      - Is there a significant difference in [angels awards anticoagulants at discharge](metric) between [Q1 2023]{"entity": "date", "role": "lower"} and [Q2 2023]{"entity": "date", "role": "upper"}?
       - Test [first-day bed type](metric) between [Q1 2023]{"entity": "date", "role": "lower"} and [Q2 2023]{"entity": "date", "role": "upper"} using [Mann Whitney](statistical_test_type)
       - Compare [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} against [Q3 2023]{"entity": "date", "role": "lower"} to [Q4 2023]{"entity": "date", "role": "upper"} using [Mann Whitney](statistical_test_type) for [DTN](metric)
       - Run a [Mann Whitney test](statistical_test_type) comparing [Q1 2023]{"entity": "date", "role": "lower"} to [Q2 2023]{"entity": "date", "role": "upper"} with [Q3 2023]{"entity": "date",("role"): ("upper")} for [DTN](metric)
