@@ -55,6 +55,7 @@ RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 # fsspec is only required by dask's dataframe IO and huggingface-hub
 # (fsspec>=2023.5.0); rasa's dask graph runner never touches it, so it moves
 # freely to the fixed release.
+# certifi only needs to be recent for requests (certifi>=2017.4.17).
 RUN pip install --no-cache-dir --upgrade \
 	python-engineio==4.13.2 \
 	python-socketio==5.16.2 \
@@ -69,7 +70,8 @@ RUN pip install --no-cache-dir --upgrade \
 	cryptography==50.0.1 \
 	fonttools==4.43.0 \
 	grpcio==1.56.2 \
-	fsspec==2026.6.0
+	fsspec==2026.6.0 \
+	certifi==2026.10.19
 
 WORKDIR /app
 
