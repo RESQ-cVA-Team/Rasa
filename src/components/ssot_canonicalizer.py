@@ -37,10 +37,9 @@ class _SSOTIndex:
 
 
 def _load_ssot_index(path: Path) -> _SSOTIndex:
-    """Loads a SSOT YAML file into a synonym->canonical index.
-
-    For MetricType.yml, some items also include data_type: Enum with an Enum list; we include
-    enum keys + their synonyms as valid synonyms for that canonical as well.
+    """Loads a SSOT YAML file into a synonym->canonical index of each item's
+    canonical and synonyms. An Enum metric's category keys and their synonyms
+    name values of that metric, not the metric, so they are not in the index.
     """
 
     items = ssot_yaml.load_ssot_items(path)
@@ -58,20 +57,6 @@ def _load_ssot_index(path: Path) -> _SSOTIndex:
         synonyms = ssot_yaml.all_synonyms(item)
         # Always accept the canonical itself.
         synonyms.append(canonical)
-
-        # For Enum types, also accept enum keys and their synonyms.
-        if str(item.get("data_type") or "").lower() == "enum":
-            enum_items = item.get("Enum")
-            if isinstance(enum_items, list):
-                for e in cast(List[Any], enum_items):
-                    if not isinstance(e, dict):
-                        continue
-                    key_any = cast(Dict[str, Any], e).get("key")
-                    if key_any is not None:
-                        synonyms.append(str(key_any))
-                    synonyms.extend(
-                        ssot_yaml.all_synonyms(cast(Dict[str, Any], e))
-                    )
 
         for syn in synonyms:
             k = _norm_text(syn)

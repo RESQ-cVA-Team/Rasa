@@ -29,6 +29,13 @@ class CanonicalizerSpellingTests(unittest.TestCase):
     def test_unknown_text_still_resolves_to_nothing(self) -> None:
         self.assertIsNone(self.index.lookup("no such metric"))
 
+    def test_enum_categories_do_not_name_their_metric(self) -> None:
+        # "one" is an MTICI_SCORE category, "no" one of many yes/no metrics,
+        # "hematoma" an MT_COMPLICATIONS_TYPE category: none of them is a metric.
+        for word in ("one", "1", "no", "yes", "hematoma", "other"):
+            self.assertIsNone(self.index.lookup(word), word)
+        self.assertEqual(self.index.lookup("mtici score"), "MTICI_SCORE")
+
 
 if __name__ == "__main__":
     unittest.main()
