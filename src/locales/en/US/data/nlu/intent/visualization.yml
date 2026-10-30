@@ -249,6 +249,9 @@ nlu:
       - Get me [thrombolysis rate](metric) data
       - Hello there, I would like a graph of [medication before onset in ais or tia](metric)
       - what [carotid stenosis](metric) did paitients have
+      - Show [initial blood glucose](metric)
+      - show me [discharge nihss](metric) in a [bar chart](chart_type) grouped by [stroke type](group_by)
+      - make me a [ich score](metric), [line chart](chart_type) grouped by [stroke type](group_by)
 
   - intent: update_visualization
     examples: |
@@ -372,9 +375,6 @@ nlu:
       - Change grouping to [quarters](group_by)
       - Set KPI to [percent]{"entity": "kpi", "value": "percent"}
       - Switch to an [XY plot](chart_type) visualisation
-      - Show [initial blood glucose](metric)
-      - show me [discharge nihss](metric) in a [bar chart](chart_type) grouped by [stroke type](group_by)
-      - make me a [ich score](metric), [line chart](chart_type) grouped by [stroke type](group_by)
       - Actually, use [DTN](metric) instead
       - Switch this to a [time series](chart_type)
       - Can you change it to a [pie graph](chart_type) instead
