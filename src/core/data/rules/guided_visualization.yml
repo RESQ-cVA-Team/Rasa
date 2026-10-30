@@ -16,27 +16,11 @@ rules:
       - action: guided_visualization_form
       - active_loop: guided_visualization_form
 
-  - rule: Handle clarify intent while guided mode is active
-    condition:
-      - active_loop: guided_visualization_form
-    steps:
-      - intent: clarify_visualization
-      - action: guided_visualization_form
-      - active_loop: guided_visualization_form
-
   - rule: Handle generate intent while guided mode is active
     condition:
       - active_loop: guided_visualization_form
     steps:
       - intent: generate_visualization
-      - action: guided_visualization_form
-      - active_loop: guided_visualization_form
-
-  - rule: Handle update intent while guided mode is active
-    condition:
-      - active_loop: guided_visualization_form
-    steps:
-      - intent: update_visualization
       - action: guided_visualization_form
       - active_loop: guided_visualization_form
 

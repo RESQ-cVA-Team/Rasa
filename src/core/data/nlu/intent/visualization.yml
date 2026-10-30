@@ -4,9 +4,3 @@ nlu:
   - intent: generate_visualization
     examples: |
       - [placeholder] see en/us or locale overlays
-  - intent: update_visualization
-    examples: |
-      - [placeholder] see en/us or locale overlays
-  - intent: clarify_visualization
-    examples: |
-      - [placeholder] see en/us or locale overlays

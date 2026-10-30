@@ -252,9 +252,6 @@ nlu:
       - Show [initial blood glucose](metric)
       - show me [discharge nihss](metric) in a [bar chart](chart_type) grouped by [stroke type](group_by)
       - make me a [ich score](metric), [line chart](chart_type) grouped by [stroke type](group_by)
-
-  - intent: update_visualization
-    examples: |
       - Change the chart to a [column chart](chart_type)
       - Update to show [female](sex) patients only
       - Filter for [male](sex) patients only
@@ -303,7 +300,6 @@ nlu:
       - show data from [2023](date) to [2025](date)
       - show [2024](date) and [2025](date) data
       - display data for [2023](date) and [2024](date)
-      - show data from [2024](date) and [2025](date)
       - include [2024](date) and [2025](date)
       - show data for [2024](date) and [2025](date)
       - Change it to a [line graph](chart_type)
@@ -390,9 +386,6 @@ nlu:
       - Change this chart's metric to [DIDO](metric) instead
       - On the same chart, swap in [mRS](metric)
       - Keep the chart but switch the metric to [admission nihss](metric)
-
-  - intent: clarify_visualization
-    examples: |
       - [DTN](metric)
       - Use [thrombectomy complications type](metric)
       - [mtici score](metric) please
