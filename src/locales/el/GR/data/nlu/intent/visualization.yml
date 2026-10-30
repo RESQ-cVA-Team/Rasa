@@ -184,8 +184,6 @@ nlu:
       - Δείξε μου τον [τύπο εγκεφαλικού](metric) ασθενών σε [διάγραμμα στηλών](chart_type) ομαδοποιημένο ανά [τρίμηνο](group_by)
       - Δείξε μου γραμμικό διάγραμμα του [dtn](metric) ομαδοποιημένο ανά [τρόπο μέτρησης INR](group_by)
       - Φτιάξε μου διάγραμμα στηλών του [physiotherapy received](metric) ομαδοποιημένο ανά [τύπο εγκεφαλικού](group_by)
-  - intent: update_visualization
-    examples: |
       - Άλλαξε το γράφημα σε [στήλες](chart_type)
       - Ενημέρωσε για να δείχνει μόνο [γυναίκες](sex) ασθενείς
       - Φίλτραρε μόνο [άνδρες](sex) ασθενείς
@@ -300,8 +298,6 @@ nlu:
       - Δείξε [αρχική γλυκόζη αίματος](metric)
       - δείξε μου [discharge nihss](metric) σε [διάγραμμα στηλών](chart_type) ομαδοποιημένο ανά [τύπο εγκεφαλικού](group_by)
       - φτιάξε μου [ich score](metric), [γραμμικό διάγραμμα](chart_type) ομαδοποιημένο ανά [τύπο εγκεφαλικού](group_by)
-  - intent: clarify_visualization
-    examples: |
       - [DTN](metric)
       - Χρησιμοποίησε [DIDO](metric)
       - [NIHSS](metric) παρακαλώ
