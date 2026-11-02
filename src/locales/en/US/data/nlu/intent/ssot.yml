@@ -1,114 +1,89 @@
 version: "3.1"
 
 nlu:
-  - intent: faq_ssot_help
+  - intent: ask_question
     examples: |
-      - What kinds of clinical concepts can you explain?
-      - What data dictionary or SSOT do you use?
-      - What are your metric, stroke, and chart types?
-      - What structured types can I ask you about?
-      - Tell me about the concepts behind your KPIs and filters.
-      - What is the SSOT?
-      - Can you walk me through your data dictionary?
-      - What do you mean by canonical values?
-      - How is your terminology standardized?
-      - What reference data backs your answers?
-      - Where do your metric definitions come from?
-      - Is there a glossary I can look at?
-      - What's the source of truth for these categories?
-
-  - intent: faq_metric_types
-    examples: |
-      - What metrics or KPIs can I ask about?
-      - Explain your metric types.
-      - What does metric type mean here?
-      - Which metrics are available?
-      - List the KPIs I can chart.
-      - What data points can I visualize?
-      - What metrics does the dashboard track?
-      - What kind of clinical measurements do you have?
-      - Give me a list of trackable metrics.
-      - What KPIs exist for treatment timing?
-
-  - intent: faq_stroke_types
-    examples: |
-      - What stroke types do you support?
-      - What stroke subtypes are there in your data?
-      - Explain your stroke type categories.
-      - What are the different stroke subtypes?
-      - Can you list the stroke categories?
-      - How do you classify stroke type?
-      - What counts as a stroke mimic?
-
-  - intent: faq_chart_types
-    examples: |
-      - What chart types can you show?
-      - What kinds of visualizations are available?
-      - Explain the chart types you support.
-      - Do you support line, bar, or pie charts?
-      - What visualization types are available?
-      - Can I get a scatter plot or histogram?
-      - List the chart formats you support.
-      - What kind of graphs can you make?
-      - Do you support box plots?
-      - Can you make a radar or waterfall chart?
-      - What chart options do I have for distributions?
-
-  - intent: faq_group_by_types
-    examples: |
-      - What can I group the data by?
-      - What group-by dimensions do you support?
-      - Explain your grouping options.
-      - What are the main grouping fields?
-      - Can I break the data down by hospital?
-      - What dimensions can I split the data by?
-      - List the available group-by fields.
-      - What fields can I use to segment the data?
-
-  - intent: faq_statistical_test_types
-    examples: |
-      - What statistical tests can you run?
-      - Explain the statistical test types you support.
-      - What hypothesis tests are available?
-      - Which correlation or regression methods do you have?
-
-  - intent: faq_operator_types
-    examples: |
-      - What comparison operators can I use in filters?
-      - Explain operators like greater than or equal.
-      - What do GE and LE mean?
-      - What relational operators are supported?
-      - What filter comparisons are available?
-      - Can I filter using less than or equal?
-      - Explain the filter operators.
-      - What does NE mean in a filter?
-      - How do I filter for values equal to something?
-      - What symbols can I use to compare numbers?
-      - Can I filter for "at least" or "at most" a value?
-
-  - intent: faq_sex_types
-    examples: |
-      - How do you categorize sex in the data?
-      - What sex categories do you support?
-      - Explain the biological sex types you use.
-      - What sex values are in the data?
-      - Do you track male, female, and other?
-      - How do you record patient sex?
-      - What options are there besides male and female?
-      - Is there an unknown category for sex?
-      - How is sex recorded when it's not provided?
-
-  - intent: faq_boolean_types
-    examples: |
-      - What kind of yes or no flags do you track?
-      - Explain your boolean types.
-      - What boolean indicators are available in the data?
-      - What yes/no metrics do you track?
-      - What true/false fields are available?
-      - What are the available treatment flags?
-
-  - intent: ask_metric_definition
-    examples: |
+      - What kinds of [clinical concepts]{"entity": "topic", "value": "ssot"} can you explain?
+      - What [data dictionary]{"entity": "topic", "value": "ssot"} or SSOT do you use?
+      - What are your [metric, stroke, and chart types]{"entity": "topic", "value": "ssot"}?
+      - What [structured types]{"entity": "topic", "value": "ssot"} can I ask you about?
+      - Tell me about the [concepts behind your KPIs and filters]{"entity": "topic", "value": "ssot"}.
+      - What is the [SSOT]{"entity": "topic", "value": "ssot"}?
+      - Can you walk me through your [data dictionary]{"entity": "topic", "value": "ssot"}?
+      - What do you mean by [canonical values]{"entity": "topic", "value": "ssot"}?
+      - How is your [terminology]{"entity": "topic", "value": "ssot"} standardized?
+      - What [reference data]{"entity": "topic", "value": "ssot"} backs your answers?
+      - Where do your [metric definitions]{"entity": "topic", "value": "ssot"} come from?
+      - Is there a [glossary]{"entity": "topic", "value": "ssot"} I can look at?
+      - What's the [source of truth]{"entity": "topic", "value": "ssot"} for these categories?
+      - What [metrics or KPIs]{"entity": "topic", "value": "metric_types"} can I ask about?
+      - Explain your [metric types]{"entity": "topic", "value": "metric_types"}.
+      - What does [metric type]{"entity": "topic", "value": "metric_types"} mean here?
+      - Which [metrics]{"entity": "topic", "value": "metric_types"} are available?
+      - List the [KPIs]{"entity": "topic", "value": "metric_types"} I can chart.
+      - What [data points]{"entity": "topic", "value": "metric_types"} can I visualize?
+      - What [metrics]{"entity": "topic", "value": "metric_types"} does the dashboard track?
+      - What kind of [clinical measurements]{"entity": "topic", "value": "metric_types"} do you have?
+      - Give me a list of trackable [metrics]{"entity": "topic", "value": "metric_types"}.
+      - What [KPIs]{"entity": "topic", "value": "metric_types"} exist for treatment timing?
+      - What kinds of [stroke metrics]{"entity": "topic", "value": "metric_types"} do you track?
+      - What [stroke types]{"entity": "topic", "value": "stroke_types"} do you support?
+      - What [stroke subtypes]{"entity": "topic", "value": "stroke_types"} are there in your data?
+      - Explain your [stroke type]{"entity": "metric", "value": "STROKE_TYPE"} categories.
+      - What are the different [stroke subtypes]{"entity": "topic", "value": "stroke_types"}?
+      - Can you list the [stroke categories]{"entity": "topic", "value": "stroke_types"}?
+      - How do you classify [stroke type]{"entity": "metric", "value": "STROKE_TYPE"}?
+      - What counts as a [stroke mimic]{"entity": "topic", "value": "stroke_types"}?
+      - What do you mean by [ischaemic or haemorrhagic stroke]{"entity": "topic", "value": "stroke_types"}?
+      - What [chart types]{"entity": "topic", "value": "chart_types"} can you show?
+      - What [kinds of visualizations]{"entity": "topic", "value": "chart_types"} are available?
+      - Explain the [chart types]{"entity": "topic", "value": "chart_types"} you support.
+      - Do you support [line](chart_type), [bar](chart_type), or [pie](chart_type) charts?
+      - What [visualization types]{"entity": "topic", "value": "chart_types"} are available?
+      - Can I get a [scatter plot](chart_type) or [histogram](chart_type)?
+      - List the [chart formats]{"entity": "topic", "value": "chart_types"} you support.
+      - What [kind of graphs]{"entity": "topic", "value": "chart_types"} can you make?
+      - Do you support [box](chart_type) plots?
+      - Can you make a [radar](chart_type) or [waterfall](chart_type) chart?
+      - What [chart options]{"entity": "topic", "value": "chart_types"} do I have for distributions?
+      - What can I [group the data by]{"entity": "topic", "value": "group_by_types"}?
+      - What [group-by dimensions]{"entity": "topic", "value": "group_by_types"} do you support?
+      - Explain your [grouping options]{"entity": "topic", "value": "group_by_types"}.
+      - What are the main [grouping fields]{"entity": "topic", "value": "group_by_types"}?
+      - Can I [break the data down]{"entity": "topic", "value": "group_by_types"} by hospital?
+      - What dimensions can I [split the data by]{"entity": "topic", "value": "group_by_types"}?
+      - List the available [group-by fields]{"entity": "topic", "value": "group_by_types"}.
+      - What fields can I use to [segment the data]{"entity": "topic", "value": "group_by_types"}?
+      - What [statistical tests]{"entity": "topic", "value": "statistical_test_types"} can you run?
+      - Explain the [statistical test types]{"entity": "topic", "value": "statistical_test_types"} you support.
+      - What [hypothesis tests]{"entity": "topic", "value": "statistical_test_types"} are available?
+      - Which [correlation or regression methods]{"entity": "topic", "value": "statistical_test_types"} do you have?
+      - What [comparison operators]{"entity": "topic", "value": "operator_types"} can I use in filters?
+      - Explain [operators]{"entity": "topic", "value": "operator_types"} like greater than or equal.
+      - What do [GE]{"entity": "topic", "value": "operator_types"} and [LE]{"entity": "topic", "value": "operator_types"} mean?
+      - What [relational operators]{"entity": "topic", "value": "operator_types"} are supported?
+      - What [filter comparisons]{"entity": "topic", "value": "operator_types"} are available?
+      - Can I [filter]{"entity": "topic", "value": "operator_types"} using less than or equal?
+      - Explain the filter [operators]{"entity": "topic", "value": "operator_types"}.
+      - What does NE mean in a [filter]{"entity": "topic", "value": "operator_types"}?
+      - How do I [filter]{"entity": "topic", "value": "operator_types"} for values equal to something?
+      - What [symbols]{"entity": "topic", "value": "operator_types"} can I use to compare numbers?
+      - Can I [filter]{"entity": "topic", "value": "operator_types"} for "at least" or "at most" a value?
+      - How do you categorize [sex]{"entity": "metric", "value": "SEX"} in the data?
+      - What [sex]{"entity": "metric", "value": "SEX"} categories do you support?
+      - Explain the biological [sex]{"entity": "metric", "value": "SEX"} types you use.
+      - What [sex]{"entity": "metric", "value": "SEX"} values are in the data?
+      - Do you track [male](sex), [female](sex), and other?
+      - How do you record patient [sex]{"entity": "metric", "value": "SEX"}?
+      - What options are there besides [male](sex) and [female](sex)?
+      - Is there an unknown category for [sex]{"entity": "metric", "value": "SEX"}?
+      - How is [sex]{"entity": "metric", "value": "SEX"} recorded when it's not provided?
+      - What kind of [yes or no flags]{"entity": "topic", "value": "boolean_types"} do you track?
+      - Explain your [boolean types]{"entity": "topic", "value": "boolean_types"}.
+      - What [boolean indicators]{"entity": "topic", "value": "boolean_types"} are available in the data?
+      - What [yes/no metrics]{"entity": "topic", "value": "boolean_types"} do you track?
+      - What [true/false fields]{"entity": "topic", "value": "boolean_types"} are available?
+      - What are the available [treatment flags]{"entity": "topic", "value": "boolean_types"}?
       - What is [DTN](metric)?
       - Can you explain [AA_DTN_LE60](metric)?
       - What does the metric [ONSET_TO_DOOR](metric) mean?
