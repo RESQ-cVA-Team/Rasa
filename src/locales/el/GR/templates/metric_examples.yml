@@ -1,0 +1,41 @@
+version: "3.1"
+
+# Filled at training time with every SSOT metric's names (see
+# layered_importer._build_metric_examples).
+metric_examples:
+  ask_question:
+    names_per_metric: 1
+    templates:
+      - Τι σημαίνει {metric};
+      - τι είναι το {metric}
+      - Εξήγησε το {metric}
+      - Τι εννοείται με τον όρο {metric};
+      - Όρισε το {metric}
+      - Τι αντιπροσωπεύει η συντομογραφία {metric};
+      - Τι εννοείς με τον όρο {metric};
+      - Μπορείς να εξηγήσεις τι είναι το {metric};
+      - Ποια είναι η σημασία του όρου {metric};
+      - ορισμός του όρου {metric}
+      - Πώς ορίζεται ο όρος {metric};
+      - Τι μετράει το {metric};
+  generate_visualization:
+    names_per_metric: 1
+    templates:
+      - Δείξε μου {metric}
+      - Σχεδίασε {metric}
+      - Δώσε μου ένα γράφημα για {metric}
+      - Θέλω να δω {metric}
+      - Εμφάνισε {metric} για όλους τους ασθενείς
+      - Ποιος είναι ο δείκτης {metric} μας;
+      - Ποιος είναι ο δείκτης {metric} μου;
+      - Πώς είναι ο δείκτης {metric} μας;
+      - Φτιάξε μου ένα γράφημα για {metric}
+      - Μπορώ να δω τον δείκτη {metric} μας;
+      - Οπτικοποίησε {metric}
+      - Πώς εξελίσσεται ο δείκτης {metric} μας;
+      - Όχι, εννοούσα {metric}
+      - Εννοούσα {metric}
+      - Συγγνώμη, εννοούσα {metric}
+      - 'Ποιος είναι ο διάμεσος {metric} ανά [μήνα]{"entity": "group_by", "value": "MONTH"};'
+      - 'Ποια είναι η κατανομή του {metric};'
+      - 'Ποιος είναι ο μέσος όρος {metric} ανά [τρίμηνο]{"entity": "group_by", "value": "QUARTER"};'

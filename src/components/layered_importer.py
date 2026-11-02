@@ -355,6 +355,43 @@ def _build_ssot_nlu_doc(ssot_dir: Path, locale: str, entities: Dict[str, str]) -
     return {"version": "3.1", "nlu": nlu_items}
 
 
+METRIC_EXAMPLE_TEMPLATES = Path("templates") / "metric_examples.yml"
+
+
+def _find_metric_templates(domain_paths: List[Path]) -> Optional[Path]:
+    """The metric example templates of the most specific layer that has them."""
+    for p in reversed(domain_paths):
+        candidate = p.parent / METRIC_EXAMPLE_TEMPLATES
+        if candidate.exists():
+            return candidate
+    return None
+
+
+def _build_metric_examples(ssot_dir: Path, locale: str, templates_path: Path) -> List[Dict[str, Any]]:
+    """Training examples that name every SSOT metric, from templates per intent:
+    `{metric}` becomes a metric name annotated as the metric entity. Names a
+    metric in each intent that has templates, so the metric's words do not
+    decide the intent. Templates are dealt in turn, so the output is stable."""
+    doc = yaml.safe_load(templates_path.read_text(encoding="utf-8")) or {}
+    metrics = ssot_yaml.load_ssot_items(ssot_dir / "MetricType.yml")
+    items: List[Dict[str, Any]] = []
+    for intent, spec_any in cast(Dict[str, Any], doc.get("metric_examples") or {}).items():
+        spec = cast(Dict[str, Any], spec_any)
+        templates = [str(t) for t in spec.get("templates") or []]
+        per_metric = int(spec.get("names_per_metric", 1))
+        if not templates:
+            continue
+        examples: List[str] = []
+        for entry in metrics:
+            names = [n for n in ssot_yaml.locale_synonyms(entry, locale) if not any(c in n for c in "[](){}")]
+            for name in names[:per_metric]:
+                template = templates[len(examples) % len(templates)]
+                examples.append(template.replace("{metric}", f"[{name}](metric)"))
+        if examples:
+            items.append({"intent": intent, "examples": "".join(f"- {e}\n" for e in examples)})
+    return items
+
+
 def _merge_config_docs(base_docs: List[Dict[str, Any]], overlay_docs: List[Dict[str, Any]]) -> Dict[str, Any]:
     """Merge Rasa config dictionaries with add/replace semantics.
 
@@ -675,6 +712,13 @@ class OverlayImporter(TrainingDataImporter):  # pyright: ignore[reportUntypedBas
 
         merged: Dict[str, Any] = _merge_nlu_docs(base_docs, overlay_docs)
         merged_nlu_list = cast(List[Dict[str, Any]], merged.get("nlu", []))
+        # Added after the layer merge: a locale's own examples of an intent
+        # replace the English ones, and must not replace these.
+        templates_path = _find_metric_templates(self._base_domain_paths + self._overlay_domain_paths)
+        if templates_path:
+            generated = _build_metric_examples(self._ssot_dir, self._ssot_locale, templates_path)
+            merged_nlu_list.extend(generated)
+            logger.info(f"Generated metric examples from {templates_path}: {[(it['intent'], it['examples'].count(chr(10))) for it in generated]}")
         intents = [str(it.get("intent")) for it in merged_nlu_list if it.get("intent")]
         logger.info(f"Merged NLU intents: {sorted(set(intents))}")
 

@@ -1,0 +1,41 @@
+version: "3.1"
+
+# Filled at training time with every SSOT metric's names (see
+# layered_importer._build_metric_examples).
+metric_examples:
+  ask_question:
+    names_per_metric: 1
+    templates:
+      - Co znamená {metric}?
+      - co je {metric}
+      - Vysvětli {metric}
+      - Co se myslí pojmem {metric}?
+      - Definuj {metric}
+      - Co znamená zkratka {metric}?
+      - Co myslíš pojmem {metric}?
+      - Můžeš vysvětlit, co je {metric}?
+      - Jaký je význam pojmu {metric}?
+      - definice pojmu {metric}
+      - Jak je definován pojem {metric}?
+      - Co měří {metric}?
+  generate_visualization:
+    names_per_metric: 1
+    templates:
+      - Ukaž mi {metric}
+      - Vykresli {metric}
+      - Dej mi graf pro {metric}
+      - Chci vidět {metric}
+      - Zobraz {metric} pro všechny pacienty
+      - Jaký je náš ukazatel {metric}?
+      - Jaký je můj ukazatel {metric}?
+      - Jak vypadá náš ukazatel {metric}?
+      - Udělej mi graf pro {metric}
+      - Můžu vidět náš ukazatel {metric}?
+      - Vizualizuj {metric}
+      - Jak se vyvíjí náš ukazatel {metric}?
+      - Ne, myslel jsem {metric}
+      - Myslel jsem {metric}
+      - Promiň, myslel jsem spíš {metric}
+      - 'Jaký je medián {metric} podle [měsíců]{"entity": "group_by", "value": "MONTH"}?'
+      - 'Jaké je rozdělení {metric}?'
+      - 'Jaký je průměr {metric} podle [čtvrtletí]{"entity": "group_by", "value": "QUARTER"}?'

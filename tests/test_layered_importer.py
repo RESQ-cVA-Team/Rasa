@@ -1,7 +1,9 @@
 import unittest
 from pathlib import Path
 
-from src.components.layered_importer import DEFAULT_SSOT_NLU_ENTITIES, _build_ssot_nlu_doc, _detect_locale
+from src.components import ssot_yaml
+
+from src.components.layered_importer import DEFAULT_SSOT_NLU_ENTITIES, _build_metric_examples, _build_ssot_nlu_doc, _detect_locale, _find_metric_templates
 
 _SSOT_DIR = Path(__file__).resolve().parents[1] / "src" / "shared" / "SSOT"
 
@@ -78,3 +80,24 @@ class CanonicalSpellingVariantTests(unittest.TestCase):
         assert doc is not None
         metric_lookup = next(item for item in doc["nlu"] if item.get("lookup") == "metric")
         self.assertEqual(metric_lookup["examples"].count("- DTN\n"), 1)
+
+
+class MetricExampleTests(unittest.TestCase):
+    _ROOT = Path(__file__).resolve().parents[1]
+
+    def test_the_most_specific_layer_has_the_templates(self) -> None:
+        paths = [self._ROOT / "src/core/domain", self._ROOT / "src/locales/en/US/domain", self._ROOT / "src/locales/cs/CZ/domain"]
+        self.assertEqual(_find_metric_templates(paths), self._ROOT / "src/locales/cs/CZ/templates/metric_examples.yml")
+
+    def test_every_locale_names_every_metric_in_questions_and_chart_requests(self) -> None:
+        metrics = len(ssot_yaml.load_ssot_items(_SSOT_DIR / "MetricType.yml"))
+        for locale, region in (("en", "US"), ("cs", "CZ"), ("el", "GR")):
+            items = _build_metric_examples(_SSOT_DIR, locale, self._ROOT / f"src/locales/{locale}/{region}/templates/metric_examples.yml")
+            counts = {item["intent"]: item["examples"].count("\n") for item in items}
+            self.assertGreaterEqual(counts.get("ask_question", 0), metrics, locale)
+            self.assertGreaterEqual(counts.get("generate_visualization", 0), metrics, locale)
+
+    def test_an_example_annotates_the_metric_name(self) -> None:
+        items = _build_metric_examples(_SSOT_DIR, "en", self._ROOT / "src/locales/en/US/templates/metric_examples.yml")
+        examples = next(item for item in items if item["intent"] == "ask_question")["examples"]
+        self.assertIn("[door to needle](metric)", examples)
