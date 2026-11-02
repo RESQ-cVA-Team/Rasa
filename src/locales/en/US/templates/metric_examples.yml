@@ -1,0 +1,41 @@
+version: "3.1"
+
+# Filled at training time with every SSOT metric's names (see
+# layered_importer._build_metric_examples).
+metric_examples:
+  ask_question:
+    names_per_metric: 1
+    templates:
+      - What does {metric} mean?
+      - what is {metric}
+      - Explain {metric}
+      - How is {metric} defined?
+      - What is meant by {metric}?
+      - Define {metric}
+      - What does {metric} stand for?
+      - What do you mean by {metric}?
+      - Can you explain what {metric} is?
+      - What is the meaning of {metric}?
+      - definition of {metric}
+      - What does {metric} measure?
+  generate_visualization:
+    names_per_metric: 1
+    templates:
+      - Show me {metric}
+      - Plot {metric}
+      - Give me a chart of {metric}
+      - I want to see {metric}
+      - Display {metric} for all patients
+      - What is our {metric}?
+      - What's my {metric}?
+      - How is our {metric} looking?
+      - Chart {metric} for me
+      - Can I see our {metric}?
+      - Visualize {metric}
+      - What does our {metric} look like?
+      - No, I meant {metric}
+      - I meant {metric}
+      - Sorry, I meant {metric} instead
+      - 'What is the median {metric} per [month]{"entity": "group_by", "value": "MONTH"}?'
+      - 'What is the {metric} distribution?'
+      - 'What is the average {metric} per [quarter]{"entity": "group_by", "value": "QUARTER"}?'

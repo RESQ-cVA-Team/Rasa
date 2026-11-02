@@ -22,23 +22,23 @@ responses:
         Můžeš mě také požádat o definici metriky otázkou „Co je [název metriky]?“ nebo „Co znamená [název metriky]?“.
       buttons:
         - title: Typy metrik
-          payload: /faq_metric_types
+          payload: '/ask_question{"topic": "metric_types"}'
         - title: Typy mrtvice
-          payload: /faq_stroke_types
+          payload: '/ask_question{"topic": "stroke_types"}'
         - title: Typy grafů
-          payload: /faq_chart_types
+          payload: '/ask_question{"topic": "chart_types"}'
         - title: Typy seskupení
-          payload: /faq_group_by_types
+          payload: '/ask_question{"topic": "group_by_types"}'
         - title: Typy statistických testů
-          payload: /faq_statistical_test_types
+          payload: '/ask_question{"topic": "statistical_test_types"}'
         - title: Typy pohlaví
-          payload: /faq_sex_types
+          payload: '/ask_question{"topic": "sex_types"}'
         - title: Booleovské typy
-          payload: /faq_boolean_types
+          payload: '/ask_question{"topic": "boolean_types"}'
         - title: Typy operátorů
-          payload: /faq_operator_types
+          payload: '/ask_question{"topic": "operator_types"}'
         - title: SSOT
-          payload: /faq_ssot_help
+          payload: '/ask_question{"topic": "ssot"}'
         - title: Zpět
           payload: /return_to_user_prompt
 
@@ -46,22 +46,22 @@ responses:
     - text: "Chceš vědět ještě něco?"
       buttons:
         - title: Typy metrik
-          payload: /faq_metric_types
+          payload: '/ask_question{"topic": "metric_types"}'
         - title: Typy mrtvice
-          payload: /faq_stroke_types
+          payload: '/ask_question{"topic": "stroke_types"}'
         - title: Typy grafů
-          payload: /faq_chart_types
+          payload: '/ask_question{"topic": "chart_types"}'
         - title: Typy seskupení
-          payload: /faq_group_by_types
+          payload: '/ask_question{"topic": "group_by_types"}'
         - title: Typy statistických testů
-          payload: /faq_statistical_test_types
+          payload: '/ask_question{"topic": "statistical_test_types"}'
         - title: Typy pohlaví
-          payload: /faq_sex_types
+          payload: '/ask_question{"topic": "sex_types"}'
         - title: Booleovské typy
-          payload: /faq_boolean_types
+          payload: '/ask_question{"topic": "boolean_types"}'
         - title: Typy operátorů
-          payload: /faq_operator_types
+          payload: '/ask_question{"topic": "operator_types"}'
         - title: SSOT
-          payload: /faq_ssot_help
+          payload: '/ask_question{"topic": "ssot"}'
         - title: Zpět
           payload: /return_to_user_prompt

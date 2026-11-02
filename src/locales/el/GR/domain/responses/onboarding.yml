@@ -22,23 +22,23 @@ responses:
         Μπορείς επίσης να μου ζητήσεις να ορίσω μια μετρική ρωτώντας «Τι είναι [όνομα μετρικής];» ή «Τι σημαίνει [όνομα μετρικής];».
       buttons:
         - title: Τύποι μετρικών
-          payload: /faq_metric_types
+          payload: '/ask_question{"topic": "metric_types"}'
         - title: Τύποι εγκεφαλικού
-          payload: /faq_stroke_types
+          payload: '/ask_question{"topic": "stroke_types"}'
         - title: Τύποι γραφημάτων
-          payload: /faq_chart_types
+          payload: '/ask_question{"topic": "chart_types"}'
         - title: Τύποι ομαδοποίησης
-          payload: /faq_group_by_types
+          payload: '/ask_question{"topic": "group_by_types"}'
         - title: Τύποι στατιστικών δοκιμών
-          payload: /faq_statistical_test_types
+          payload: '/ask_question{"topic": "statistical_test_types"}'
         - title: Τύποι φύλου
-          payload: /faq_sex_types
+          payload: '/ask_question{"topic": "sex_types"}'
         - title: Δυαδικοί τύποι
-          payload: /faq_boolean_types
+          payload: '/ask_question{"topic": "boolean_types"}'
         - title: Τύποι τελεστών
-          payload: /faq_operator_types
+          payload: '/ask_question{"topic": "operator_types"}'
         - title: SSOT
-          payload: /faq_ssot_help
+          payload: '/ask_question{"topic": "ssot"}'
         - title: Πίσω
           payload: /return_to_user_prompt
 
@@ -46,22 +46,22 @@ responses:
     - text: "Θέλεις να μάθεις κάτι άλλο;"
       buttons:
         - title: Τύποι μετρικών
-          payload: /faq_metric_types
+          payload: '/ask_question{"topic": "metric_types"}'
         - title: Τύποι εγκεφαλικού
-          payload: /faq_stroke_types
+          payload: '/ask_question{"topic": "stroke_types"}'
         - title: Τύποι γραφημάτων
-          payload: /faq_chart_types
+          payload: '/ask_question{"topic": "chart_types"}'
         - title: Τύποι ομαδοποίησης
-          payload: /faq_group_by_types
+          payload: '/ask_question{"topic": "group_by_types"}'
         - title: Τύποι στατιστικών δοκιμών
-          payload: /faq_statistical_test_types
+          payload: '/ask_question{"topic": "statistical_test_types"}'
         - title: Τύποι φύλου
-          payload: /faq_sex_types
+          payload: '/ask_question{"topic": "sex_types"}'
         - title: Δυαδικοί τύποι
-          payload: /faq_boolean_types
+          payload: '/ask_question{"topic": "boolean_types"}'
         - title: Τύποι τελεστών
-          payload: /faq_operator_types
+          payload: '/ask_question{"topic": "operator_types"}'
         - title: SSOT
-          payload: /faq_ssot_help
+          payload: '/ask_question{"topic": "ssot"}'
         - title: Πίσω
           payload: /return_to_user_prompt
