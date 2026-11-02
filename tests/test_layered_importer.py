@@ -1,7 +1,7 @@
 import unittest
 from pathlib import Path
 
-from src.components.layered_importer import DEFAULT_SSOT_NLU_ENTITIES, _build_ssot_nlu_doc
+from src.components.layered_importer import DEFAULT_SSOT_NLU_ENTITIES, _build_ssot_nlu_doc, _detect_locale
 
 _SSOT_DIR = Path(__file__).resolve().parents[1] / "src" / "shared" / "SSOT"
 
@@ -34,6 +34,23 @@ class BuildSsotNluDocTests(unittest.TestCase):
         for canonical in ("LINE", "BAR", "BOX", "HISTOGRAM", "SCATTER", "PIE", "RADAR", "WATERFALL"):
             self.assertIn(canonical, examples)
 
+
+
+class DetectLocaleTests(unittest.TestCase):
+    def test_a_locale_build_takes_the_locale_layered_over_en_us(self) -> None:
+        paths = [Path("src/locales/en/US/domain"), Path("src/locales/cs/CZ/domain")]
+        self.assertEqual(_detect_locale(paths), "cs")
+
+    def test_an_english_build_is_english(self) -> None:
+        self.assertEqual(_detect_locale([Path("src/locales/en/US/domain")]), "en")
+
+
+class LocaleSynonymTests(unittest.TestCase):
+    def test_a_czech_model_knows_czech_and_english_metric_names(self) -> None:
+        doc = _build_ssot_nlu_doc(_SSOT_DIR, "cs", {"metric": "MetricType.yml"})
+        lookup = next(item for item in doc["nlu"] if item.get("lookup") == "metric")["examples"]
+        self.assertIn("délka hospitalizace", lookup)
+        self.assertIn("length of hospital stay", lookup)
 
 if __name__ == "__main__":
     unittest.main()

@@ -254,8 +254,10 @@ DEFAULT_SSOT_NLU_ENTITIES: Dict[str, str] = {
 
 
 def _detect_locale(domain_paths: List[Path]) -> str:
-    """Best-effort locale code from an overlay domain path like src/locales/cs/CZ/domain."""
-    for p in domain_paths:
+    """Locale code of the most specific layer, from an overlay domain path like
+    src/locales/cs/CZ/domain. Layers run from general to specific, and every
+    locale build layers en/US first."""
+    for p in reversed(domain_paths):
         parts = p.parts
         if "locales" in parts:
             idx = parts.index("locales")
@@ -310,7 +312,11 @@ def _build_ssot_nlu_doc(ssot_dir: Path, locale: str, entities: Dict[str, str]) -
             if not isinstance(canonical_any, str) or not canonical_any.strip():
                 continue
             canonical = canonical_any.strip().upper()
+            # A non-English model also knows the English names: users type
+            # English clinical terms in any language.
             names = ssot_yaml.locale_synonyms(entry, locale)
+            if locale != "en":
+                names = list(dict.fromkeys(names + ssot_yaml.locale_synonyms(entry, "en")))
             if not names:
                 continue
             # country_code canonicals are bare ISO 3166-1 alpha-2 codes (TO, US,
