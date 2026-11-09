@@ -10,14 +10,15 @@ Instead this covers the same ground with plain `requests`, since four of
 Action's five providers (openai, openai-compatible, vllm, sglang) already
 speak the identical OpenAI wire protocol, and Ollama exposes the same shape
 at `{base_url}/v1`. Env var names intentionally match Action's
-(LLM_PROVIDER, LLM_MODEL, LLM_BASE_URL, LLM_API_KEY) so the two services
-stay operationally consistent without sharing code.
+(LLM_PROVIDER, LLM_MODEL, LLM_BASE_URL, LLM_API_KEY, LLM_KWARGS_JSON) so the
+two services stay operationally consistent without sharing code.
 """
 from __future__ import annotations
 
+import json
 import logging
 import os
-from typing import List, Optional, TypedDict
+from typing import Any, Dict, List, Optional, TypedDict
 
 import requests  # type: ignore[import-untyped]
 
@@ -66,6 +67,19 @@ def _resolve_api_key(provider: str) -> Optional[str]:
     raise LLMConfigError(f"LLM_API_KEY (or OPENAI_API_KEY) is required for provider '{provider}'")
 
 
+def _load_extra_kwargs() -> Dict[str, Any]:
+    raw = _env("LLM_KWARGS_JSON")
+    if not raw:
+        return {}
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise LLMConfigError("LLM_KWARGS_JSON must be valid JSON") from exc
+    if not isinstance(parsed, dict):
+        raise LLMConfigError("LLM_KWARGS_JSON must decode to a JSON object")
+    return parsed
+
+
 class OpenAICompatibleLLMClient:
     """Calls one `/chat/completions` endpoint. Returns None on any failure --
     callers are expected to treat that as "no answer" and keep their own
@@ -78,6 +92,7 @@ class OpenAICompatibleLLMClient:
         self._configured = False
         self._base_url = ""
         self._api_key: Optional[str] = None
+        self._extra_kwargs: Dict[str, Any] = {}
 
         if not self._provider or not self._model:
             logger.info("LLM_PROVIDER/LLM_MODEL not set -- LLM client disabled")
@@ -86,6 +101,7 @@ class OpenAICompatibleLLMClient:
         try:
             self._base_url = _resolve_base_url(self._provider)
             self._api_key = _resolve_api_key(self._provider)
+            self._extra_kwargs = _load_extra_kwargs()
             self._configured = True
         except LLMConfigError as exc:
             logger.warning(f"LLM client misconfigured, disabling: {exc}")
@@ -108,6 +124,7 @@ class OpenAICompatibleLLMClient:
             headers["Authorization"] = f"Bearer {self._api_key}"
 
         payload = {
+            **self._extra_kwargs,
             "model": self._model,
             "messages": messages,
             "temperature": temperature,

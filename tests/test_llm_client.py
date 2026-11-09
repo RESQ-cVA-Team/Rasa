@@ -74,5 +74,31 @@ class ClientConfigurationTests(unittest.TestCase):
             self.assertTrue(client.enabled)
 
 
+class ExtraKwargsTests(unittest.TestCase):
+    ENV = {"LLM_PROVIDER": "openai", "LLM_MODEL": "gpt-test", "LLM_API_KEY": "sk-test"}
+
+    def _sent_payload(self, kwargs_json: str) -> dict:
+        response = mock.Mock()
+        response.json.return_value = {"choices": [{"message": {"content": "ok"}}]}
+        with mock.patch.dict("os.environ", {**self.ENV, "LLM_KWARGS_JSON": kwargs_json}, clear=True):
+            client = OpenAICompatibleLLMClient()
+            with mock.patch("src.components.llm_client.requests.post", return_value=response) as post:
+                self.assertEqual(client.complete([{"role": "user", "content": "hi"}], max_tokens=20), "ok")
+        return post.call_args.kwargs["json"]
+
+    def test_sends_llm_kwargs_json_with_the_request(self) -> None:
+        self.assertEqual(self._sent_payload('{"reasoning_effort": "none"}')["reasoning_effort"], "none")
+
+    def test_the_call_own_values_win_over_llm_kwargs_json(self) -> None:
+        payload = self._sent_payload('{"max_tokens": 4000, "model": "other"}')
+        self.assertEqual(payload["max_tokens"], 20)
+        self.assertEqual(payload["model"], "gpt-test")
+
+    def test_disabled_when_llm_kwargs_json_is_invalid(self) -> None:
+        for raw in ("not json", "[1]"):
+            with mock.patch.dict("os.environ", {**self.ENV, "LLM_KWARGS_JSON": raw}, clear=True):
+                self.assertFalse(OpenAICompatibleLLMClient().enabled)
+
+
 if __name__ == "__main__":
     unittest.main()
