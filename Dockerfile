@@ -52,33 +52,47 @@ RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 # fix (3.13.3+) requires aiohttp>=3.10, which violates rasa's own
 # aiohttp<3.10 pin -- same unfixable category as tensorflow/skops/protobuf
 # above. Tracked via .trivyignore instead.
+# fsspec is only required by dask's dataframe IO and huggingface-hub
+# (fsspec>=2023.5.0); rasa's dask graph runner never touches it, so it moves
+# freely to the fixed release.
+# certifi only needs to be recent for requests (certifi>=2017.4.17).
+# oauthlib is only required by requests-oauthlib (oauthlib>=3.0.0), which
+# rasa does not import.
 RUN pip install --no-cache-dir --upgrade \
 	python-engineio==4.13.2 \
 	python-socketio==5.16.2 \
 	ujson==5.12.1 \
-	urllib3==2.7.0 \
-	msgpack==1.2.1 \
-	pyasn1==0.6.4 \
+	urllib3==2.8.0 \
+	msgpack==1.2.3 \
+	pyasn1==0.6.5 \
+	oauthlib==4.0.1 \
 	Pillow==12.3.0 \
 	PyJWT==2.14.0 \
 	Werkzeug==3.0.3 \
 	aiohttp==3.9.4 \
 	cryptography==50.0.1 \
 	fonttools==4.43.0 \
-	grpcio==1.56.2
+	grpcio==1.56.2 \
+	fsspec==2026.6.0 \
+	certifi==2026.10.19
 
 WORKDIR /app
 
-RUN mkdir -p /app/.data && chown -R 1001:1001 /app/.data && chmod 700 /app/.data
+# Owned by root so the runtime user can read the code but not change it.
+RUN chown -R root:root /app && chmod 755 /app
 
-COPY --chown=1001:1001 src/ src/
-COPY --chown=1001:1001 scripts/ scripts/
+COPY src/ src/
+COPY scripts/ scripts/
+
+# The SSOT submodule must be checked out: without it the model trains without
+# the SSOT lookups and synonyms, and the canonicalizer passes raw values through.
+RUN test -f /app/src/shared/SSOT/ChartType.yml \
+	|| (echo "[ERROR] SSOT files missing: run 'git submodule update --init --recursive' before building." && exit 1)
 
 RUN chmod +x /app/scripts/*.sh
 
 # Ensure local 'src' is a real package to shadow any site-packages 'src'
-RUN test -f /app/src/__init__.py || echo "# project package root" > /app/src/__init__.py \
-	&& chown 1001:1001 /app/src/__init__.py
+RUN test -f /app/src/__init__.py || echo "# project package root" > /app/src/__init__.py
 
 RUN echo "Using PYTHONPATH=$PYTHONPATH" && \
 	python -c "import sys; print('Container sys.path:', sys.path)" && \
@@ -103,7 +117,7 @@ RUN PYTHONPATH=/app:/app/src ./scripts/layer_rasa_projects.sh ${LAYERS}
 
 EXPOSE 5005
 
-USER 1001
+USER 1001:1001
 
 # Always run through the wrapper; it resolves endpoints from env presets.
 ENTRYPOINT ["python3", "-m", "src.run_rasa"]

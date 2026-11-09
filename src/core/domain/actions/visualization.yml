@@ -5,4 +5,3 @@ actions:
   - action_clarify_visualization_request
   - action_guided_generate_visualization
   - validate_guided_visualization_form
-  #- action_update_visualization

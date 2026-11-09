@@ -13,3 +13,7 @@ responses:
     - text: "[placeholder] localized in en/us or locale overlays]"
   utter_help_user:
     - text: "[placeholder] localized in en/us or locale overlays]"
+  utter_faq_help:
+    - text: "[placeholder] localized in en/us or locale overlays]"
+  utter_faq_again:
+    - text: "[placeholder] localized in en/us or locale overlays]"

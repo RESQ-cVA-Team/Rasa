@@ -11,3 +11,11 @@ rules:
       - intent: help_me
       - action: utter_help_user
       - action: utter_user_prompt
+  - rule: Expanded help section and FAQ
+    steps:
+      - intent: faq_help
+      - action: utter_faq_help
+  - rule: Take me back to user prompt
+    steps:
+      - intent: return_to_user_prompt
+      - action: utter_user_prompt

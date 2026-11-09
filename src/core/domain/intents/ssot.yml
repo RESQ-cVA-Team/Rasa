@@ -1,13 +1,4 @@
 version: "3.1"
 
 intents:
-  - faq_ssot_help
-  - faq_metric_types
-  - faq_stroke_types
-  - faq_chart_types
-  - faq_group_by_types
-  - faq_statistical_test_types
-  - faq_operator_types
-  - faq_sex_types
-  - faq_boolean_types
-  - ask_metric_definition
+  - ask_question

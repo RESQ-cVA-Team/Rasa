@@ -2,5 +2,3 @@ version: "3.1"
 
 intents:
   - generate_visualization
-  - update_visualization
-  - clarify_visualization

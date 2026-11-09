@@ -7,3 +7,9 @@ nlu:
   - intent: help_me
     examples: |
       - [placeholder] see en/us or locale overlays
+  - intent: faq_help
+    examples: |
+      - [placeholder] see en/us or locale overlays
+  - intent: return_to_user_prompt
+    examples: |
+      - [placeholder] see en/us or locale overlays
