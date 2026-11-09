@@ -56,13 +56,16 @@ RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
 # (fsspec>=2023.5.0); rasa's dask graph runner never touches it, so it moves
 # freely to the fixed release.
 # certifi only needs to be recent for requests (certifi>=2017.4.17).
+# oauthlib is only required by requests-oauthlib (oauthlib>=3.0.0), which
+# rasa does not import.
 RUN pip install --no-cache-dir --upgrade \
 	python-engineio==4.13.2 \
 	python-socketio==5.16.2 \
 	ujson==5.12.1 \
 	urllib3==2.8.0 \
 	msgpack==1.2.3 \
-	pyasn1==0.6.4 \
+	pyasn1==0.6.5 \
+	oauthlib==4.0.0 \
 	Pillow==12.3.0 \
 	PyJWT==2.14.0 \
 	Werkzeug==3.0.3 \
