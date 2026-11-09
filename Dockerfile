@@ -78,10 +78,11 @@ RUN pip install --no-cache-dir --upgrade \
 
 WORKDIR /app
 
-RUN mkdir -p /app/.data && chown -R 1001:1001 /app/.data && chmod 700 /app/.data
+# Owned by root so the runtime user can read the code but not change it.
+RUN chown -R root:root /app && chmod 755 /app
 
-COPY --chown=1001:1001 src/ src/
-COPY --chown=1001:1001 scripts/ scripts/
+COPY src/ src/
+COPY scripts/ scripts/
 
 # The SSOT submodule must be checked out: without it the model trains without
 # the SSOT lookups and synonyms, and the canonicalizer passes raw values through.
@@ -91,8 +92,7 @@ RUN test -f /app/src/shared/SSOT/ChartType.yml \
 RUN chmod +x /app/scripts/*.sh
 
 # Ensure local 'src' is a real package to shadow any site-packages 'src'
-RUN test -f /app/src/__init__.py || echo "# project package root" > /app/src/__init__.py \
-	&& chown 1001:1001 /app/src/__init__.py
+RUN test -f /app/src/__init__.py || echo "# project package root" > /app/src/__init__.py
 
 RUN echo "Using PYTHONPATH=$PYTHONPATH" && \
 	python -c "import sys; print('Container sys.path:', sys.path)" && \
@@ -117,7 +117,7 @@ RUN PYTHONPATH=/app:/app/src ./scripts/layer_rasa_projects.sh ${LAYERS}
 
 EXPOSE 5005
 
-USER 1001
+USER 1001:1001
 
 # Always run through the wrapper; it resolves endpoints from env presets.
 ENTRYPOINT ["python3", "-m", "src.run_rasa"]
