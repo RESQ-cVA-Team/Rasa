@@ -1,34 +1,6 @@
 version: "3.1"
 
 nlu:
-  - intent: faq_ssot_help
-    examples: |
-      - [placeholder] localized in en/us or locale overlays
-  - intent: faq_metric_types
-    examples: |
-      - [placeholder] localized in en/us or locale overlays
-  - intent: faq_stroke_types
-    examples: |
-      - [placeholder] localized in en/us or locale overlays
-  - intent: faq_chart_types
-    examples: |
-      - [placeholder] localized in en/us or locale overlays
-  - intent: faq_group_by_types
-    examples: |
-      - [placeholder] localized in en/us or locale overlays
-  - intent: faq_statistical_test_types
-    examples: |
-      - [placeholder] localized in en/us or locale overlays
-  - intent: faq_operator_types
-    examples: |
-      - [placeholder] localized in en/us or locale overlays
-  - intent: faq_sex_types
-    examples: |
-      - [placeholder] localized in en/us or locale overlays
-  - intent: faq_boolean_types
-    examples: |
-      - [placeholder] localized in en/us or locale overlays
-
-  - intent: ask_metric_definition
+  - intent: ask_question
     examples: |
       - [placeholder] localized in en/us or locale overlays

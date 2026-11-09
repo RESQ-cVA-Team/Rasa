@@ -9,6 +9,7 @@ entities:
         - chart_type
         - country_code
         - statistical_test_type
+        - topic
         - hospital_name
         - hospital_scope_reference
         - sort

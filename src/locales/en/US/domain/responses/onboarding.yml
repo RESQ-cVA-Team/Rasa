@@ -37,23 +37,23 @@ responses:
         You can also always ask me to define a Metric by asking "What is [metric name]?" or "What does [metric name] mean?"
       buttons:
         - title: Metric types
-          payload: /faq_metric_types
+          payload: '/ask_question{"topic": "metric_types"}'
         - title: Stroke types
-          payload: /faq_stroke_types
+          payload: '/ask_question{"topic": "stroke_types"}'
         - title: Chart types
-          payload: /faq_chart_types
+          payload: '/ask_question{"topic": "chart_types"}'
         - title: Group-by types
-          payload: /faq_group_by_types
+          payload: '/ask_question{"topic": "group_by_types"}'
         - title: Statistical test types
-          payload: /faq_statistical_test_types
+          payload: '/ask_question{"topic": "statistical_test_types"}'
         - title: Sex Types
-          payload: /faq_sex_types
+          payload: '/ask_question{"topic": "sex_types"}'
         - title: Boolean types
-          payload: /faq_boolean_types
+          payload: '/ask_question{"topic": "boolean_types"}'
         - title: Operator types
-          payload: /faq_operator_types
+          payload: '/ask_question{"topic": "operator_types"}'
         - title: SSOT
-          payload: /faq_ssot_help
+          payload: '/ask_question{"topic": "ssot"}'
         - title: Go back
           payload: /return_to_user_prompt
   utter_faq_again:
@@ -61,22 +61,22 @@ responses:
         Anything else you want to know?
       buttons:
         - title: Metric types
-          payload: /faq_metric_types
+          payload: '/ask_question{"topic": "metric_types"}'
         - title: Stroke types
-          payload: /faq_stroke_types
+          payload: '/ask_question{"topic": "stroke_types"}'
         - title: Chart types
-          payload: /faq_chart_types
+          payload: '/ask_question{"topic": "chart_types"}'
         - title: Group-by types
-          payload: /faq_group_by_types
+          payload: '/ask_question{"topic": "group_by_types"}'
         - title: Statistical test types
-          payload: /faq_statistical_test_types
+          payload: '/ask_question{"topic": "statistical_test_types"}'
         - title: Sex Types
-          payload: /faq_sex_types
+          payload: '/ask_question{"topic": "sex_types"}'
         - title: Boolean types
-          payload: /faq_boolean_types
+          payload: '/ask_question{"topic": "boolean_types"}'
         - title: Operator types
-          payload: /faq_operator_types
+          payload: '/ask_question{"topic": "operator_types"}'
         - title: SSOT
-          payload: /faq_ssot_help
+          payload: '/ask_question{"topic": "ssot"}'
         - title: Go back
           payload: /return_to_user_prompt

@@ -1,71 +1,89 @@
 version: "3.1"
 
 nlu:
-  - intent: faq_ssot_help
+  - intent: ask_question
     examples: |
-      - Jaké klinické koncepty umíš vysvětlit?
-      - Jaký datový slovník nebo SSOT používáš?
-      - Jaké máš typy metrik, mrtvic a grafů?
-      - Na jaké strukturované typy se tě mohu ptát?
-      - Řekni mi něco o konceptech za KPI a filtry.
-
-  - intent: faq_metric_types
-    examples: |
-      - Na jaké metriky nebo KPI se mohu ptát?
-      - Vysvětli typy metrik.
-      - Co zde znamená typ metriky?
-      - Jaké typy metrik pro mrtvici sledujete?
-      - Co představuje KPI jako DTN nebo DIDO?
-
-  - intent: faq_stroke_types
-    examples: |
-      - Jaké typy mrtvice podporujete?
-      - Jaké podtypy mrtvice jsou ve vašich datech?
-      - Vysvětli kategorie typů mrtvice.
-      - Co myslíš ischemickou nebo hemoragickou mrtvicí?
-
-  - intent: faq_chart_types
-    examples: |
-      - Jaké typy grafů můžeš zobrazit?
-      - Jaké vizualizace jsou dostupné?
-      - Vysvětli, jaké typy grafů podporuješ.
-      - Podporuješ spojnicové, sloupcové nebo koláčové grafy?
-
-  - intent: faq_group_by_types
-    examples: |
-      - Podle čeho mohu data seskupit?
-      - Jaké dimenze seskupení podporujete?
-      - Vysvětli možnosti seskupení.
-      - Jaká jsou hlavní pole pro seskupení?
-
-  - intent: faq_statistical_test_types
-    examples: |
-      - Jaké statistické testy můžeš spustit?
-      - Vysvětli typy statistických testů, které podporuješ.
-      - Jaké testy hypotéz jsou k dispozici?
-      - Jaké korelační nebo regresní metody máte?
-
-  - intent: faq_operator_types
-    examples: |
-      - Jaké porovnávací operátory mohu použít ve filtrech?
-      - Vysvětli operátory jako větší nebo rovno.
-      - Co znamenají GE a LE?
-      - Jaké relační operátory jsou podporované?
-
-  - intent: faq_sex_types
-    examples: |
-      - Jak kategorizujete pohlaví v datech?
-      - Jaké kategorie pohlaví podporujete?
-      - Vysvětli biologické kategorie pohlaví, které používáte.
-
-  - intent: faq_boolean_types
-    examples: |
-      - Jaké ano/ne indikátory sledujete?
-      - Vysvětli vaše booleovské typy.
-      - Jaké booleovské indikátory jsou v datech dostupné?
-
-  - intent: ask_metric_definition
-    examples: |
+      - Jaké [klinické koncepty]{"entity": "topic", "value": "ssot"} umíš vysvětlit?
+      - Jaký [datový slovník]{"entity": "topic", "value": "ssot"} nebo SSOT používáš?
+      - Jaké máš [typy metrik, mrtvic a grafů]{"entity": "topic", "value": "ssot"}?
+      - Na jaké [strukturované typy]{"entity": "topic", "value": "ssot"} se tě mohu ptát?
+      - Řekni mi něco o [konceptech za KPI a filtry]{"entity": "topic", "value": "ssot"}.
+      - Co je [SSOT]{"entity": "topic", "value": "ssot"}?
+      - Můžeš mě provést svým [datovým slovníkem]{"entity": "topic", "value": "ssot"}?
+      - Co myslíš [kanonickými hodnotami]{"entity": "topic", "value": "ssot"}?
+      - Jak je standardizována tvoje [terminologie]{"entity": "topic", "value": "ssot"}?
+      - Jaká [referenční data]{"entity": "topic", "value": "ssot"} stojí za tvými odpověďmi?
+      - Odkud pocházejí tvoje [definice metrik]{"entity": "topic", "value": "ssot"}?
+      - Je tu nějaký [glosář]{"entity": "topic", "value": "ssot"}, na který se mohu podívat?
+      - Co je [zdrojem pravdy]{"entity": "topic", "value": "ssot"} pro tyto kategorie?
+      - Na jaké [metriky nebo KPI]{"entity": "topic", "value": "metric_types"} se mohu ptát?
+      - Vysvětli [typy metrik]{"entity": "topic", "value": "metric_types"}.
+      - Co zde znamená [typ metriky]{"entity": "topic", "value": "metric_types"}?
+      - Které [metriky]{"entity": "topic", "value": "metric_types"} jsou k dispozici?
+      - Vypiš [KPI]{"entity": "topic", "value": "metric_types"}, které mohu zobrazit v grafu.
+      - Jaké [datové body]{"entity": "topic", "value": "metric_types"} mohu vizualizovat?
+      - Jaké [metriky]{"entity": "topic", "value": "metric_types"} dashboard sleduje?
+      - Jaká [klinická měření]{"entity": "topic", "value": "metric_types"} máte?
+      - Dej mi seznam sledovatelných [metrik]{"entity": "topic", "value": "metric_types"}.
+      - Jaké [KPI]{"entity": "topic", "value": "metric_types"} existují pro načasování léčby?
+      - Jaké [typy metrik]{"entity": "topic", "value": "metric_types"} pro mrtvici sledujete?
+      - Jaké [typy mrtvice]{"entity": "topic", "value": "stroke_types"} podporujete?
+      - Jaké [podtypy mrtvice]{"entity": "topic", "value": "stroke_types"} jsou ve vašich datech?
+      - Vysvětli [kategorie typů mrtvice]{"entity": "topic", "value": "stroke_types"}.
+      - Jaké jsou různé [podtypy mrtvice]{"entity": "topic", "value": "stroke_types"}?
+      - Můžeš vypsat [kategorie mrtvice]{"entity": "topic", "value": "stroke_types"}?
+      - Jak klasifikujete [typ mrtvice]{"entity": "topic", "value": "stroke_types"}?
+      - Co se počítá jako [napodobenina mrtvice]{"entity": "topic", "value": "stroke_types"}?
+      - Co myslíš [ischemickou nebo hemoragickou mrtvicí]{"entity": "topic", "value": "stroke_types"}?
+      - Jaké [typy grafů]{"entity": "topic", "value": "chart_types"} můžeš zobrazit?
+      - Jaké [vizualizace]{"entity": "topic", "value": "chart_types"} jsou dostupné?
+      - Vysvětli, jaké [typy grafů]{"entity": "topic", "value": "chart_types"} podporuješ.
+      - Podporuješ spojnicové, sloupcové nebo koláčové [grafy]{"entity": "topic", "value": "chart_types"}?
+      - Jaké [typy vizualizací]{"entity": "topic", "value": "chart_types"} jsou k dispozici?
+      - Můžu dostat bodový [graf]{"entity": "topic", "value": "chart_types"} nebo histogram?
+      - Vypiš [formáty grafů]{"entity": "topic", "value": "chart_types"}, které podporuješ.
+      - Jaké [druhy grafů]{"entity": "topic", "value": "chart_types"} umíš vytvořit?
+      - Podporuješ krabicové [grafy]{"entity": "topic", "value": "chart_types"}?
+      - Umíš udělat radarový nebo vodopádový [graf]{"entity": "topic", "value": "chart_types"}?
+      - Jaké [možnosti grafů]{"entity": "topic", "value": "chart_types"} mám pro rozdělení?
+      - Podle čeho mohu [data seskupit]{"entity": "topic", "value": "group_by_types"}?
+      - Jaké [dimenze seskupení]{"entity": "topic", "value": "group_by_types"} podporujete?
+      - Vysvětli [možnosti seskupení]{"entity": "topic", "value": "group_by_types"}.
+      - Jaká jsou hlavní [pole pro seskupení]{"entity": "topic", "value": "group_by_types"}?
+      - Mohu [data rozdělit]{"entity": "topic", "value": "group_by_types"} podle nemocnice?
+      - Podle jakých dimenzí mohu [data rozdělit]{"entity": "topic", "value": "group_by_types"}?
+      - Vypiš dostupná [pole pro seskupení]{"entity": "topic", "value": "group_by_types"}.
+      - Jaká pole mohu použít k [segmentaci dat]{"entity": "topic", "value": "group_by_types"}?
+      - Jaké [statistické testy]{"entity": "topic", "value": "statistical_test_types"} můžeš spustit?
+      - Vysvětli [typy statistických testů]{"entity": "topic", "value": "statistical_test_types"}, které podporuješ.
+      - Jaké [testy hypotéz]{"entity": "topic", "value": "statistical_test_types"} jsou k dispozici?
+      - Jaké [korelační nebo regresní metody]{"entity": "topic", "value": "statistical_test_types"} máte?
+      - Jaké [porovnávací operátory]{"entity": "topic", "value": "operator_types"} mohu použít ve filtrech?
+      - Vysvětli [operátory]{"entity": "topic", "value": "operator_types"} jako větší nebo rovno.
+      - Co znamenají [GE]{"entity": "topic", "value": "operator_types"} a [LE]{"entity": "topic", "value": "operator_types"}?
+      - Jaké [relační operátory]{"entity": "topic", "value": "operator_types"} jsou podporované?
+      - Jaká [porovnání ve filtrech]{"entity": "topic", "value": "operator_types"} jsou dostupná?
+      - Mohu [filtrovat]{"entity": "topic", "value": "operator_types"} pomocí menší nebo rovno?
+      - Vysvětli [operátory filtru]{"entity": "topic", "value": "operator_types"}.
+      - Co znamená NE ve [filtru]{"entity": "topic", "value": "operator_types"}?
+      - Jak [filtruji]{"entity": "topic", "value": "operator_types"} hodnoty rovné něčemu?
+      - Jaké [symboly]{"entity": "topic", "value": "operator_types"} mohu použít k porovnání čísel?
+      - Mohu [filtrovat]{"entity": "topic", "value": "operator_types"} podle „alespoň“ nebo „nejvýše“?
+      - Jak kategorizujete [pohlaví]{"entity": "topic", "value": "sex_types"} v datech?
+      - Jaké [kategorie pohlaví]{"entity": "topic", "value": "sex_types"} podporujete?
+      - Vysvětli [biologické kategorie pohlaví]{"entity": "topic", "value": "sex_types"}, které používáte.
+      - Jaké [hodnoty pohlaví]{"entity": "topic", "value": "sex_types"} jsou v datech?
+      - Sledujete [pohlaví]{"entity": "topic", "value": "sex_types"} muž, žena a jiné?
+      - Jaké možnosti [pohlaví]{"entity": "topic", "value": "sex_types"} existují kromě muže a ženy?
+      - Jak zaznamenáváte [pohlaví pacienta]{"entity": "topic", "value": "sex_types"}?
+      - Existuje neznámá kategorie pro [pohlaví]{"entity": "topic", "value": "sex_types"}?
+      - Jak se zaznamenává [pohlaví]{"entity": "topic", "value": "sex_types"}, když není uvedeno?
+      - Jaké [ano/ne indikátory]{"entity": "topic", "value": "boolean_types"} sledujete?
+      - Vysvětli vaše [booleovské typy]{"entity": "topic", "value": "boolean_types"}.
+      - Jaké [booleovské indikátory]{"entity": "topic", "value": "boolean_types"} jsou v datech dostupné?
+      - Jaké [ano/ne metriky]{"entity": "topic", "value": "boolean_types"} sledujete?
+      - Jaká [pravda/nepravda pole]{"entity": "topic", "value": "boolean_types"} jsou k dispozici?
+      - Jaké [příznaky léčby]{"entity": "topic", "value": "boolean_types"} jsou k dispozici?
       - Co je [DTN](metric)?
       - Můžeš vysvětlit [AA_DTN_LE60](metric)?
       - Co znamená metrika [ONSET_TO_DOOR](metric)?
