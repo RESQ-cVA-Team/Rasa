@@ -65,7 +65,7 @@ RUN pip install --no-cache-dir --upgrade \
 	urllib3==2.8.0 \
 	msgpack==1.2.3 \
 	pyasn1==0.6.5 \
-	oauthlib==4.0.0 \
+	oauthlib==4.0.1 \
 	Pillow==12.3.0 \
 	PyJWT==2.14.0 \
 	Werkzeug==3.0.3 \
