@@ -27,9 +27,8 @@ _CONVERSATION_RE = re.compile(
     r"^/conversations/(?P<sender>.+)/"
     r"(?:tracker(?:/events)?|story|execute|trigger_intent|predict|messages)$"
 )
-_THREADS_BY_USER_RE = re.compile(r"^/threads/by-user/(?P<sub>[^/]+)(?:/next-id)?$")
-_THREADS_INDEX_EVENT_RE = re.compile(r"^/threads/(?P<sub>[^/]+)/index-event$")
-_THREADS_DELETE_RE = re.compile(r"^/threads/(?P<sub>[^/]+)/thread/[^/]+$")
+_THREADS_BY_USER_RE = re.compile(r"^/threads/by-user/(?P<sub>[^/]+)$")
+_THREAD_RE = re.compile(r"^/threads/(?P<sub>[^/]+)/thread/[^/]+$")
 
 
 def sender_sub(sender_id: str) -> str:
@@ -86,7 +85,7 @@ def required_identity(method: str, path: str, body_sender: Optional[str]) -> Dec
     if conversation:
         return Decision("bound", sender_sub(conversation.group("sender")))
 
-    for pattern in (_THREADS_BY_USER_RE, _THREADS_INDEX_EVENT_RE, _THREADS_DELETE_RE):
+    for pattern in (_THREADS_BY_USER_RE, _THREAD_RE):
         threads = pattern.match(path)
         if threads:
             return Decision("bound", threads.group("sub"))

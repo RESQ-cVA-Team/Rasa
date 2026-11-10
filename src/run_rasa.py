@@ -28,13 +28,13 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", message="Matplotlib created a temporary config/cache directory*")
 
 from src.request_identity_policy import WEBHOOK_PATH, has_required_role, required_identity  # noqa: E402
-from src.thread_index import (  # noqa: E402
-    apply_index_action,
-    build_thread_list_from_payload,
-    build_thread_list_response,
-    next_thread_id_from_payload,
+from src.thread_index import build_thread_list_from_payload, build_thread_list_response  # noqa: E402
+from src.thread_index_store import (  # noqa: E402
+    create_index_thread,
+    delete_index_thread,
+    get_index_payload,
+    rename_index_thread,
 )
-from src.thread_index_store import get_index_payload, set_index_payload  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
@@ -330,48 +330,31 @@ def _install_custom_routes() -> None:
             threads = build_thread_list_from_payload(payload)
             return response.json(build_thread_list_response(threads), status=200)
 
-        async def get_next_thread_id(request, user_sub: str):
-            payload = get_index_payload(user_sub)
+        async def create_thread(request, user_sub: str):
+            payload = request.json if isinstance(request.json, dict) else {}
+            name = payload.get("name")
+            thread = create_index_thread(user_sub, name if isinstance(name, str) else "")
             return response.json(
-                {
-                    "next_thread_id": next_thread_id_from_payload(payload),
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
-                },
-                status=200,
+                {"ok": True, "thread": thread, "timestamp": datetime.now(timezone.utc).isoformat()},
+                status=201,
             )
 
-        async def post_index_event(request, user_sub: str):
-            payload = request.json if isinstance(request.json, dict) else None
-            if payload is None:
-                return response.json({"error": "Invalid JSON"}, status=400)
-
-            thread_id_raw = payload.get("thread_id")
-            action = payload.get("action")
-            name = payload.get("name", "")
-            if thread_id_raw is None:
-                return response.json({"error": "Missing or invalid thread_id, action"}, status=400)
+        async def rename_thread(request, user_sub: str, thread_id: str):
             try:
-                thread_id = int(str(thread_id_raw))
+                thread_id_int = int(thread_id)
             except (TypeError, ValueError):
-                thread_id = None
+                return response.json({"error": "Invalid thread_id"}, status=400)
 
-            if thread_id is None or action not in {"create", "rename", "delete"}:
-                return response.json({"error": "Missing or invalid thread_id, action"}, status=400)
+            payload = request.json if isinstance(request.json, dict) else None
+            name = payload.get("name") if payload else None
+            if not isinstance(name, str) or not name.strip():
+                return response.json({"error": "Missing name"}, status=400)
 
-            current_payload = get_index_payload(user_sub)
-            next_payload = apply_index_action(current_payload, thread_id, action, str(name))
-            set_index_payload(user_sub, next_payload)
-
-            threads = build_thread_list_from_payload(next_payload)
-            thread_record = threads.get(thread_id)
+            thread = rename_index_thread(user_sub, thread_id_int, name.strip())
+            if thread is None:
+                return response.json({"error": "Thread not found"}, status=404)
             return response.json(
-                {
-                    "ok": True,
-                    "action": action,
-                    "thread": thread_record,
-                    "next_thread_id": next_thread_id_from_payload(next_payload),
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
-                },
+                {"ok": True, "thread": thread, "timestamp": datetime.now(timezone.utc).isoformat()},
                 status=200,
             )
 
@@ -398,8 +381,7 @@ def _install_custom_routes() -> None:
             physically_deleted = await _hard_delete_tracker(tracker_store, conversation_sender_id)
 
             # Soft-mark as deleted in the index regardless of hard-delete outcome.
-            next_payload = apply_index_action(current_payload, thread_id_int, "delete")
-            set_index_payload(user_sub, next_payload)
+            delete_index_thread(user_sub, thread_id_int)
 
             return response.json(
                 {
@@ -445,8 +427,8 @@ def _install_custom_routes() -> None:
         app.on_response(_add_build_metadata_to_version)
 
         _safe_add(get_threads, "/threads/by-user/<user_sub:str>", ["GET"])
-        _safe_add(get_next_thread_id, "/threads/by-user/<user_sub:str>/next-id", ["GET"])
-        _safe_add(post_index_event, "/threads/<user_sub:str>/index-event", ["POST"])
+        _safe_add(create_thread, "/threads/by-user/<user_sub:str>", ["POST"])
+        _safe_add(rename_thread, "/threads/<user_sub:str>/thread/<thread_id:str>", ["PATCH"])
         _safe_add(delete_thread, "/threads/<user_sub:str>/thread/<thread_id:str>", ["DELETE"])
         _safe_add(delete_conversation_tracker, "/conversations/<conversation_id:path>/tracker", ["DELETE"])
 
