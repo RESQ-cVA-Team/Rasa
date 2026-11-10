@@ -349,3 +349,9 @@ nlu:
       - [ischemický typ](stroke_type)
       - Podle [měsíce](group_by)
       - procenta
+      - Udělej mi 3 grafy [DTN](metric), každý jako [sloupcový](chart_type) graf
+      - Ukaž mi 5 grafů [DIDO](metric), každý jako [čárový](chart_type) graf
+      - Chci 4 grafy [door to groin](metric), všechny jako [sloupcový](chart_type) graf
+      - Vytvoř 10 grafů [DTN](metric) pro [mou nemocnici](hospital_scope_reference), každý jako [čárový](chart_type) graf
+      - Potřebuji 2 grafy [AdmissionNihss](metric), oba jako [sloupcový](chart_type) graf
+      - Nakresli 6 grafů [DischargeNihss](metric), každý jako [čárový](chart_type) graf

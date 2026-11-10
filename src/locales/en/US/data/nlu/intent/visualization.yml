@@ -445,3 +445,11 @@ nlu:
       - [ischaemic](stroke_type)
       - By [month](group_by)
       - [percent]{"entity": "kpi", "value": "percent"}
+      - Make me 3 [bar](chart_type) charts of [DTN](metric)
+      - Show me 5 [line](chart_type) graphs of [door in door out](metric)
+      - Create 4 [line](chart_type) charts showing [DTN](metric) for [my hospital](hospital_scope_reference)
+      - Give me 10 [bar](chart_type) charts of [door to groin](metric)
+      - Draw 6 [line](chart_type) graphs, each one showing [admission nihss](metric)
+      - Can I get 2 [bar](chart_type) charts of [DIDO](metric)?
+      - Make 8 [line](chart_type) graphs of [discharge nihss](metric)
+      - I need 12 [bar](chart_type) charts of [DTN](metric)

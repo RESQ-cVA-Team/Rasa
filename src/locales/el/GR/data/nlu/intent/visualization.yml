@@ -350,3 +350,9 @@ nlu:
       - [ισχαιμικός τύπος](stroke_type)
       - Ανά [μήνα](group_by)
       - ποσοστό
+      - Φτιάξε μου 3 διαγράμματα [στηλών](chart_type) για το [DTN](metric)
+      - Δείξε μου 5 διαγράμματα [στηλών](chart_type) για το [DIDO](metric)
+      - Θέλω 4 διαγράμματα για το [door to groin](metric), το καθένα ένα [γραμμικό](chart_type) διάγραμμα
+      - Δημιούργησε 10 διαγράμματα [στηλών](chart_type) για το [DTN](metric) για [το νοσοκομείο μου](hospital_scope_reference)
+      - Χρειάζομαι 2 διαγράμματα [στηλών](chart_type) για το [AdmissionNihss](metric)
+      - Σχεδίασε 6 διαγράμματα για το [DischargeNihss](metric), το καθένα ένα [γραμμικό](chart_type) διάγραμμα
