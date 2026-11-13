@@ -40,6 +40,7 @@ CVE-2025-69223
 CVE-2026-69244
 CVE-2026-111064
 CVE-2026-111066
+CVE-2026-123817
 GHSA-2g87-pp6c-29x5
 # pymongo==4.3.3 -- rasa==3.6.21 constrains to pymongo<4.4,>=3.8 and imports it
 # at module level in rasa.core.tracker_store, so it can neither move to the
@@ -54,8 +55,8 @@ CVE-2026-106435
 CVE-2026-114605
 # Pillow==12.3.0 -- every fix is in 13.0.0, which requires Python >=3.11; the
 # rasa==3.6.21 image runs Python 3.10. Pillow is only loaded through
-# matplotlib, and nothing here passes images to it: these advisories need a
-# crafted image or font to be parsed.
+# matplotlib, and nothing here passes images or fonts to it or writes TIFF,
+# which these advisories need.
 CVE-2026-112390
 CVE-2026-112392
 CVE-2026-112393
@@ -83,4 +84,5 @@ CVE-2026-96642
 CVE-2026-96643
 CVE-2026-96644
 CVE-2026-96778
+CVE-2026-128067
 GHSA-78g4-xqwv-q3g8
