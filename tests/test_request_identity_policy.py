@@ -83,13 +83,15 @@ class ConversationRoutesTests(unittest.TestCase):
 class ThreadRoutesTests(unittest.TestCase):
     def test_thread_routes_are_bound_to_the_sub_in_the_path(self) -> None:
         self.assertEqual(required_identity("GET", f"/threads/by-user/{SUB}", None), bound(SUB))
-        self.assertEqual(required_identity("GET", f"/threads/by-user/{SUB}/next-id", None), bound(SUB))
-        self.assertEqual(required_identity("POST", f"/threads/{SUB}/index-event", None), bound(SUB))
+        self.assertEqual(required_identity("POST", f"/threads/by-user/{SUB}", None), bound(SUB))
+        self.assertEqual(required_identity("PATCH", f"/threads/{SUB}/thread/4", None), bound(SUB))
         self.assertEqual(required_identity("DELETE", f"/threads/{SUB}/thread/4", None), bound(SUB))
 
     def test_malformed_thread_paths_are_denied(self) -> None:
         self.assertEqual(required_identity("GET", "/threads", None), DENY)
         self.assertEqual(required_identity("GET", f"/threads/by-user/{SUB}/extra/segments", None), DENY)
+        self.assertEqual(required_identity("GET", f"/threads/by-user/{SUB}/next-id", None), DENY)
+        self.assertEqual(required_identity("POST", f"/threads/{SUB}/index-event", None), DENY)
         self.assertEqual(required_identity("DELETE", f"/threads/{SUB}/thread/4/more", None), DENY)
 
 
