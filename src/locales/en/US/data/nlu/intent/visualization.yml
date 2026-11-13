@@ -445,6 +445,12 @@ nlu:
       - [ischaemic](stroke_type)
       - By [month](group_by)
       - [percent]{"entity": "kpi", "value": "percent"}
+      - Everyone on my team already has their reports, but I still need a [line](chart_type) chart of [door in door out](metric). Can you help?
+      - I'm still waiting for my [bar](chart_type) chart of [door to groin](metric). Could you help me?
+      - My colleagues got their graphs and I still don't have a [line](chart_type) graph of [admission nihss](metric). Can you help me with that?
+      - Still no [bar](chart_type) chart of [DIDO](metric) for me, can you help?
+      - Nobody has sent me the [line](chart_type) graph of [DTN](metric) yet. Can you help?
+      - I'm still missing a [bar](chart_type) chart of [discharge nihss](metric). Can you help me out?
       - Make me 3 [bar](chart_type) charts of [DTN](metric)
       - Show me 5 [line](chart_type) graphs of [door in door out](metric)
       - Create 4 [line](chart_type) charts showing [DTN](metric) for [my hospital](hospital_scope_reference)

@@ -349,6 +349,12 @@ nlu:
       - [ischemický typ](stroke_type)
       - Podle [měsíce](group_by)
       - procenta
+      - Všichni v týmu už mají své přehledy, ale já pořád potřebuji [čárový](chart_type) graf [door in door out](metric). Můžete mi pomoct?
+      - Pořád čekám na [sloupcový](chart_type) graf [door to groin](metric). Pomůžete mi?
+      - Kolegové už grafy dostali a já pořád nemám [čárový](chart_type) graf [AdmissionNihss](metric). Můžete mi s tím pomoct?
+      - Pořád nemám [sloupcový](chart_type) graf [DIDO](metric), můžete pomoct?
+      - Nikdo mi ještě neposlal [čárový](chart_type) graf [DTN](metric). Pomůžete?
+      - Pořád mi chybí [sloupcový](chart_type) graf [DischargeNihss](metric). Můžete mi pomoct?
       - Udělej mi 3 grafy [DTN](metric), každý jako [sloupcový](chart_type) graf
       - Ukaž mi 5 grafů [DIDO](metric), každý jako [čárový](chart_type) graf
       - Chci 4 grafy [door to groin](metric), všechny jako [sloupcový](chart_type) graf

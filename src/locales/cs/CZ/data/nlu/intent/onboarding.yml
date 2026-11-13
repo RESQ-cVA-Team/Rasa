@@ -15,6 +15,14 @@ nlu:
       - Jaká je tvoje role?
       - Co děláš?
       - Jaká je tvoje práce?
+  - intent: help_me
+    examples: |
+      - Pomoc
+      - Pomoz mi
+      - Potřebuji pomoc
+      - Můžete pomoct?
+      - Můžete mi pomoct?
+      - Pomůžete mi, prosím?
   - intent: faq_help
     examples: |
       - Zobraz rozšířenou sekci nápovědy
