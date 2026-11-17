@@ -39,6 +39,16 @@ rules:
       - intent: fallback
       - action: action_clarify_visualization_request
 
+  # A hospital scope on its own is part of a visualization request
+  - rule: handle hospital scope intent outside a clarification
+    condition:
+      - active_loop: null
+      - slot_was_set:
+          - awaiting_visualization_clarification: false
+    steps:
+      - intent: provide_guided_hospital_scope
+      - action: action_clarify_visualization_request
+
   - rule: handle hospital scope intent while awaiting clarification
     condition:
       - active_loop: null
