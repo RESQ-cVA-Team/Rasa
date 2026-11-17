@@ -41,6 +41,14 @@ CVE-2026-69244
 CVE-2026-111064
 CVE-2026-111066
 CVE-2026-123817
+CVE-2026-128124
+CVE-2026-128126
+CVE-2026-128127
+CVE-2026-128128
+CVE-2026-128129
+CVE-2026-128130
+CVE-2026-128131
+CVE-2026-128132
 GHSA-2g87-pp6c-29x5
 # pymongo==4.3.3 -- rasa==3.6.21 constrains to pymongo<4.4,>=3.8 and imports it
 # at module level in rasa.core.tracker_store, so it can neither move to the
@@ -49,10 +57,11 @@ GHSA-2g87-pp6c-29x5
 CVE-2026-96748
 CVE-2026-96749
 CVE-2026-106435
-# dnspython==2.3.0 -- rasa==3.6.21 pins dnspython==2.3.0 exactly, and the fix
-# (2.9.0) requires Python >=3.11; the image runs Python 3.10. rasa does not
+# dnspython==2.3.0 -- rasa==3.6.21 pins dnspython==2.3.0 exactly, and the fixes
+# (2.9.0, 2.9.2) require Python >=3.11; the image runs Python 3.10. rasa does not
 # import it; pymongo uses it for mongodb+srv lookups, and Mongo is not used here.
 CVE-2026-114605
+CVE-2026-128089
 # Pillow==12.3.0 -- every fix is in 13.0.0, which requires Python >=3.11; the
 # rasa==3.6.21 image runs Python 3.10. Pillow is only loaded through
 # matplotlib, and nothing here passes images or fonts to it or writes TIFF,
