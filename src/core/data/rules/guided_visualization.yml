@@ -32,6 +32,13 @@ rules:
       - action: guided_visualization_form
       - active_loop: guided_visualization_form
 
+  - rule: Cancel outside guided mode offers what the assistant can do
+    condition:
+      - active_loop: null
+    steps:
+      - intent: cancel_guided_visualization
+      - action: utter_user_prompt
+
   - rule: Cancel guided mode and switch to freeform mode
     condition:
       - active_loop: guided_visualization_form
