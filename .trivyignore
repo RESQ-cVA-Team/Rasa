@@ -41,6 +41,14 @@ CVE-2026-69244
 CVE-2026-111064
 CVE-2026-111066
 CVE-2026-123817
+CVE-2026-128124
+CVE-2026-128126
+CVE-2026-128127
+CVE-2026-128128
+CVE-2026-128129
+CVE-2026-128130
+CVE-2026-128131
+CVE-2026-128132
 GHSA-2g87-pp6c-29x5
 # pymongo==4.3.3 -- rasa==3.6.21 constrains to pymongo<4.4,>=3.8 and imports it
 # at module level in rasa.core.tracker_store, so it can neither move to the
