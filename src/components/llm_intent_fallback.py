@@ -35,7 +35,9 @@ from src.components.prompt_template import render_system_prompt
 
 logger = logging.getLogger(__name__)
 
-_EXCLUDED_INTENTS = {"nlu_fallback"}
+# Never a reading of typed text: nlu_fallback is the no-match label, and a
+# button-only intent arrives as its payload.
+_EXCLUDED_INTENTS = {"nlu_fallback", "show_answer_as_chart"}
 
 # Editable via config.yml's system_prompt_template (and, in CVaLab's pipeline
 # editor, a text field on this component) -- see render_system_prompt.

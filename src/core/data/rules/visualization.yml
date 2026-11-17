@@ -57,3 +57,8 @@ rules:
     steps:
       - intent: provide_guided_hospital_scope
       - action: action_clarify_visualization_request
+
+  - rule: show the latest number answer as a chart
+    steps:
+      - intent: show_answer_as_chart
+      - action: action_show_answer_as_chart
