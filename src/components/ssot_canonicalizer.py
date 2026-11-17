@@ -152,7 +152,9 @@ class SSOTCanonicalizer(GraphComponent):
         # span is just a substring of that metric's SSOT synonym text (e.g. "day"
         # inside HOSPITALIZED_IN's "first-day bed type") -- not independent
         # evidence of a separate entity, and misleading downstream (the LLM
-        # planner sometimes honors it as a real request).
+        # planner sometimes honors it as a real request). The metric's exact
+        # span read as something else ("stroke type" as a group_by) is another
+        # reading of the same words, not a substring, and stays.
         metric_spans = [
             (cast(int, e["start"]), cast(int, e["end"]))
             for e in entities
@@ -167,7 +169,7 @@ class SSOTCanonicalizer(GraphComponent):
         for ent in entities:
             if ent.get("entity") != "metric" and isinstance(ent.get("start"), int) and isinstance(ent.get("end"), int):
                 start, end = cast(int, ent["start"]), cast(int, ent["end"])
-                if any(m_start <= start and end <= m_end for m_start, m_end in metric_spans):
+                if any(m_start <= start and end <= m_end and (m_start, m_end) != (start, end) for m_start, m_end in metric_spans):
                     if self._debug:
                         logger.info(
                             f"Dropping {ent.get('entity')} entity subsumed by metric span: {ent.get('value')!r}"
