@@ -2,6 +2,7 @@ version: "3.1"
 
 actions:
   - action_oneshot_generate_visualization
+  - action_show_answer_as_chart
   - action_clarify_visualization_request
   - action_guided_generate_visualization
   - validate_guided_visualization_form

@@ -2,3 +2,5 @@ version: "3.1"
 
 intents:
   - generate_visualization
+  # Sent only by the button under a number answer, never typed.
+  - show_answer_as_chart
