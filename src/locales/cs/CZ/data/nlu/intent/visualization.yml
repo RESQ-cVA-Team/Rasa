@@ -350,14 +350,14 @@ nlu:
       - Podle [měsíce](group_by)
       - procenta
       - Všichni v týmu už mají své přehledy, ale já pořád potřebuji [čárový](chart_type) graf [door in door out](metric). Můžete mi pomoct?
-      - Pořád čekám na [sloupcový](chart_type) graf [door to groin](metric). Pomůžete mi?
+      - Pořád čekám na [sloupcový](chart_type) graf [primary door to groin](metric). Pomůžete mi?
       - Kolegové už grafy dostali a já pořád nemám [čárový](chart_type) graf [AdmissionNihss](metric). Můžete mi s tím pomoct?
       - Pořád nemám [sloupcový](chart_type) graf [DIDO](metric), můžete pomoct?
       - Nikdo mi ještě neposlal [čárový](chart_type) graf [DTN](metric). Pomůžete?
       - Pořád mi chybí [sloupcový](chart_type) graf [DischargeNihss](metric). Můžete mi pomoct?
       - Udělej mi 3 grafy [DTN](metric), každý jako [sloupcový](chart_type) graf
       - Ukaž mi 5 grafů [DIDO](metric), každý jako [čárový](chart_type) graf
-      - Chci 4 grafy [door to groin](metric), všechny jako [sloupcový](chart_type) graf
+      - Chci 4 grafy [primary door to groin](metric), všechny jako [sloupcový](chart_type) graf
       - Vytvoř 10 grafů [DTN](metric) pro [mou nemocnici](hospital_scope_reference), každý jako [čárový](chart_type) graf
       - Potřebuji 2 grafy [AdmissionNihss](metric), oba jako [sloupcový](chart_type) graf
       - Nakresli 6 grafů [DischargeNihss](metric), každý jako [čárový](chart_type) graf
