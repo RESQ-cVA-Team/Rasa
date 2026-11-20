@@ -361,3 +361,11 @@ nlu:
       - Vytvoř 10 grafů [DTN](metric) pro [mou nemocnici](hospital_scope_reference), každý jako [čárový](chart_type) graf
       - Potřebuji 2 grafy [AdmissionNihss](metric), oba jako [sloupcový](chart_type) graf
       - Nakresli 6 grafů [DischargeNihss](metric), každý jako [čárový](chart_type) graf
+      - Jaký podíl mých pacientů má diabetes?
+      - Kolik procent mých pacientů jsou kuřáci?
+      - Kolik mých pacientů má fibrilaci síní?
+      - Jaký podíl našich pacientů měl vysoký krevní tlak?
+      - Jaký podíl mých pacientů tvoří ženy?
+      - Kolik procent pacientů přijelo sanitkou?
+      - Kolik pacientů mělo CT vyšetření?
+      - Jaký podíl mých pacientů měl magnetickou rezonanci?

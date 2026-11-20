@@ -456,3 +456,11 @@ nlu:
       - Can I get 2 [bar](chart_type) charts of [DIDO](metric)?
       - Make 8 [line](chart_type) graphs of [discharge nihss](metric)
       - I need 12 [bar](chart_type) charts of [DTN](metric)
+      - What share of [my](hospital_scope_reference) patients have diabetes?
+      - What percentage of [my](hospital_scope_reference) patients are smokers?
+      - How many of [my](hospital_scope_reference) patients have atrial fibrillation?
+      - What share of our patients had high blood pressure?
+      - What proportion of [my](hospital_scope_reference) patients are women?
+      - What percentage of patients arrived by ambulance?
+      - How many patients had a CT scan?
+      - What share of [my](hospital_scope_reference) patients had an MRI?
