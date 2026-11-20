@@ -232,7 +232,6 @@ nlu:
       - [ivt dose](metric) [stacked area chart](chart_type) [monthly period](group_by)
       - Plot [HOSPITAL_STAY](metric) in a [line chart](chart_type)
       - Visualize [carotid endarterectomy or stenting within two weeks](metric) as a line graph per month([group_by])
-      - Show me a chart of [how patient was admitted](metric)
       - I'd like to see [thrombolysis and thrombectomy](metric)
       - Can I get a chart for [admission nihss](metric)
       - Give me a chart showing [thrombolysis application department](metric)
@@ -243,8 +242,6 @@ nlu:
       - Let's see [thrombolysis application department](metric) data
       - Bring up [thrombolysis rate](metric)
       - I want to check [day 2 hyperglycemia checks](metric)
-      - Show me [unfiltered dtn](metric) please
-      - Can you pull [unfiltered dtg](metric) for me
       - I'd like a look at [day 3 hyperglycemia checks](metric)
       - Get me [thrombolysis rate](metric) data
       - Hello there, I would like a graph of [medication before onset in ais or tia](metric)
@@ -446,7 +443,7 @@ nlu:
       - By [month](group_by)
       - [percent]{"entity": "kpi", "value": "percent"}
       - Everyone on my team already has their reports, but I still need a [line](chart_type) chart of [door in door out](metric). Can you help?
-      - I'm still waiting for my [bar](chart_type) chart of [door to groin](metric). Could you help me?
+      - I'm still waiting for my [bar](chart_type) chart of [primary door to groin](metric). Could you help me?
       - My colleagues got their graphs and I still don't have a [line](chart_type) graph of [admission nihss](metric). Can you help me with that?
       - Still no [bar](chart_type) chart of [DIDO](metric) for me, can you help?
       - Nobody has sent me the [line](chart_type) graph of [DTN](metric) yet. Can you help?
@@ -454,7 +451,7 @@ nlu:
       - Make me 3 [bar](chart_type) charts of [DTN](metric)
       - Show me 5 [line](chart_type) graphs of [door in door out](metric)
       - Create 4 [line](chart_type) charts showing [DTN](metric) for [my hospital](hospital_scope_reference)
-      - Give me 10 [bar](chart_type) charts of [door to groin](metric)
+      - Give me 10 [bar](chart_type) charts of [primary door to groin](metric)
       - Draw 6 [line](chart_type) graphs, each one showing [admission nihss](metric)
       - Can I get 2 [bar](chart_type) charts of [DIDO](metric)?
       - Make 8 [line](chart_type) graphs of [discharge nihss](metric)
