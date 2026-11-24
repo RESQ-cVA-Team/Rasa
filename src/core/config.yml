@@ -82,6 +82,9 @@ pipeline:
     prefixes: ["/cli", "!"]
     intent_name: "cli_command"
 
+  # Years as dates, after the extractors and before consolidation
+  - name: src.components.year_dates.YearDates
+
   # Optional: Uncomment if you need time/date entities
   #- name: DucklingEntityExtractor
   #  url: http://duckling:8000
