@@ -18,6 +18,7 @@ pipeline:
   # Intent Classification
   - name: DIETClassifier
     epochs: 100
+    random_seed: 42
     constrain_similarities: true
     model_confidence: softmax
     entity_recognition: true
@@ -75,6 +76,7 @@ pipeline:
     strict_entities: ["metric", "chart_type", "group_by"]
   - name: ResponseSelector
     epochs: 100
+    random_seed: 42
     constrain_similarities: true
 
   # CLI intent override (configure prefixes/intent here)
@@ -153,9 +155,11 @@ policies:
   - name: UnexpecTEDIntentPolicy
     max_history: 5
     epochs: 100
+    random_seed: 42
   - name: TEDPolicy
     max_history: 5
     epochs: 100
+    random_seed: 42
     constrain_similarities: true
 importers:
   - name: "src.components.layered_importer.OverlayImporter"
