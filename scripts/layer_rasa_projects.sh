@@ -118,4 +118,6 @@ except Exception as e:
   raise
 PY
 
+# The trained model depends on TensorFlow's thread counts as well as the seeds in the config.
+export TF_INTRA_OP_PARALLELISM_THREADS=4 TF_INTER_OP_PARALLELISM_THREADS=4
 rasa train -d "$BASE_DOMAIN" --config "$BASE_CONFIG" --data "$BASE_STORIES"
